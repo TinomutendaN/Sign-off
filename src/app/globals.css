@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/* SIGNoFF design tokens (CLAUDE.md, "Shared style"). Use these, never raw hex values, in components. */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Surfaces */
+  --color-page: #e4e2fb;
+  --color-panel: #e8e7f0;
+  --color-card: #ffffff;
+  --color-line: #ecebf5;
+  --color-soft: #f5f5f9;
+  --color-soft-2: #f0eff6;
+  --color-slot: #d9d8e4;
+
+  /* Text */
+  --color-ink: #1f1d3a;
+  --color-muted: #5f5e78;
+
+  /* Violet accent */
+  --color-violet: #6d5df0;
+  --color-violet-icon: #5b4bea;
+  --color-violet-ink: #4334c9;
+  --color-violet-tint: #f0eeff;
+
+  /* Status colours: main, tint (background), ink (text) */
+  --color-amber: #f5a524;
+  --color-amber-tint: #fff4e0;
+  --color-amber-ink: #8a4b00;
+  --color-green: #34c38f;
+  --color-green-tint: #ddf5ea;
+  --color-green-ink: #0e6b45;
+  --color-red: #ef5a5a;
+  --color-red-tint: #fde2e4;
+  --color-red-ink: #9b1c2c;
+  --color-blue: #5b8def;
+  --color-blue-tint: #dcebff;
+  --color-blue-ink: #1d4e99;
+
+  /* Avatars */
+  --color-av-tm: #e3deff;
+  --color-av-ak: #d7f2e6;
+  --color-av-lr: #fde2e4;
+  --color-av-js: #dcebff;
+
+  /* Corners */
+  --radius-window: 28px;
+  --radius-panel: 20px;
+  --radius-card: 12px;
+}

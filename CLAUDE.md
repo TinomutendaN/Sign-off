@@ -10,28 +10,26 @@ The finished screen designs are saved as images in the project at:
 design/screens/
 ```
 
-They arrive as a zip file. **Unzip it into `design/screens/`** before building: coding agents can open images in a folder but can't look inside a zip.
+File names (one per screen, as exported from the design canvas). The "Description" column is the matching number in the written screen descriptions at the end of this file:
 
-Expected file names (one per screen, numbered like the canvas):
-
-| File | Screen | Route |
-|---|---|---|
-| `01-landing.png` | Landing | `/` |
-| `02-pricing.png` | Pricing | `/pricing` |
-| `03-sign-in.png` | Sign in | `/sign-in` |
-| `04-dashboard.png` | Dashboard | `/dashboard` |
-| `05-clients.png` | Clients | `/clients` |
-| `06-projects.png` | Projects | `/projects` |
-| `07-project-board.png` | Project board | `/projects/[projectId]` |
-| `08-milestones.png` | Milestones | `/projects/[projectId]/milestones` |
-| `09-task-detail.png` | Task detail | `/projects/[projectId]?task=[taskId]` |
-| `10-team-settings.png` | Team settings | `/settings` |
-| `11-billing.png` | Billing | `/billing` |
-| `12-upgrade-popup.png` | Upgrade pop-up | shown over `/projects` |
-| `13-client-home.png` | Client home | `/portal` |
-| `14-client-project.png` | Client project view | `/portal/projects/[projectId]` |
-| `15-admin-dashboard.png` | Admin dashboard | `/admin` |
-| `16-subscribers.png` | Subscribers | `/admin/subscribers` |
+| File in `design/screens/` | Screen | Route | Description |
+|---|---|---|---|
+| `01 Landing.png` | Landing | `/` | 1 |
+| `02 Pricing.png` | Pricing | `/pricing` | 2 |
+| `03 Sign in.png` | Sign in | `/sign-in` | 3 |
+| `04 Dashboard.png` | Dashboard | `/dashboard` | 4 |
+| `05 Clients.png` | Clients | `/clients` | 5 |
+| `06 Projects.png` | Projects | `/projects` | 6 |
+| `07 Project page · Board.png` | Project board | `/projects/[projectId]` | 7 |
+| `07 Project page · Milestones.png` | Milestones | `/projects/[projectId]/milestones` | 8 |
+| `08 Task detail.png` | Task detail | `/projects/[projectId]?task=[taskId]` | 9 |
+| `09 Team settings.png` | Team settings | `/settings` | 10 |
+| `10 Billing.png` | Billing | `/billing` | 11 |
+| `Upgrade pop-up (Free limit reached).png` | Upgrade pop-up | shown over `/projects` | 12 |
+| `11 Client home.png` | Client home | `/portal` | 13 |
+| `12 Client project view.png` | Client project view | `/portal/projects/[projectId]` | 14 |
+| `13 Admin dashboard.png` | Admin dashboard | `/admin` | 15 |
+| `14 Subscribers.png` | Subscribers | `/admin/subscribers` | 16 |
 
 ### How to use them
 

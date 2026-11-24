@@ -1,0 +1,10 @@
+// Tables are added in Step 1.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
