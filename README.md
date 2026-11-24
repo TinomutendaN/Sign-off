@@ -4,10 +4,8 @@
 
 SIGNoFF helps freelancers and small agencies run client projects and get work approved without email chains. Agencies organise work into projects, milestones and Kanban tasks, then send deliverables to clients, who approve them or request changes in their own portal. Workspaces pay on Free, Pro or Agency plans, monthly or yearly, and an admin dashboard tracks subscribers and monthly revenue.
 
-> **Portfolio demo.** SIGNoFF runs with **test payments** (Stripe test cards through Clerk's development gateway) and **sample data**. No real money is taken.
-
-- **Live demo:** [YOUR VERCEL URL]
-- **Demo video:** [YOUR VIDEO LINK]
+- **Live app:** [YOUR VERCEL URL]
+- **Video walkthrough:** [YOUR VIDEO LINK]
 
 ---
 
@@ -15,7 +13,7 @@ SIGNoFF helps freelancers and small agencies run client projects and get work ap
 
 - [Screens](#screens)
 - [Features](#features)
-- [Try the demo](#try-the-demo)
+- [Try it](#try-it)
 - [Tech stack](#tech-stack)
 - [How it's built](#how-its-built)
 - [Getting started](#getting-started)
@@ -35,7 +33,7 @@ The finished designs live in [`design/screens/`](design/screens/).
 |---|---|---|
 | 01 | Landing | Everyone |
 | 02 | Pricing | Everyone |
-| 03 | Sign in and demo role picker | Everyone |
+| 03 | Sign in and role picker | Everyone |
 | 04 | Dashboard | Agency |
 | 05 | Clients | Agency |
 | 06 | Projects | Agency |
@@ -86,13 +84,12 @@ Every screen works on laptop, tablet and phone. On tablets the side panel hides;
 ### For the SIGNoFF admin
 - **Admin dashboard:** monthly recurring revenue, paying subscribers, new subscribers, cancellations, a revenue chart and subscribers by plan.
 - **Subscribers list:** every paying workspace, filtered by plan and status, with CSV export.
-- Past months are seeded sample data and are labelled **Demo data**.
 
 ---
 
-## Try the demo
+## Try it
 
-Open the live demo and choose **Try the demo** on the sign-in page. Pick a role to see SIGNoFF the way that person would:
+Open the app and pick a role on the sign-in page to explore a ready-made workspace without signing up. Each role shows SIGNoFF the way that person sees it:
 
 | Role | Signs in as | Lands on |
 |---|---|---|
@@ -101,17 +98,13 @@ Open the live demo and choose **Try the demo** on the sign-in page. Pick a role 
 | Client | Thandi M. · Brightline Bakery | Client portal |
 | SIGNoFF admin | Platform owner | Admin dashboard |
 
-To try a subscription, use a Stripe test card such as `4242 4242 4242 4242` with any future expiry date and any CVC.
-
-### The demo story
+### A typical flow
 1. An agency picks **Pro** on the Pricing page.
-2. They create an account and pay with a test card.
+2. They create an account and pay for Pro.
 3. They invite a client and work on the Kanban board.
 4. They send a homepage design for approval.
 5. The client approves it in their portal.
 6. The admin dashboard shows the new subscriber and the revenue going up.
-
-All demo people, companies and email addresses are fictional.
 
 ---
 
@@ -173,7 +166,7 @@ npx prisma migrate dev
 npx prisma db seed
 ```
 
-The seed creates the demo agency (Northfold Studio), its client (Brightline Bakery), both projects, their milestones, tasks, deliverables and activity, plus the sample subscriber history for the admin screens.
+The seed creates a starter workspace (Northfold Studio), its client (Brightline Bakery), both projects, their milestones, tasks, deliverables and activity, plus subscriber history for the admin screens.
 
 ### 4. Run the app
 
@@ -201,7 +194,7 @@ Clerk webhooks need a public address. Use a tunnelling tool such as ngrok to exp
 | `BLOB_READ_WRITE_TOKEN` | Vercel Blob token |
 | `ADMIN_USER_IDS` | Comma-separated Clerk user IDs allowed into `/admin` |
 | `DEMO_ORG_ID` | Clerk organization ID for Northfold Studio |
-| `DEMO_*_USER_ID` | Clerk user IDs for the demo people (owner, team members, client, admin) |
+| `DEMO_*_USER_ID` | Clerk user IDs for the seeded people (owner, team members, client, admin) |
 
 Never commit `.env.local`.
 
@@ -209,7 +202,7 @@ Never commit `.env.local`.
 
 ## Clerk setup
 
-1. **Create an application** in the Clerk dashboard. Keep the **development** instance for the demo.
+1. **Create an application** in the Clerk dashboard. Use the **development** instance while building; move to production once you have your own domain.
 2. **Turn on Organizations.** Each agency workspace is an organization.
 3. **Turn on Billing** and create **Organization** plans:
    - Free
@@ -218,9 +211,9 @@ Never commit `.env.local`.
 
    Add features for the plan limits (projects, team members, storage).
 4. **Add a webhook endpoint** pointing to `/api/webhooks/clerk`, subscribed to the billing and invitation events. Copy its signing secret into `CLERK_WEBHOOK_SIGNING_SECRET`.
-5. **Create the demo people:** Tino M., Leo R., Ama K., Jen S., Thandi M. and the admin. Add Tino, Leo, Ama and Jen to the Northfold Studio organization with the right roles, then copy all the IDs into `.env.local`.
+5. **Create the starter people:** Tino M., Leo R., Ama K., Jen S., Thandi M. and the admin. Add Tino, Leo, Ama and Jen to the Northfold Studio organization with the right roles, then copy all the IDs into `.env.local`.
 
-The demo uses Clerk's **development payment gateway**, a shared test Stripe account. You don't need your own Stripe account.
+On the development instance, Clerk Billing uses its **development payment gateway**, so you can pay with a Stripe test card such as `4242 4242 4242 4242` and don't need your own Stripe account. For live payments, connect your own Stripe account to Clerk's production instance.
 
 ---
 
@@ -228,9 +221,9 @@ The demo uses Clerk's **development payment gateway**, a shared test Stripe acco
 
 1. Push the repository to GitHub and import it into Vercel.
 2. Add every environment variable from `.env.local` to the Vercel project.
-3. Deploy. The demo runs on the `*.vercel.app` address with Clerk's development keys.
+3. Deploy. The app runs on the `*.vercel.app` address with Clerk's development keys (production keys need your own domain).
 4. Update the Clerk webhook endpoint to the live address.
-5. Run the seed against the live database so the demo starts clean.
+5. Run the seed against the live database to load the starter workspace.
 
 ---
 
