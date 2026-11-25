@@ -53,7 +53,7 @@ export function DemoPanel({ cards }: { cards: DemoCard[] }) {
         </span>
         <h2 className="m-0 text-2xl font-semibold tracking-[-0.01em] text-ink">Try the demo</h2>
         <p className="m-0 text-sm leading-normal text-muted">
-          Pick a role to see SIGNoFF the way that person would. The demo uses sample projects and Stripe test payments.
+          Pick a role to see SIGNoFF the way that person would.
         </p>
       </div>
 
@@ -102,7 +102,7 @@ export function DemoPanel({ cards }: { cards: DemoCard[] }) {
         aria-busy={busy}
         className="flex items-center justify-center gap-2 rounded-control bg-ink p-3 text-[15px] font-medium text-white shadow-navy transition-opacity disabled:cursor-wait disabled:opacity-80"
       >
-        Enter the demo as {selected.buttonLabel}
+        Enter as {selected.buttonLabel}
         <ArrowRightIcon />
       </button>
     </section>

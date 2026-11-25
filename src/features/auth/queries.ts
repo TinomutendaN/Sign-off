@@ -11,7 +11,7 @@ export type DemoCard = {
   initials: string;
   tone: AvatarTone;
   description: string;
-  /** Ends the button text: "Enter the demo as agency owner". */
+  /** Ends the button text: "Enter as an agency owner". */
   buttonLabel: string;
 };
 
@@ -33,8 +33,13 @@ export async function getDemoCards(): Promise<DemoCard[]> {
     clientId ? getClientCompanyName(clientId) : null,
   ]);
 
-  const workspace = org?.name ?? "Demo workspace";
+  const workspace = org?.name ?? null;
   const person = (id: string | undefined) => users.find((u) => u.id === id) ?? { firstName: "Demo", lastName: "" };
+  // "Tinomutenda N. · Northfold Studio", or just "Workspace" if the names can't be loaded.
+  const teamLine = (id: string | undefined) => {
+    const found = users.find((u) => u.id === id);
+    return found && workspace ? `${displayName(found)} · ${workspace}` : "Workspace";
+  };
   const owner = person(ownerId);
   const member = person(memberId);
   const clientName = company ?? "Client";
@@ -43,20 +48,20 @@ export async function getDemoCards(): Promise<DemoCard[]> {
     {
       role: "owner",
       title: "Agency owner",
-      who: `${displayName(owner)} · ${workspace}`,
+      who: teamLine(ownerId),
       initials: initials(owner),
       tone: "violet",
       description: "Run projects, invite clients and manage billing.",
-      buttonLabel: "agency owner",
+      buttonLabel: "an agency owner",
     },
     {
       role: "member",
       title: "Team member",
-      who: `${displayName(member)} · ${workspace}`,
+      who: teamLine(memberId),
       initials: initials(member),
       tone: "green",
       description: "Work on tasks and upload deliverables.",
-      buttonLabel: "team member",
+      buttonLabel: "a team member",
     },
     {
       role: "client",
@@ -65,7 +70,7 @@ export async function getDemoCards(): Promise<DemoCard[]> {
       initials: nameInitials(clientName),
       tone: "peach",
       description: "See progress and approve or request changes.",
-      buttonLabel: "client",
+      buttonLabel: "a client",
     },
     {
       role: "admin",
@@ -74,7 +79,7 @@ export async function getDemoCards(): Promise<DemoCard[]> {
       initials: "So",
       tone: "navy",
       description: "See subscribers, plans and monthly revenue.",
-      buttonLabel: "admin",
+      buttonLabel: "an admin",
     },
   ];
 }
