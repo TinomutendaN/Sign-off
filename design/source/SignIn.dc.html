@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SIGNoFF sign in</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Inter,system-ui,sans-serif;color:#1F1D3A}
+a{color:#5B4BEA;text-decoration:none}a:hover{color:#4334C9}
+button{font-family:inherit;cursor:pointer}
+input{font-family:inherit}
+@media (max-width:1024px){.sf-side{display:none!important}.sf-col{max-width:none!important}}
+@media (max-width:640px){.sf-page{padding:0!important}.sf-win{border-radius:0!important;border:0!important;box-shadow:none!important;padding:8px 8px 96px!important;min-height:100vh}
+.sf-frame{position:fixed!important;left:8px;right:8px;bottom:8px;z-index:30;padding:6px!important;border-radius:18px!important;box-shadow:0 8px 24px rgba(31,29,58,.2)}
+.sf-rail{flex:1 1 auto!important;flex-direction:row!important;justify-content:space-around!important;padding:0!important}
+.sf-rail>div,.sf-rail a[aria-label="Help"]{display:none!important}
+.sf-main{padding:12px 4px!important}.sf-search{width:100%!important}.sf-main h1{font-size:22px!important}
+.sf-pubnav{display:none!important}.sf-hero{padding:28px 10px!important}.sf-h1{font-size:32px!important}
+.sf-float{position:static!important;transform:none!important;width:auto!important;margin-top:12px}.sf-pubwin{padding-bottom:8px!important}}
+</style>
+</helmet>
+<div class="sf-page" style="min-height: 100vh; box-sizing: border-box; padding: 40px 32px; background: #E4E2FB; font-family: Inter, system-ui, sans-serif; color: #1F1D3A">
+<div class="sf-win sf-pubwin" style="max-width: 1440px; margin: 0 auto; background: #FFFFFF; border: 1px solid #ECEBF5; border-radius: 28px; padding: 10px; box-sizing: border-box; box-shadow: 0 30px 70px rgba(76,64,180,0.14), 0 2px 6px rgba(76,64,180,0.06); display: flex; flex-wrap: wrap; gap: 10px">
+
+<section style="flex: 1 1 460px; min-width: 0; padding: 28px 24px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 28px">
+<a href="Pricing.dc.html" style="align-self: flex-start; display: flex; align-items: center; gap: 10px; color: #1F1D3A"><span style="width: 36px; height: 36px; border-radius: 11px; background: #5B4BEA; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px">So</span><span style="font-size: 18px; font-weight: 700; letter-spacing: -0.01em">SIGNoFF</span></a>
+<div class="sf-col" style="width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 20px; padding: 12px 0 24px">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h1 style="margin: 0; font-size: 30px; font-weight: 600; letter-spacing: -0.02em">{{ heading }}</h1>
+<p style="margin: 0; font-size: 14px; line-height: 1.5; color: #5F5E78">{{ subheading }}</p>
+</div>
+<div role="tablist" aria-label="Sign in or create account" style="display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: #E8E7F0">
+<sc-for list="{{ modes }}" as="m" hint-placeholder-count="2">
+<button role="tab" aria-selected="{{ m.on }}" onClick="{{ m.pick }}" style="flex: 1; padding: 9px 12px; border: 0; border-radius: 9px; font-size: 14px; font-weight: 500; background: {{ m.bg }}; color: {{ m.fg }}; box-shadow: {{ m.sh }}">{{ m.label }}</button>
+</sc-for>
+</div>
+<sc-if value="{{ signup }}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 12px; background: #F0EEFF; font-size: 13px; color: #3A3955">
+<span style="width: 30px; height: 30px; border-radius: 9px; background: #FFFFFF; color: #5B4BEA; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 10h19"/></svg></span>
+<span style="flex: 1"><span style="font-weight: 600">Pro · annual, $190 a year.</span> You'll pay with Stripe on the next step.</span>
+<a href="Pricing.dc.html" style="font-size: 12px; font-weight: 500">Change</a>
+</div>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #3A3955">Your name
+<input type="text" value="Tino M." autocomplete="name" style="padding: 11px 12px; border: 1px solid #E0DFEA; border-radius: 10px; font-size: 14px; font-weight: 400; color: #1F1D3A; outline: 0">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #3A3955">Workspace name
+<input type="text" value="Northfold Studio" style="padding: 11px 12px; border: 1px solid #E0DFEA; border-radius: 10px; font-size: 14px; font-weight: 400; color: #1F1D3A; outline: 0">
+</label>
+</sc-if>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #3A3955">Email
+<input type="email" placeholder="you@studio.com" autocomplete="email" style="padding: 11px 12px; border: 1px solid #E0DFEA; border-radius: 10px; font-size: 14px; font-weight: 400; color: #1F1D3A; outline: 0">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 500; color: #3A3955"><span style="display: flex; justify-content: space-between">Password<sc-if value="{{ signin }}" hint-placeholder-val="{{ false }}"><a href="#" style="font-weight: 500">Forgot password?</a></sc-if></span>
+<input type="password" placeholder="At least 8 characters" autocomplete="current-password" style="padding: 11px 12px; border: 1px solid #E0DFEA; border-radius: 10px; font-size: 14px; font-weight: 400; color: #1F1D3A; outline: 0">
+</label>
+<a href="{{ submitHref }}" style="padding: 12px; border-radius: 10px; background: #6D5DF0; color: #FFFFFF; font-size: 15px; font-weight: 500; text-align: center; box-shadow: 0 4px 12px rgba(109,93,240,0.3)">{{ submitLabel }}</a>
+<p style="margin: 0; font-size: 12px; line-height: 1.5; color: #5F5E78; text-align: center">{{ footnote }}</p>
+</div>
+</section>
+
+<section style="flex: 1 1 460px; min-width: 0; background: #E8E7F0; border-radius: 20px; padding: 28px 24px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; gap: 18px">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 0 4px">
+<span style="align-self: flex-start; font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 999px; background: #FFFFFF; color: #4334C9">No sign-up needed</span>
+<h2 style="margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.01em">Try the demo</h2>
+<p style="margin: 0; font-size: 14px; line-height: 1.5; color: #5F5E78">Pick a role to see SIGNoFF the way that person would. The demo uses sample projects and Stripe test payments.</p>
+</div>
+<div role="radiogroup" aria-label="Demo role" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px">
+<sc-for list="{{ roles }}" as="r" hint-placeholder-count="4">
+<button role="radio" aria-checked="{{ r.on }}" onClick="{{ r.pick }}" style="text-align: left; background: #FFFFFF; border: 0; border-radius: 14px; padding: 16px; box-shadow: {{ r.sh }}; outline: {{ r.ring }}; display: flex; flex-direction: column; gap: 12px">
+<span style="display: flex; align-items: center; gap: 10px; width: 100%">
+<span style="width: 34px; height: 34px; border-radius: 50%; background: {{ r.bg }}; color: {{ r.fg }}; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600">{{ r.ini }}</span>
+<span style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600; color: #1F1D3A">{{ r.role }}</span><span style="font-size: 12px; color: #5F5E78">{{ r.who }}</span></span>
+<span style="width: 18px; height: 18px; border-radius: 50%; border: 2px solid {{ r.dot }}; box-sizing: border-box; display: flex; align-items: center; justify-content: center"><span style="width: 8px; height: 8px; border-radius: 50%; background: {{ r.fill }}"></span></span>
+</span>
+<span style="font-size: 13px; line-height: 1.5; color: #3A3955">{{ r.desc }}</span>
+</button>
+</sc-for>
+</div>
+<a href="{{ demoHref }}" style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: 10px; background: #1F1D3A; color: #FFFFFF; font-size: 15px; font-weight: 500; box-shadow: 0 6px 16px rgba(31,29,58,0.2)">{{ demoLabel }}<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+</section>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":980}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { mode: 'signup', role: 'owner' }; }
+  renderVals() {
+    const signup = this.state.mode === 'signup';
+    const modes = [['signup', 'Create account'], ['signin', 'Sign in']].map(([k, label]) => {
+      const on = this.state.mode === k;
+      return { label, on: on ? 'true' : 'false', bg: on ? '#FFFFFF' : 'transparent', fg: on ? '#1F1D3A' : '#5F5E78',
+        sh: on ? '0 1px 3px rgba(31,29,58,0.1)' : 'none', pick: () => this.setState({ mode: k }) };
+    });
+    const list = [
+      { k: 'owner', role: 'Agency owner', who: 'Tino M. · Northfold Studio', ini: 'TM', bg: '#E3DEFF', fg: '#3F2FB8', desc: 'Run projects, invite clients and manage billing.', href: 'Main.dc.html', label: 'agency owner' },
+      { k: 'member', role: 'Team member', who: 'Ama K. · Northfold Studio', ini: 'AK', bg: '#D7F2E6', fg: '#0E6B45', desc: 'Work on tasks and upload deliverables.', href: 'Main.dc.html', label: 'team member' },
+      { k: 'client', role: 'Client', who: 'Brightline Bakery', ini: 'BB', bg: '#FCE3D3', fg: '#8A3B12', desc: 'See progress and approve or request changes.', href: 'ClientProject.dc.html', label: 'client' },
+      { k: 'admin', role: 'SIGNoFF admin', who: 'Platform owner', ini: 'So', bg: '#1F1D3A', fg: '#FFFFFF', desc: 'See subscribers, plans and monthly revenue.', href: 'Admin.dc.html', label: 'admin' }
+    ];
+    const roles = list.map((r) => {
+      const on = this.state.role === r.k;
+      return { ...r, on: on ? 'true' : 'false', ring: on ? '2px solid #6D5DF0' : 'none', dot: on ? '#6D5DF0' : '#C9C7D9', fill: on ? '#6D5DF0' : 'transparent',
+        sh: on ? '0 12px 28px rgba(76,64,180,0.14)' : '0 1px 3px rgba(31,29,58,0.07), 0 0 0 1px rgba(31,29,58,0.03)',
+        pick: () => this.setState({ role: r.k }) };
+    });
+    const cur = list.find((r) => r.k === this.state.role);
+    return {
+      modes, roles, signup, signin: !signup,
+      heading: signup ? 'Create your workspace' : 'Welcome back',
+      subheading: signup ? 'Set up SIGNoFF for your studio in a minute.' : 'Sign in to your SIGNoFF workspace.',
+      submitLabel: signup ? 'Create account and continue to payment' : 'Sign in',
+      submitHref: signup ? 'Billing.dc.html' : 'Main.dc.html',
+      footnote: signup ? 'By creating an account you agree to the terms and privacy policy.' : 'Clients: use the invite link your agency sent you.',
+      demoHref: cur.href, demoLabel: 'Enter the demo as ' + cur.label
+    };
+  }
+}
+</script>
+</body>
+</html>

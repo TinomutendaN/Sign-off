@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SIGNoFF clients</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Inter,system-ui,sans-serif;color:#1F1D3A}
+a{color:#5B4BEA;text-decoration:none}a:hover{color:#4334C9}
+button{font-family:inherit;cursor:pointer}
+.sx::-webkit-scrollbar{height:6px}.sx::-webkit-scrollbar-thumb{background:#D9D8E3;border-radius:3px}.sx::-webkit-scrollbar-track{background:transparent}
+@media (max-width:1024px){.sf-side{display:none!important}.sf-col{max-width:none!important}}
+@media (max-width:640px){.sf-page{padding:0!important}.sf-win{border-radius:0!important;border:0!important;box-shadow:none!important;padding:8px 8px 96px!important;min-height:100vh}
+.sf-frame{position:fixed!important;left:8px;right:8px;bottom:8px;z-index:30;padding:6px!important;border-radius:18px!important;box-shadow:0 8px 24px rgba(31,29,58,.2)}
+.sf-rail{flex:1 1 auto!important;flex-direction:row!important;justify-content:space-around!important;padding:0!important}
+.sf-rail>div,.sf-rail a[aria-label="Help"]{display:none!important}
+.sf-main{padding:12px 4px!important}.sf-search{width:100%!important}.sf-main h1{font-size:22px!important}
+.sf-pubnav{display:none!important}.sf-hero{padding:28px 10px!important}.sf-h1{font-size:32px!important}
+.sf-float{position:static!important;transform:none!important;width:auto!important;margin-top:12px}.sf-pubwin{padding-bottom:8px!important}}
+</style>
+</helmet>
+<div class="sf-page" style="min-height: 100vh; box-sizing: border-box; padding: 40px 32px; background: #E4E2FB; font-family: Inter, system-ui, sans-serif; color: #1F1D3A">
+<div class="sf-win" style="max-width: 1440px; margin: 0 auto; background: #FFFFFF; border: 1px solid #ECEBF5; border-radius: 28px; padding: 10px; box-sizing: border-box; box-shadow: 0 30px 70px rgba(76,64,180,0.14), 0 2px 6px rgba(76,64,180,0.06); display: flex; flex-wrap: wrap; gap: 10px">
+
+<div class="sf-frame" style="flex: 0 0 auto; display: flex; gap: 4px; padding: 8px 8px 8px 4px; box-sizing: border-box; background: #E8E7F0; border-radius: 20px">
+<nav aria-label="Main" class="sf-rail" style="flex: 0 0 68px; padding: 10px 0; box-sizing: border-box; background: transparent; display: flex; flex-direction: column; align-items: center; gap: 6px">
+<div style="width: 38px; height: 38px; border-radius: 12px; background: #5B4BEA; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; margin-bottom: 18px">So</div>
+<a href="Dashboard.dc.html" style="width: 60px; padding: 9px 0; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; color: #5F5E78"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</a>
+<a href="Clients.dc.html" style="width: 60px; padding: 9px 0; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; color: #1F1D3A; background: #FFFFFF; box-shadow: 0 2px 8px rgba(31,29,58,0.08), 0 0 0 1px rgba(31,29,58,0.03); font-weight: 500"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5B4BEA" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.9.7 3.1 2.4 3.5 5.2"/></svg>Clients</a>
+<a href="Projects.dc.html" style="width: 60px; padding: 9px 0; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; color: #5F5E78"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="11" rx="1.5"/><rect x="17" y="4" width="4" height="7" rx="1.5"/></svg>Projects</a>
+<a href="Billing.dc.html" style="width: 60px; padding: 9px 0; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; color: #5F5E78"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 10h19M6.5 15h4"/></svg>Billing</a>
+<div style="flex: 1"></div>
+<a href="#" aria-label="Help" style="width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #5F5E78"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.2M12 17h.01"/></svg></a>
+<a href="Team.dc.html" aria-label="Settings" style="width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #5F5E78"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></a>
+</nav>
+
+<aside class="sf-side" style="flex: 0 0 220px; display: flex">
+<div style="flex: 1; min-width: 0; padding: 12px 8px; box-sizing: border-box; background: #FFFFFF; border-radius: 14px; box-shadow: 0 1px 3px rgba(31,29,58,0.06); display: flex; flex-direction: column; gap: 16px">
+<label style="display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; background: transparent; font-size: 13px; color: #5F5E78">
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+<input type="search" placeholder="Search…" style="border: 0; outline: 0; background: transparent; font: inherit; color: #1F1D3A; width: 100%">
+</label>
+<button style="display: flex; align-items: center; gap: 10px; padding: 8px; border: 0; border-radius: 12px; background: transparent; text-align: left">
+<span style="width: 28px; height: 28px; border-radius: 8px; background: #FDE7C8; color: #8A4B00; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px">NS</span>
+<span style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 13px; font-weight: 600; color: #1F1D3A">Northfold Studio</span><span style="font-size: 11px; color: #5F5E78">Workspace · 4 members</span></span>
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5F5E78" stroke-width="2" stroke-linecap="round"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg>
+</button>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 500; letter-spacing: 0.05em; color: #5F5E78; padding: 0 8px 8px"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>CLIENTS &amp; PROJECTS</div>
+<sc-for list="{{ projects }}" as="p" hint-placeholder-count="4">
+<a href="#" style="display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; font-size: 13px; color: #1F1D3A; background: {{ p.bg }}; font-weight: {{ p.weight }}">
+<span style="width: 8px; height: 8px; border-radius: 3px; background: {{ p.dot }}"></span>
+<span style="flex: 1; display: flex; flex-direction: column; min-width: 0"><span>{{ p.name }}</span><span style="font-size: 11px; color: #5F5E78; font-weight: 400">{{ p.client }}</span></span>
+<span style="font-size: 11px; color: #5F5E78">{{ p.count }}</span>
+</a>
+</sc-for>
+</div>
+<div style="flex: 1"></div>
+<div style="position: relative; padding: 14px; border: 1px solid #E8E7F0; border-radius: 14px; background: #FFFFFF; box-shadow: 0 1px 3px rgba(31,29,58,0.05); display: flex; flex-direction: column; gap: 10px">
+<button aria-label="Close" style="position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border: 0; border-radius: 8px; background: transparent; color: #5F5E78; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+<div style="font-size: 15px; font-weight: 500; padding-right: 24px">You're on Pro</div>
+<div style="font-size: 12px; color: #5F5E78">Annual plan · renews 24 Nov 2027</div>
+<div style="font-size: 12px; color: #5F5E78">2 projects · no project limit</div>
+<a href="Billing.dc.html" style="padding: 10px; border-radius: 8px; border: 1px solid #E0DFEA; background: #FFFFFF; color: #1F1D3A; font-size: 13px; font-weight: 500; text-align: center; box-shadow: 0 1px 2px rgba(31,29,58,0.05)">Manage billing</a>
+</div>
+</div>
+</aside>
+</div>
+
+<main class="sf-main" style="flex: 999 1 560px; min-width: 0; padding: 18px 20px 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 14px">
+<div style="flex: 1 1 320px; display: flex; align-items: center; gap: 14px">
+<span style="width: 44px; height: 44px; border-radius: 12px; background: #F5F5F9; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5B4BEA" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.9.7 3.1 2.4 3.5 5.2"/></svg></span>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<h1 style="margin: 0; font-size: 26px; font-weight: 500; letter-spacing: -0.01em">Clients</h1>
+<div style="font-size: 12px; color: #5F5E78">{{ countNote }}</div>
+</div>
+</div>
+<label class="sf-search" style="display: flex; align-items: center; gap: 8px; padding: 9px 12px; border: 1px solid #E8E7F0; border-radius: 10px; font-size: 13px; color: #5F5E78; width: 220px; box-shadow: 0 1px 2px rgba(31,29,58,0.05)">
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+<input type="search" placeholder="Search clients…" style="border: 0; outline: 0; background: transparent; font: inherit; color: #1F1D3A; width: 100%">
+</label>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-start">
+<section style="flex: 999 1 520px; min-width: 0; background: #E8E7F0; border-radius: 18px; padding: 12px 10px 10px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 8px 4px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 500">All clients</h2>
+<span style="font-size: 12px; color: #5F5E78">{{ count }}</span>
+</div>
+<sc-for list="{{ clients }}" as="c" hint-placeholder-count="2">
+<article style="background: #FFFFFF; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(31,29,58,0.07), 0 0 0 1px rgba(31,29,58,0.03); display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 14px">
+<span style="width: 44px; height: 44px; border-radius: 12px; background: {{ c.bg }}; color: {{ c.fg }}; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700">{{ c.ini }}</span>
+<div style="flex: 1 1 220px; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+<div style="display: flex; align-items: center; gap: 10px"><span style="font-size: 16px; font-weight: 600">{{ c.name }}</span><span style="font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 999px; background: {{ c.stBg }}; color: {{ c.stFg }}">{{ c.status }}</span></div>
+<div style="font-size: 12px; color: #5F5E78">{{ c.contact }}</div>
+</div>
+<sc-if value="{{ c.active }}" hint-placeholder-val="{{ true }}"><a href="ClientProject.dc.html" style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid #E8E7F0; border-radius: 10px; font-size: 13px; font-weight: 500; color: #1F1D3A"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>See their portal</a></sc-if>
+<sc-if value="{{ c.pending }}" hint-placeholder-val="{{ false }}"><button style="padding: 8px 12px; border: 1px solid #E8E7F0; border-radius: 10px; background: #FFFFFF; font-size: 13px; font-weight: 500; color: #1F1D3A">Resend invite</button></sc-if>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px">
+<sc-for list="{{ c.stats }}" as="s" hint-placeholder-count="3">
+<div style="padding: 10px 12px; border-radius: 10px; background: #F5F5F9; display: flex; flex-direction: column; gap: 3px"><span style="font-size: 11px; color: #5F5E78">{{ s.label }}</span><span style="font-size: 14px; font-weight: 600">{{ s.value }}</span></div>
+</sc-for>
+</div>
+<sc-if value="{{ c.hasProjects }}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+<span style="font-size: 12px; color: #5F5E78">Projects</span>
+<sc-for list="{{ c.projects }}" as="p" hint-placeholder-count="2"><a href="Main.dc.html" style="display: flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: #F0EFF6; font-size: 12px; font-weight: 500; color: #1F1D3A"><span style="width: 7px; height: 7px; border-radius: 2px; background: {{ p.dot }}"></span>{{ p.name }}</a></sc-for>
+</div>
+</sc-if>
+</article>
+</sc-for>
+</section>
+
+<section class="sf-col" style="flex: 1 1 320px; max-width: 380px; min-width: 0; background: #E8E7F0; border-radius: 18px; padding: 12px 10px 10px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px">
+<div style="padding: 6px 8px 4px"><h2 style="margin: 0; font-size: 16px; font-weight: 500">Invite a client</h2></div>
+<div style="background: #FFFFFF; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(31,29,58,0.07), 0 0 0 1px rgba(31,29,58,0.03); display: flex; flex-direction: column; gap: 14px">
+<sc-if value="{{ drafting }}" hint-placeholder-val="{{ true }}">
+<p style="margin: 0; font-size: 13px; line-height: 1.5; color: #5F5E78">Your client gets their own portal. They only see the projects you share, and they never pay.</p>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; font-weight: 500; color: #3A3955">Company
+<input type="text" value="Kopje Physio" style="padding: 10px 12px; border: 1px solid #E0DFEA; border-radius: 10px; font: inherit; font-size: 13px; font-weight: 400; color: #1F1D3A; outline: 0">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; font-weight: 500; color: #3A3955">Contact name
+<input type="text" value="Rudo C." style="padding: 10px 12px; border: 1px solid #E0DFEA; border-radius: 10px; font: inherit; font-size: 13px; font-weight: 400; color: #1F1D3A; outline: 0">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; font-weight: 500; color: #3A3955">Contact email
+<input type="email" value="rudo@kopjephysio.example" style="padding: 10px 12px; border: 1px solid #E0DFEA; border-radius: 10px; font: inherit; font-size: 13px; font-weight: 400; color: #1F1D3A; outline: 0">
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 12px; font-weight: 500; color: #3A3955">First project
+<input type="text" value="Booking app" style="padding: 10px 12px; border: 1px solid #E0DFEA; border-radius: 10px; font: inherit; font-size: 13px; font-weight: 400; color: #1F1D3A; outline: 0">
+</label>
+<button onClick="{{ invite }}" style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 16px; border: 0; border-radius: 10px; background: #6D5DF0; color: #FFFFFF; font-size: 14px; font-weight: 500; box-shadow: 0 4px 12px rgba(109,93,240,0.3)"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10 14M21 3l-7 18-4-7-7-4z"/></svg>Create project and send invite</button>
+</sc-if>
+<sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 8px 4px 4px; text-align: center">
+<span style="width: 44px; height: 44px; border-radius: 50%; background: #DDF5EA; color: #0E6B45; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+<div style="font-size: 15px; font-weight: 600">Invite sent to Rudo C.</div>
+<div style="font-size: 13px; line-height: 1.5; color: #5F5E78">The Booking app project is ready. You can also share this link yourself.</div>
+</div>
+<div style="display: flex; align-items: center; gap: 8px; padding: 6px 6px 6px 12px; border-radius: 10px; background: #F5F5F9">
+<span style="flex: 1; min-width: 0; font-size: 12px; color: #3A3955; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">signoff.app/invite/kp-7f3a92</span>
+<button onClick="{{ copy }}" style="padding: 7px 12px; border: 0; border-radius: 8px; background: #FFFFFF; font-size: 12px; font-weight: 600; color: #1F1D3A; box-shadow: 0 1px 3px rgba(31,29,58,0.1)">{{ copyLabel }}</button>
+</div>
+<button onClick="{{ reset }}" style="padding: 10px 14px; border: 1px solid #E8E7F0; border-radius: 10px; background: #FFFFFF; font-size: 13px; font-weight: 500; color: #1F1D3A">Invite another client</button>
+</sc-if>
+</div>
+</section>
+</div>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { sent: false, copied: false }; }
+  renderVals() {
+    const sent = this.state.sent;
+    const projects = [
+      { name: 'Website redesign', client: 'Brightline Bakery', count: 10, dot: '#6D5DF0' },
+      { name: 'Spring campaign', client: 'Brightline Bakery', count: 6, dot: '#F5A524' }
+    ];
+    if (sent) projects.push({ name: 'Booking app', client: 'Kopje Physio', count: 0, dot: '#34C38F' });
+    const side = projects.map((p) => ({ ...p, bg: 'transparent', weight: 500 }));
+    const list = [];
+    if (sent) list.push({ ini: 'KP', bg: '#D7F2E6', fg: '#0E6B45', name: 'Kopje Physio', status: 'Invite sent', stBg: '#FFF4E0', stFg: '#8A4B00',
+      contact: 'Rudo C. · rudo@kopjephysio.example', active: false, pending: true,
+      stats: [{ label: 'Projects', value: '1' }, { label: 'Waiting on client', value: 'None' }, { label: 'Last activity', value: 'Invited just now' }],
+      hasProjects: true, projects: [{ name: 'Booking app', dot: '#34C38F' }] });
+    list.push({ ini: 'BB', bg: '#FCE3D3', fg: '#8A3B12', name: 'Brightline Bakery', status: 'Active', stBg: '#DDF5EA', stFg: '#0E6B45',
+      contact: 'Thandi M. · thandi@brightline.example', active: true, pending: false,
+      stats: [{ label: 'Projects', value: '2' }, { label: 'Waiting on client', value: '1 approval' }, { label: 'Last activity', value: 'Asked for changes, 21 Nov' }],
+      hasProjects: true, projects: [{ name: 'Website redesign', dot: '#6D5DF0' }, { name: 'Spring campaign', dot: '#F5A524' }] });
+    const n = list.length;
+    return {
+      projects: side, clients: list, count: String(n),
+      countNote: n + (n === 1 ? ' client' : ' clients') + ' · Northfold Studio',
+      drafting: !sent, sent, copyLabel: this.state.copied ? 'Copied' : 'Copy',
+      invite: () => this.setState({ sent: true }), copy: () => this.setState({ copied: true }),
+      reset: () => this.setState({ sent: false, copied: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

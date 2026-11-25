@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SIGNoFF project board</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:Inter,system-ui,sans-serif;color:#1F1D3A}
+a{color:#5B4BEA;text-decoration:none}a:hover{color:#4334C9}
+button{font-family:inherit;cursor:pointer}
+.sx::-webkit-scrollbar{height:6px}.sx::-webkit-scrollbar-thumb{background:#D9D8E3;border-radius:3px}.sx::-webkit-scrollbar-track{background:transparent}
+@media (max-width:1024px){.sf-side{display:none!important}.sf-col{max-width:none!important}}
+@media (max-width:640px){.sf-page{padding:0!important}.sf-win{border-radius:0!important;border:0!important;box-shadow:none!important;padding:8px 8px 96px!important;min-height:100vh}
+.sf-frame{position:fixed!important;left:8px;right:8px;bottom:8px;z-index:30;padding:6px!important;border-radius:18px!important;box-shadow:0 8px 24px rgba(31,29,58,.2)}
+.sf-rail{flex:1 1 auto!important;flex-direction:row!important;justify-content:space-around!important;padding:0!important}
+.sf-rail>div,.sf-rail a[aria-label="Help"]{display:none!important}
+.sf-main{padding:12px 4px!important}.sf-search{width:100%!important}.sf-main h1{font-size:22px!important}
+.sf-pubnav{display:none!important}.sf-hero{padding:28px 10px!important}.sf-h1{font-size:32px!important}
+.sf-float{position:static!important;transform:none!important;width:auto!important;margin-top:12px}.sf-pubwin{padding-bottom:8px!important}}
+</style>
+</helmet>
+<div class="sf-page" style="min-height: 100vh; box-sizing: border-box; padding: 40px 32px; background: #E4E2FB; font-family: Inter, system-ui, sans-serif; color: #1F1D3A">
+<div class="sf-win" style="max-width: 1440px; margin: 0 auto; background: #FFFFFF; border: 1px solid #ECEBF5; border-radius: 28px; padding: 10px; box-sizing: border-box; box-shadow: 0 30px 70px rgba(76,64,180,0.14), 0 2px 6px rgba(76,64,180,0.06); display: flex; flex-wrap: wrap; gap: 10px">
+
+<div class="sf-frame" style="flex: 0 0 auto; display: flex; gap: 4px; padding: 8px 8px 8px 4px; box-sizing: border-box; background: #E8E7F0; border-radius: 20px">
+<nav aria-label="Main" class="sf-rail" style="flex: 0 0 68px; padding: 10px 0; box-sizing: border-box; background: transparent; display: flex; flex-direction: column; align-items: center; gap: 6px">
+<div style="width: 38px; height: 38px; border-radius: 12px; background: #5B4BEA; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; margin-bottom: 18px">So</div>
+<a href="Dashboard.dc.html" style="width: 60px; padding: 9px 0; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; color: #5F5E78"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Home</a>
+<a href="Clients.dc.html" style="width: 60px; padding: 9px 0; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; color: #5F5E78"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.5 3.4-5.5 6.5-5.5s5.7 2 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.8c1.9.7 3.1 2.4 3.5 5.2"/></svg>Clients</a>
+<a href="Projects.dc.html" style="width: 60px; padding: 9px 0; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; color: #1F1D3A; background: #FFFFFF; box-shadow: 0 2px 8px rgba(31,29,58,0.08), 0 0 0 1px rgba(31,29,58,0.03); font-weight: 500"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5B4BEA" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="11" rx="1.5"/><rect x="17" y="4" width="4" height="7" rx="1.5"/></svg>Projects</a>
+<a href="Billing.dc.html" style="width: 60px; padding: 9px 0; border-radius: 12px; display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; color: #5F5E78"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 10h19M6.5 15h4"/></svg>Billing</a>
+<div style="flex: 1"></div>
+<a href="#" aria-label="Help" style="width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #5F5E78"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.2M12 17h.01"/></svg></a>
+<a href="Team.dc.html" aria-label="Settings" style="width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #5F5E78"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg></a>
+</nav>
+
+<aside class="sf-side" style="flex: 0 0 220px; display: flex">
+<div style="flex: 1; min-width: 0; padding: 12px 8px; box-sizing: border-box; background: #FFFFFF; border-radius: 14px; box-shadow: 0 1px 3px rgba(31,29,58,0.06); display: flex; flex-direction: column; gap: 16px">
+<label style="display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; background: transparent; font-size: 13px; color: #5F5E78">
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+<input type="search" placeholder="Search…" style="border: 0; outline: 0; background: transparent; font: inherit; color: #1F1D3A; width: 100%">
+</label>
+<button style="display: flex; align-items: center; gap: 10px; padding: 8px; border: 0; border-radius: 12px; background: transparent; text-align: left">
+<span style="width: 28px; height: 28px; border-radius: 8px; background: #FDE7C8; color: #8A4B00; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px">NS</span>
+<span style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 13px; font-weight: 600; color: #1F1D3A">Northfold Studio</span><span style="font-size: 11px; color: #5F5E78">Workspace · 4 members</span></span>
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5F5E78" stroke-width="2" stroke-linecap="round"><path d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg>
+</button>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 500; letter-spacing: 0.05em; color: #5F5E78; padding: 0 8px 8px"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>CLIENTS &amp; PROJECTS</div>
+<sc-for list="{{ projects }}" as="p" hint-placeholder-count="4">
+<a href="#" style="display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 10px; font-size: 13px; color: #1F1D3A; background: {{ p.bg }}; font-weight: {{ p.weight }}">
+<span style="width: 8px; height: 8px; border-radius: 3px; background: {{ p.dot }}"></span>
+<span style="flex: 1; display: flex; flex-direction: column; min-width: 0"><span>{{ p.name }}</span><span style="font-size: 11px; color: #5F5E78; font-weight: 400">{{ p.client }}</span></span>
+<span style="font-size: 11px; color: #5F5E78">{{ p.count }}</span>
+</a>
+</sc-for>
+</div>
+<div style="flex: 1"></div>
+<div style="position: relative; padding: 14px; border: 1px solid #E8E7F0; border-radius: 14px; background: #FFFFFF; box-shadow: 0 1px 3px rgba(31,29,58,0.05); display: flex; flex-direction: column; gap: 10px">
+<button aria-label="Close" style="position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border: 0; border-radius: 8px; background: transparent; color: #5F5E78; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+<div style="font-size: 15px; font-weight: 500; padding-right: 24px">You're on Pro</div>
+<div style="font-size: 12px; color: #5F5E78">Annual plan · renews 24 Nov 2027</div>
+<div style="font-size: 12px; color: #5F5E78">2 projects · no project limit</div>
+<a href="Billing.dc.html" style="padding: 10px; border-radius: 8px; border: 1px solid #E0DFEA; background: #FFFFFF; color: #1F1D3A; font-size: 13px; font-weight: 500; text-align: center; box-shadow: 0 1px 2px rgba(31,29,58,0.05)">Manage billing</a>
+</div>
+</div>
+</aside>
+</div>
+
+<main class="sf-main" style="flex: 999 1 560px; min-width: 0; padding: 18px 20px 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 14px">
+<div style="flex: 1 1 320px; display: flex; align-items: center; gap: 14px">
+<span style="width: 44px; height: 44px; border-radius: 12px; background: #F5F5F9; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5B4BEA" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 21h8"/></svg></span>
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; align-items: center; gap: 10px"><h1 style="margin: 0; font-size: 26px; font-weight: 500; letter-spacing: -0.01em">Website redesign</h1><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5F5E78" stroke-width="1.7" stroke-linejoin="round"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg></div>
+<div style="font-size: 12px; color: #5F5E78">Brightline Bakery · Due 12 Dec 2026</div>
+</div>
+</div>
+<div style="display: flex; align-items: center; gap: 14px">
+<div style="display: flex; align-items: center; padding-left: 8px">
+<sc-for list="{{ team }}" as="a" hint-placeholder-count="4">
+<span title="{{ a.name }}" style="width: 32px; height: 32px; margin-left: -8px; border-radius: 50%; border: 2px solid #FFFFFF; background: {{ a.bg }}; color: {{ a.fg }}; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600">{{ a.i }}</span>
+</sc-for>
+</div>
+<button aria-label="Notifications" style="position: relative; width: 36px; height: 36px; border: 0; border-radius: 10px; background: transparent; color: #5F5E78; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9M10 20a2 2 0 0 0 4 0"/></svg><span style="position: absolute; top: 7px; right: 8px; width: 7px; height: 7px; border-radius: 50%; background: #EF4444; border: 1.5px solid #FFFFFF"></span></button>
+<a href="#" style="display: flex; align-items: center; gap: 8px; padding: 9px 14px; border: 1px solid #E8E7F0; border-radius: 10px; font-size: 13px; font-weight: 500; color: #1F1D3A; box-shadow: 0 1px 2px rgba(31,29,58,0.05)">
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>Client view</a>
+<a href="#" style="display: flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 10px; background: #6D5DF0; color: #FFFFFF; font-size: 13px; font-weight: 500; box-shadow: 0 4px 12px rgba(109,93,240,0.3)">
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>New task</a>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 12px">
+<sc-for list="{{ milestones }}" as="m" hint-placeholder-count="3">
+<div style="flex: 1 1 220px; padding: 12px 14px; background: #E8E7F0; border-radius: 14px; display: flex; flex-direction: column; gap: 9px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px"><span style="font-size: 13px; font-weight: 500">{{ m.name }}</span><span style="font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 999px; background: {{ m.pillBg }}; color: {{ m.pillFg }}">{{ m.status }}</span></div>
+<div style="height: 5px; border-radius: 3px; background: #FFFFFF"><div style="width: {{ m.pct }}; height: 5px; border-radius: 3px; background: {{ m.bar }}"></div></div>
+</div>
+</sc-for>
+</div>
+
+<div role="tablist" aria-label="Project views" style="display: flex; flex-wrap: wrap; align-items: center; gap: 4px; border-bottom: 1px solid #E8E7F0">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+<button role="tab" aria-selected="{{ t.sel }}" style="display: flex; align-items: center; gap: 8px; padding: 12px 14px; border: 0; background: transparent; font-size: 14px; font-weight: {{ t.weight }}; color: {{ t.color }}; border-bottom: 2px solid {{ t.line }}; margin-bottom: -1px"><span style="width: 16px; height: 16px; border-radius: 4px; border: 1.6px solid {{ t.icon }}; box-sizing: border-box"></span>{{ t.label }}</button>
+</sc-for>
+<div style="flex: 1"></div>
+<button style="display: flex; align-items: center; gap: 6px; border: 0; background: transparent; font-size: 13px; color: #5F5E78; padding: 8px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>Filter</button>
+</div>
+
+<div class="sx" style="overflow-x: auto; padding: 4px 2px 12px">
+<div style="display: grid; grid-template-columns: repeat(4, minmax(260px, 1fr)); gap: 14px; align-items: start">
+<sc-for list="{{ columns }}" as="col" hint-placeholder-count="4">
+<section style="background: #E8E7F0; border-radius: 18px; padding: 12px 10px 8px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 8px 4px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 500">{{ col.title }}</h2>
+<span style="font-size: 12px; color: #5F5E78">{{ col.count }}</span>
+</div>
+<sc-for list="{{ col.cards }}" as="c" hint-placeholder-count="3">
+<sc-if value="{{ c.drag }}" hint-placeholder-val="{{ false }}">
+<div style="position: relative; height: 128px; border-radius: 12px; background: #D9D8E4">
+<article style="position: absolute; top: 10px; left: 14px; right: -16px; z-index: 2; transform: rotate(3deg); background: #FFFFFF; border-radius: 12px; padding: 14px; box-shadow: 0 22px 44px rgba(31,29,58,0.18), 0 4px 10px rgba(31,29,58,0.08); display: flex; flex-direction: column; gap: 10px">
+<span style="width: 30px; height: 4px; border-radius: 2px; background: {{ c.tag }}"></span>
+<div style="font-size: 14px; font-weight: 500; line-height: 1.35">{{ c.title }}</div>
+<div style="display: flex; align-items: center; gap: 12px; font-size: 12px; color: #5F5E78"><span>{{ c.kind }}</span><span>{{ c.comments }} comments</span><span style="flex: 1"></span><span style="width: 26px; height: 26px; border-radius: 50%; background: {{ c.avBg }}; color: {{ c.avFg }}; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600">{{ c.av }}</span></div>
+</article>
+</div>
+</sc-if>
+<sc-if value="{{ c.still }}" hint-placeholder-val="{{ true }}">
+<article style="background: #FFFFFF; border-radius: 12px; padding: 14px; box-shadow: 0 1px 3px rgba(31,29,58,0.07), 0 0 0 1px rgba(31,29,58,0.03); display: flex; flex-direction: column; gap: 10px">
+<span style="width: 30px; height: 4px; border-radius: 2px; background: {{ c.tag }}"></span>
+<sc-if value="{{ c.link }}" hint-placeholder-val="{{ false }}"><a href="TaskDetail.dc.html" style="font-size: 14px; font-weight: 500; line-height: 1.35; color: #1F1D3A; text-decoration: underline; text-decoration-color: #C9C2FA; text-underline-offset: 3px">{{ c.title }}</a></sc-if>
+<sc-if value="{{ c.plain }}" hint-placeholder-val="{{ true }}"><div style="font-size: 14px; font-weight: 500; line-height: 1.35">{{ c.title }}</div></sc-if>
+<sc-if value="{{ c.hasDesc }}" hint-placeholder-val="{{ false }}"><div style="font-size: 13px; line-height: 1.5; color: #5F5E78">{{ c.desc }}</div></sc-if>
+<sc-if value="{{ c.hasBadge }}" hint-placeholder-val="{{ false }}">
+<span style="align-self: flex-start; font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: 999px; background: {{ c.badgeBg }}; color: {{ c.badgeFg }}">{{ c.badge }}</span>
+</sc-if>
+<div style="display: flex; align-items: center; gap: 12px; font-size: 12px; color: #5F5E78">
+<span style="display: flex; align-items: center; gap: 4px"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/></svg>{{ c.comments }}</span>
+<span style="display: flex; align-items: center; gap: 4px"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>{{ c.due }}</span>
+<span style="flex: 1"></span>
+<span title="{{ c.who }}" style="width: 26px; height: 26px; border-radius: 50%; background: {{ c.avBg }}; color: {{ c.avFg }}; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600">{{ c.av }}</span>
+</div>
+</article>
+</sc-if>
+</sc-for>
+<button style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border: 0; border-radius: 10px; background: transparent; font-size: 14px; color: #4A4966"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add task</button>
+</section>
+</sc-for>
+</div>
+</div>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const people = {
+      TM: { bg: '#E3DEFF', fg: '#3F2FB8', who: 'Tino M.' },
+      AK: { bg: '#D7F2E6', fg: '#0E6B45', who: 'Ama K.' },
+      LR: { bg: '#FDE2E4', fg: '#9B1C2C', who: 'Leo R.' },
+      JS: { bg: '#DCEBFF', fg: '#1D4E99', who: 'Jen S.' }
+    };
+    const tags = { Design: '#F5A524', Build: '#5B8DEF', Content: '#34C38F', Fix: '#EF5A5A' };
+    const card = (title, kind, comments, due, av, opts) => {
+      const o = opts || {};
+      const p = people[av];
+      const b = o.badgeType === 'review' ? ['#FFF4E0', '#8A4B00'] : o.badgeType === 'ok' ? ['#DDF5EA', '#0E6B45'] : ['#FDE2E4', '#9B1C2C'];
+      return { title, kind, tag: tags[kind], comments, due, av, avBg: p.bg, avFg: p.fg, who: p.who,
+        drag: !!o.drag, still: !o.drag, link: !!o.link, plain: !o.link, hasDesc: !!o.desc, desc: o.desc || '',
+        hasBadge: !!o.badge, badge: o.badge || '', badgeBg: b[0], badgeFg: b[1] };
+    };
+    const columns = [
+      { title: 'To do', cards: [
+        card('Write copy for the Our Story page', 'Content', 2, '2 Dec', 'AK'),
+        card('Set up online ordering form', 'Build', 0, '5 Dec', 'JS', { drag: true }),
+        card('Photograph seasonal menu items', 'Content', 1, '6 Dec', 'LR', { desc: 'Breads, pastries and the new winter cakes, shot on the shop counter.' })
+      ]},
+      { title: 'In progress', cards: [
+        card('Build menu page with prices', 'Build', 4, '28 Nov', 'TM', { link: true, desc: 'Pull prices from the sheet the client shared and group them by category.' }),
+        card('Fix image sizes on mobile', 'Fix', 3, '26 Nov', 'JS')
+      ]},
+      { title: 'In review', cards: [
+        card('Homepage design, version 2', 'Design', 6, '25 Nov', 'LR', { badge: 'Waiting on client', badgeType: 'review' }),
+        card('Logo refresh options', 'Design', 2, '24 Nov', 'LR', { badge: 'Changes requested', badgeType: 'changes' })
+      ]},
+      { title: 'Done', cards: [
+        card('Sitemap and page list', 'Content', 3, '14 Nov', 'AK', { badge: 'Approved by client', badgeType: 'ok' }),
+        card('Colour palette and fonts', 'Design', 5, '18 Nov', 'LR', { badge: 'Approved by client', badgeType: 'ok' }),
+        card('Domain and hosting setup', 'Build', 1, '19 Nov', 'TM')
+      ]}
+    ].map((c) => ({ ...c, count: c.cards.length }));
+    const team = ['TM', 'AK', 'LR', 'JS'].map((i) => ({ i, name: people[i].who, bg: people[i].bg, fg: people[i].fg }));
+    const projects = [
+      { name: 'Website redesign', client: 'Brightline Bakery', count: 10, dot: '#6D5DF0', active: true },
+      { name: 'Spring campaign', client: 'Brightline Bakery', count: 6, dot: '#F5A524' }
+    ].map((p) => ({ ...p, bg: p.active ? '#F0EFF6' : 'transparent', weight: p.active ? 600 : 500 }));
+    const pill = { done: ['#DDF5EA', '#0E6B45', '#34C38F'], wait: ['#FFF4E0', '#8A4B00', '#F5A524'], next: ['#FFFFFF', '#4A4966', '#B4B2C8'] };
+    const milestones = [
+      { name: '1. Brand & sitemap', status: 'Approved', pct: '100%', k: 'done' },
+      { name: '2. Page designs', status: 'Waiting on client', pct: '70%', k: 'wait' },
+      { name: '3. Build & launch', status: 'Up next', pct: '20%', k: 'next' }
+    ].map((m) => ({ ...m, pillBg: pill[m.k][0], pillFg: pill[m.k][1], bar: pill[m.k][2] }));
+    const tabs = ['Board', 'List', 'Milestones', 'Activity'].map((label, n) => ({
+      label, sel: n === 0 ? 'true' : 'false', weight: n === 0 ? 600 : 500,
+      color: n === 0 ? '#1F1D3A' : '#5F5E78', line: n === 0 ? '#6D5DF0' : 'transparent', icon: n === 0 ? '#6D5DF0' : '#8E8DA6'
+    }));
+    return { columns, team, projects, milestones, tabs };
+  }
+}
+</script>
+</body>
+</html>
