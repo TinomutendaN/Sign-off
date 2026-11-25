@@ -25,3 +25,35 @@ export function initials(person: NameParts): string {
   const last = clean(person.lastName);
   return `${first[0] ?? ""}${last[0] ?? ""}`.toUpperCase() || "?";
 }
+
+export type AvatarTone = "violet" | "green" | "red" | "blue";
+
+const TONES: AvatarTone[] = ["violet", "green", "red", "blue"];
+
+/**
+ * A stable avatar colour for a Clerk user. The demo team keeps the colours from the
+ * designs (TM violet, AK green, LR pink, JS blue); everyone else gets one from their ID.
+ * Server-side only: the demo IDs come from the environment.
+ */
+export function avatarTone(userId: string): AvatarTone {
+  const demo: Record<string, AvatarTone> = {};
+  const set = (id: string | undefined, tone: AvatarTone) => {
+    if (id) demo[id] = tone;
+  };
+  set(process.env.DEMO_OWNER_USER_ID, "violet");
+  set(process.env.DEMO_AMA_USER_ID, "green");
+  set(process.env.DEMO_LEO_USER_ID, "red");
+  set(process.env.DEMO_JEN_USER_ID, "blue");
+  if (demo[userId]) return demo[userId];
+
+  let hash = 0;
+  for (const ch of userId) hash = (hash * 31 + ch.charCodeAt(0)) >>> 0;
+  return TONES[hash % TONES.length];
+}
+
+/** Two-letter initials for a workspace or client name: "Northfold Studio" → "NS". */
+export function nameInitials(name: string): string {
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  const letters = words.length > 1 ? words[0][0] + words[1][0] : (words[0] ?? "?").slice(0, 2);
+  return letters.toUpperCase();
+}

@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
-/* SIGNoFF design tokens (CLAUDE.md, "Shared style"). Use these, never raw hex values, in components. */
+/* Breakpoints from the design source (both include the edge width).
+   tablet: the white side panel hides. phone: the icon menu becomes a floating bottom tab bar. */
+@custom-variant tablet (@media (max-width: 1024px));
+@custom-variant phone (@media (max-width: 640px));
+
+/* SIGNoFF design tokens (CLAUDE.md "Shared style" + design/source). Use these, never raw hex values, in components. */
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
@@ -9,19 +14,35 @@
   --color-panel: #e8e7f0;
   --color-card: #ffffff;
   --color-line: #ecebf5;
+  --color-line-strong: #e0dfea; /* input and outlined-button borders */
+  --color-line-muted: #dad9e4; /* disabled button border */
+  --color-line-dash: #c9c7d9; /* dashed empty boxes and drop zones; muted text on navy */
   --color-soft: #f5f5f9;
   --color-soft-2: #f0eff6;
+  --color-soft-3: #f3f3f7; /* landing board columns */
+  --color-soft-4: #fafafd; /* drop zone fill */
   --color-slot: #d9d8e4;
+  --color-track: #ecebf3; /* progress track on white */
+  --color-scroll: #d9d8e3; /* scrollbar thumb */
+  --color-sketch: #cfcde0; /* grey bars in small previews */
 
   /* Text */
   --color-ink: #1f1d3a;
+  --color-ink-2: #3a3955; /* labels, nav links */
+  --color-ink-3: #4a4966; /* "Add task", up-next pill text */
   --color-muted: #5f5e78;
+  --color-faint: #8e8da6; /* unselected tab icon */
+  --color-idle: #b4b2c8; /* grey dots and up-next bars */
+  --color-navy-line: #4a4870; /* outlined button on navy */
 
   /* Violet accent */
   --color-violet: #6d5df0;
   --color-violet-icon: #5b4bea;
   --color-violet-ink: #4334c9;
   --color-violet-tint: #f0eeff;
+  --color-violet-soft: #faf9ff; /* selected radio card, highlighted table row */
+  --color-violet-bar: #7c6cf6; /* plan card usage bar */
+  --color-violet-line: #c9c2fa; /* light violet underline */
 
   /* Status colours: main, tint (background), ink (text) */
   --color-amber: #f5a524;
@@ -32,19 +53,83 @@
   --color-green-ink: #0e6b45;
   --color-red: #ef5a5a;
   --color-red-tint: #fde2e4;
+  --color-red-soft: #fdf2f3; /* change-request note */
   --color-red-ink: #9b1c2c;
+  --color-alert: #ef4444; /* notification dot */
   --color-blue: #5b8def;
   --color-blue-tint: #dcebff;
+  --color-blue-soft: #e9f0ff; /* "In progress" status pill */
   --color-blue-ink: #1d4e99;
 
-  /* Avatars */
+  /* Workspace and client squares */
+  --color-peach: #fde7c8; /* "NS" workspace square (text amber-ink) */
+  --color-peach-2: #fce3d3; /* "BB" client square */
+  --color-peach-ink: #8a3b12;
+  --color-peach-bar: #d9a688; /* brown text bars in the design preview */
+
+  /* Avatars: background and text */
   --color-av-tm: #e3deff;
+  --color-av-tm-ink: #3f2fb8;
   --color-av-ak: #d7f2e6;
   --color-av-lr: #fde2e4;
   --color-av-js: #dcebff;
 
   /* Corners */
   --radius-window: 28px;
+  --radius-dialog: 24px;
   --radius-panel: 20px;
+  --radius-column: 18px;
+  --radius-side: 14px;
   --radius-card: 12px;
+  --radius-control: 10px;
+  --radius-switch: 9px;
+
+  /* Shadows */
+  --shadow-window: 0 30px 70px rgba(76, 64, 180, 0.14), 0 2px 6px rgba(76, 64, 180, 0.06);
+  --shadow-card: 0 1px 3px rgba(31, 29, 58, 0.07), 0 0 0 1px rgba(31, 29, 58, 0.03);
+  --shadow-tile: 0 2px 8px rgba(31, 29, 58, 0.08), 0 0 0 1px rgba(31, 29, 58, 0.03);
+  --shadow-tab: 0 2px 8px rgba(31, 29, 58, 0.08); /* selected top-bar link */
+  --shadow-side: 0 1px 3px rgba(31, 29, 58, 0.06);
+  --shadow-side-card: 0 1px 3px rgba(31, 29, 58, 0.05);
+  --shadow-switch: 0 1px 3px rgba(31, 29, 58, 0.1); /* selected switch segment */
+  --shadow-xs: 0 1px 2px rgba(31, 29, 58, 0.05);
+  --shadow-violet: 0 4px 12px rgba(109, 93, 240, 0.3);
+  --shadow-violet-lg: 0 6px 16px rgba(109, 93, 240, 0.32);
+  --shadow-navy: 0 6px 16px rgba(31, 29, 58, 0.2);
+  --shadow-dock: 0 8px 24px rgba(31, 29, 58, 0.2); /* phone bottom tab bar */
+  --shadow-raised: 0 12px 28px rgba(76, 64, 180, 0.14); /* selected demo role card, popover menu */
+  --shadow-plan: 0 14px 32px rgba(76, 64, 180, 0.14); /* popular plan on Landing */
+  --shadow-plan-featured: 0 18px 40px rgba(76, 64, 180, 0.16), 0 2px 6px rgba(76, 64, 180, 0.08);
+  --shadow-lift: 0 22px 44px rgba(31, 29, 58, 0.18), 0 4px 10px rgba(31, 29, 58, 0.08); /* dragged card */
+  --shadow-float: 0 24px 50px rgba(31, 29, 58, 0.2), 0 4px 10px rgba(31, 29, 58, 0.08); /* tilted landing card */
+  --shadow-dialog: 0 30px 80px rgba(31, 29, 58, 0.35);
+  --shadow-drawer: -20px 0 60px rgba(31, 29, 58, 0.25); /* task detail panel */
+}
+
+@layer base {
+  /* Links default to violet, as in the design source. Components set their own colour. */
+  a {
+    color: var(--color-violet-icon);
+  }
+  a:hover {
+    color: var(--color-violet-ink);
+  }
+  button {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: default;
+  }
+}
+
+/* Thin horizontal scrollbar (Kanban board) */
+.scroll-x::-webkit-scrollbar {
+  height: 6px;
+}
+.scroll-x::-webkit-scrollbar-thumb {
+  background: var(--color-scroll);
+  border-radius: 3px;
+}
+.scroll-x::-webkit-scrollbar-track {
+  background: transparent;
 }

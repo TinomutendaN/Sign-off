@@ -3,12 +3,14 @@
 // Safe to re-run: it deletes and recreates only demo data
 //   - agency data belonging to DEMO_ORG_ID (Northfold Studio)
 //   - Subscription rows with isDemo = true
+//   - the team notes on the Northfold memberships in Clerk (publicMetadata.note)
 // Real sign-ups (other organizations, isDemo = false) are never touched.
 //
 // Dates: every date is an offset from an anchor day, so the live demo never goes stale.
 // The anchor is DEMO_ANCHOR_DATE (YYYY-MM-DD) or, if unset, today in Harare.
 // DEMO_ANCHOR_DATE=2026-11-24 reproduces the designs exactly.
 
+import { createClerkClient } from "@clerk/nextjs/server";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import {
   PrismaClient,
@@ -39,6 +41,8 @@ const LEO = requireEnv("DEMO_LEO_USER_ID");
 const AMA = requireEnv("DEMO_AMA_USER_ID");
 const JEN = requireEnv("DEMO_JEN_USER_ID");
 const THANDI = requireEnv("DEMO_CLIENT_USER_ID");
+
+const clerk = createClerkClient({ secretKey: requireEnv("CLERK_SECRET_KEY") });
 
 // ---------- Dates ----------
 
@@ -764,6 +768,27 @@ function inAnchorMonth(offset: number, time: string, monthStart: Date, events: D
   return date;
 }
 
+// ---------- Team notes (Clerk) ----------
+
+// The note under each team member's name (Team settings, and the client portal's
+// "YOUR AGENCY" card). The Owner's "Pays for the workspace" comes from the role, not a note.
+// Clerk merges metadata updates, so re-running only rewrites the note.
+const TEAM_NOTES: [userId: string, note: string][] = [
+  [LEO, "Project lead"],
+  [AMA, "Content"],
+  [JEN, "Developer"],
+];
+
+async function seedTeamNotes() {
+  for (const [userId, note] of TEAM_NOTES) {
+    await clerk.organizations.updateOrganizationMembershipMetadata({
+      organizationId: ORG,
+      userId,
+      publicMetadata: { note },
+    });
+  }
+}
+
 // ---------- Run ----------
 
 async function main() {
@@ -778,6 +803,7 @@ async function main() {
     },
     { timeout: 120_000, maxWait: 20_000 },
   );
+  await seedTeamNotes();
 
   const [projects, tasks, comments, deliverables, activity, subs] = await Promise.all([
     db.project.count({ where: { orgId: ORG } }),
@@ -788,7 +814,7 @@ async function main() {
     db.subscription.count({ where: { isDemo: true } }),
   ]);
   console.log(
-    `Done: ${projects} projects, ${tasks} tasks, ${comments} comments, ${deliverables} deliverables, ${activity} activity lines, ${subs} demo subscriptions.`,
+    `Done: ${projects} projects, ${tasks} tasks, ${comments} comments, ${deliverables} deliverables, ${activity} activity lines, ${subs} demo subscriptions, ${TEAM_NOTES.length} team notes.`,
   );
 }
 
