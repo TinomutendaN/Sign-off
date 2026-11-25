@@ -6,7 +6,7 @@ if (existsSync(".env.local")) process.loadEnvFile(".env.local");
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
-  migrations: { path: "prisma/migrations" },
+  migrations: { path: "prisma/migrations", seed: "tsx prisma/seed.ts" },
   // Migrations use Neon's direct (unpooled) connection; the app uses the pooled DATABASE_URL.
   datasource: { url: process.env.DATABASE_URL_UNPOOLED ?? process.env.DATABASE_URL ?? "" },
 });

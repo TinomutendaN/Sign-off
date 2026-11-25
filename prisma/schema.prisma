@@ -1,4 +1,5 @@
-// Tables are added in Step 1.
+// SIGNoFF database. Workspaces (organizations) and people live in Clerk,
+// so tables store Clerk IDs (orgId, userId) as plain strings.
 
 generator client {
   provider = "prisma-client"
@@ -7,4 +8,277 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+// ---------- Enums ----------
+
+enum ProjectStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum MilestoneStatus {
+  APPROVED
+  WAITING // waiting on client
+  IN_PROGRESS
+  UP_NEXT
+}
+
+enum TaskType {
+  DESIGN
+  BUILD
+  CONTENT
+  FIX
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  IN_REVIEW
+  DONE
+}
+
+enum DeliverableStatus {
+  WAITING // waiting on client
+  CHANGES_REQUESTED
+  APPROVED
+}
+
+enum DecisionKind {
+  APPROVED
+  CHANGES_REQUESTED
+}
+
+// Activity lines are stored as structured events and worded when shown,
+// because the agency and the client see the same event in different words.
+enum ActivityType {
+  TASK_CREATED
+  TASK_MOVED
+  TASK_COMMENTED
+  TASK_DONE
+  DELIVERABLE_SENT
+  DELIVERABLE_APPROVED
+  CHANGES_REQUESTED
+  DELIVERABLE_REPLY
+  MILESTONE_COMPLETED
+  REMINDER_SENT
+  PROJECT_CREATED
+}
+
+enum ActorKind {
+  TEAM
+  CLIENT
+}
+
+enum Plan {
+  FREE
+  PRO
+  AGENCY
+}
+
+enum BillingPeriod {
+  MONTHLY
+  ANNUAL
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+}
+
+// ---------- Agency workspace data ----------
+
+model Client {
+  id           String   @id @default(cuid())
+  orgId        String
+  name         String
+  contactName  String
+  contactEmail String
+  createdAt    DateTime @default(now())
+
+  projects Project[]
+  access   ClientAccess[]
+
+  @@index([orgId])
+}
+
+// Links a client's Clerk user to the projects they may see.
+model ClientAccess {
+  id        String   @id @default(cuid())
+  userId    String
+  clientId  String
+  projectId String
+  createdAt DateTime @default(now())
+
+  client  Client  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId])
+  @@index([projectId])
+  @@index([clientId])
+}
+
+model Project {
+  id        String        @id @default(cuid())
+  orgId     String
+  clientId  String
+  name      String
+  dueDate   DateTime?
+  status    ProjectStatus @default(ACTIVE)
+  colour    String        @default("violet") // theme token name, e.g. "violet", "amber"
+  createdAt DateTime      @default(now())
+
+  client     Client         @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  milestones Milestone[]
+  tasks      Task[]
+  access     ClientAccess[]
+  activity   Activity[]
+
+  @@index([orgId, status])
+  @@index([clientId])
+}
+
+model Milestone {
+  id         String          @id @default(cuid())
+  projectId  String
+  number     Int
+  name       String
+  dueDate    DateTime?
+  status     MilestoneStatus @default(UP_NEXT)
+  approvedAt DateTime?
+  createdAt  DateTime        @default(now())
+
+  project      Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  tasks        Task[]
+  deliverables Deliverable[]
+
+  @@unique([projectId, number])
+  @@index([status])
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  projectId   String
+  milestoneId String?
+  title       String
+  description String?
+  type        TaskType
+  status      TaskStatus @default(TODO)
+  order       Float // position inside its column; floats let a drop land between two cards
+  assigneeId  String?
+  dueDate     DateTime?
+  completedAt DateTime?
+  createdAt   DateTime   @default(now())
+
+  project   Project    @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  milestone Milestone? @relation(fields: [milestoneId], references: [id], onDelete: SetNull)
+  comments  Comment[]
+  files     TaskFile[]
+
+  @@index([projectId, status, order])
+  @@index([milestoneId])
+  @@index([assigneeId, dueDate])
+}
+
+model TaskFile {
+  id        String   @id @default(cuid())
+  taskId    String
+  fileName  String
+  fileUrl   String
+  size      Int // bytes
+  addedById String
+  createdAt DateTime @default(now())
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+}
+
+// Team only. Never shown to clients.
+model Comment {
+  id        String   @id @default(cuid())
+  taskId    String
+  authorId  String
+  text      String
+  createdAt DateTime @default(now())
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId, createdAt])
+}
+
+model Deliverable {
+  id          String            @id @default(cuid())
+  milestoneId String
+  title       String
+  fileUrl     String
+  fileName    String
+  size        Int // bytes
+  note        String?
+  status      DeliverableStatus @default(WAITING)
+  sentById    String
+  sentAt      DateTime
+  createdAt   DateTime          @default(now())
+
+  milestone Milestone  @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+  decisions Decision[]
+
+  @@index([milestoneId])
+  @@index([status])
+}
+
+model Decision {
+  id            String       @id @default(cuid())
+  deliverableId String
+  clientUserId  String
+  kind          DecisionKind
+  comment       String?
+  createdAt     DateTime     @default(now())
+
+  deliverable Deliverable @relation(fields: [deliverableId], references: [id], onDelete: Cascade)
+
+  @@index([deliverableId, createdAt])
+}
+
+model Activity {
+  id              String       @id @default(cuid())
+  orgId           String
+  projectId       String?
+  actorId         String // Clerk user ID (team member or client)
+  actorKind       ActorKind
+  type            ActivityType
+  subject         String // e.g. the task or deliverable title
+  detail          String? // e.g. a reply or change-request text
+  visibleToClient Boolean      @default(false)
+  createdAt       DateTime     @default(now())
+
+  project Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, createdAt])
+  @@index([projectId, createdAt])
+}
+
+// ---------- Subscriptions (admin numbers) ----------
+
+// Filled from Clerk Billing webhooks, plus seeded demo history (isDemo = true).
+model Subscription {
+  id                  String             @id @default(cuid())
+  orgId               String
+  clerkSubscriptionId String?            @unique
+  plan                Plan
+  period              BillingPeriod? // null on the Free plan
+  amount              Int // price charged per period, in cents
+  status              SubscriptionStatus @default(ACTIVE)
+  startedAt           DateTime
+  endedAt             DateTime?
+  workspaceName       String
+  ownerName           String?
+  memberCount         Int                @default(1)
+  isDemo              Boolean            @default(false)
+  createdAt           DateTime           @default(now())
+
+  @@index([status, startedAt])
+  @@index([plan, status])
+  @@index([orgId])
+  @@index([isDemo])
 }

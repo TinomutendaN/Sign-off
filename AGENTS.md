@@ -234,3 +234,8 @@ signoff/
 - **One component per file,** named like the file: `KanbanBoard.tsx` exports `KanbanBoard`.
 - **Design colours are defined once,** in `globals.css` as Tailwind theme tokens (`panel`, `ink`, `violet`, `amber`…). No stray hex values in components.
 - **Seed data mirrors the canvas** (Northfold Studio, Brightline Bakery, the same tasks and numbers), so the live demo matches the designs and the video.
+- **Privacy: never show team members' email addresses** anywhere in the app.
+  - Team settings shows each member's name, note and role only, with no email line. This is a deliberate change from the design.
+  - Don't use Clerk's `UserButton`, `UserProfile`, `OrganizationProfile` or `OrganizationSwitcher`, because they show email addresses. Build our own avatar menu (initials, name, sign out) and our own member list from Clerk data, without emails.
+  - Client contact emails come from our own seed data (e.g. `thandi@brightline.example`), so they stay as designed.
+- **Names come from Clerk, never hard-coded.** Always show first name plus last initial with a full stop ("Tinomutenda N.", "Leo R."). Avatars use those two initials. Greetings use the first name only ("Good morning, Tinomutenda"). Use the helpers in `lib/format.ts` (`displayName`, `initials`, `firstName`); they also trim stray spaces in Clerk names.

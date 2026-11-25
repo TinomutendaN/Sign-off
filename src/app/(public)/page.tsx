@@ -1,7 +1,8 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { UserButton } from "@clerk/nextjs";
-import { auth } from "@clerk/nextjs/server";
+import { SignOutButton } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
+import { displayName } from "@/lib/format";
 
 // Step 0 placeholder. Replaced by the Landing screen (01) in Step 4.
 export default function Home() {
@@ -16,9 +17,9 @@ export default function Home() {
 }
 
 async function AuthStatus() {
-  const { userId } = await auth();
+  const user = await currentUser();
 
-  if (!userId) {
+  if (!user) {
     return (
       <Link
         href="/sign-in"
@@ -31,8 +32,15 @@ async function AuthStatus() {
 
   return (
     <div className="flex items-center gap-3 text-sm text-muted">
-      Signed in
-      <UserButton />
+      Signed in as {displayName(user)}
+      <SignOutButton>
+        <button
+          type="button"
+          className="rounded-full border border-line px-4 py-2 text-sm font-semibold text-ink"
+        >
+          Sign out
+        </button>
+      </SignOutButton>
     </div>
   );
 }
