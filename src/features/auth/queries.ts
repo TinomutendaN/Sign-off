@@ -33,18 +33,18 @@ export async function getDemoCards(): Promise<DemoCard[]> {
     clientId ? getClientCompanyName(clientId) : null,
   ]);
 
-  // If a name can't be found (e.g. env values missing), leave it out rather than show a placeholder.
-  const workspace = org?.name ?? null;
-  const owner = users.find((u) => u.id === ownerId) ?? null;
-  const member = users.find((u) => u.id === memberId) ?? null;
-  const line = (...parts: (string | null)[]) => parts.filter(Boolean).join(" · ");
+  const workspace = org?.name ?? "Demo workspace";
+  const person = (id: string | undefined) => users.find((u) => u.id === id) ?? { firstName: "Demo", lastName: "" };
+  const owner = person(ownerId);
+  const member = person(memberId);
+  const clientName = company ?? "Client";
 
   return [
     {
       role: "owner",
       title: "Agency owner",
-      who: line(owner && displayName(owner), workspace),
-      initials: owner ? initials(owner) : "AO",
+      who: `${displayName(owner)} · ${workspace}`,
+      initials: initials(owner),
       tone: "violet",
       description: "Run projects, invite clients and manage billing.",
       buttonLabel: "agency owner",
@@ -52,8 +52,8 @@ export async function getDemoCards(): Promise<DemoCard[]> {
     {
       role: "member",
       title: "Team member",
-      who: line(member && displayName(member), workspace),
-      initials: member ? initials(member) : "TM",
+      who: `${displayName(member)} · ${workspace}`,
+      initials: initials(member),
       tone: "green",
       description: "Work on tasks and upload deliverables.",
       buttonLabel: "team member",
@@ -61,8 +61,8 @@ export async function getDemoCards(): Promise<DemoCard[]> {
     {
       role: "client",
       title: "Client",
-      who: company ?? "",
-      initials: company ? nameInitials(company) : "C",
+      who: clientName,
+      initials: nameInitials(clientName),
       tone: "peach",
       description: "See progress and approve or request changes.",
       buttonLabel: "client",

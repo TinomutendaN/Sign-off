@@ -76,7 +76,7 @@ export function DemoPanel({ cards }: { cards: DemoCard[] }) {
                 <Avatar label={card.initials} tone={card.tone} size={34} />
                 <span className="flex flex-1 flex-col">
                   <span className="text-sm font-semibold text-ink">{card.title}</span>
-                  {card.who && <span className="text-xs text-muted">{card.who}</span>}
+                  <span className="text-xs text-muted">{card.who}</span>
                 </span>
                 <span
                   className={cx(
