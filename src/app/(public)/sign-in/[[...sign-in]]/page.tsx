@@ -6,7 +6,8 @@ export default function SignInPage() {
   return (
     <main className="flex flex-1 items-center justify-center p-4">
       <Suspense>
-        <SignIn />
+        {/* TODO(Step 3): send each role to its own home (/dashboard, /portal, /admin). */}
+        <SignIn fallbackRedirectUrl="/dashboard" />
       </Suspense>
     </main>
   );
