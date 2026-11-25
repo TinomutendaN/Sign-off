@@ -11,7 +11,7 @@ import { WorkspaceSwitcher } from "./WorkspaceSwitcher";
 export async function AgencySidePanel() {
   const { orgId } = await auth();
 
-  // Step 3 redirects people without a workspace; until then show a neutral state.
+  // The layout sends people without an active workspace elsewhere; this only shows mid-redirect.
   if (!orgId) {
     return <div className="flex-1 px-2 text-xs text-muted">No workspace selected.</div>;
   }

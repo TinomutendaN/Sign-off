@@ -21,7 +21,7 @@ export function ClientFrame({ children }: { children: ReactNode }) {
             <>
               <RailLink href="#" icon={<HelpIcon />} ariaLabel="Help" hideOnPhone />
               <Suspense fallback={<span className="size-11" />}>
-                <UserMenuSlot />
+                <UserMenuSlot as="client" />
               </Suspense>
             </>
           }

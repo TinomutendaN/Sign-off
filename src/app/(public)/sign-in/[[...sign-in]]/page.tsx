@@ -1,14 +1,11 @@
 import { Suspense } from "react";
-import { SignIn } from "@clerk/nextjs";
+import { AuthRoute } from "@/features/auth/components/AuthRoute";
 
-// Step 0: plain Clerk sign-in. Step 3 builds the Sign in screen (03) around it.
-export default function SignInPage() {
+// 03 Sign in ("Sign in" tab) + demo role cards. /sign-in/continue opens the right area after signing in.
+export default function SignInPage({ params, searchParams }: PageProps<"/sign-in/[[...sign-in]]">) {
   return (
-    <main className="flex flex-1 items-center justify-center p-4">
-      <Suspense>
-        {/* TODO(Step 3): send each role to its own home (/dashboard, /portal, /admin). */}
-        <SignIn fallbackRedirectUrl="/dashboard" />
-      </Suspense>
-    </main>
+    <Suspense fallback={null}>
+      <AuthRoute kind="sign-in" params={params} searchParams={searchParams} />
+    </Suspense>
   );
 }

@@ -1,6 +1,14 @@
+import { Suspense } from "react";
+import { AccessGate } from "@/components/frames/AccessGate";
 import { AdminFrame } from "@/components/frames/AdminFrame";
 
-// TODO(Step 3): requireAdmin() — the signed-in user is in ADMIN_USER_IDS.
+// The SIGNoFF admin only (requireAdmin()); others go to their own area.
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return <AdminFrame>{children}</AdminFrame>;
+  return (
+    <AdminFrame>
+      <Suspense fallback={null}>
+        <AccessGate area="admin">{children}</AccessGate>
+      </Suspense>
+    </AdminFrame>
+  );
 }

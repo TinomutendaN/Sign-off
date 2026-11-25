@@ -12,7 +12,7 @@ export async function ClientSidePanel() {
   const { userId } = await auth();
   const data = userId ? await getPortalSidebar(userId) : null;
 
-  // Step 3 blocks people without client access; until then show a neutral state.
+  // The layout sends people without client access elsewhere; this only shows mid-redirect.
   if (!data) {
     return <div className="flex-1 px-2 text-xs text-muted">No shared projects yet.</div>;
   }

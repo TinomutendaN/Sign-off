@@ -10,10 +10,18 @@ type UserMenuProps = {
   lastName: string | null;
   name: string;
   tone: AvatarTone;
+  /** Clients show as their company: the peach "BB" square instead of their own initials. */
+  companyInitials?: string;
 };
 
 /** Our own avatar menu (initials, name, Sign out). Never shows an email address. */
-export function UserMenu({ firstName, lastName, name, tone }: UserMenuProps) {
+export function UserMenu({ firstName, lastName, name, tone, companyInitials }: UserMenuProps) {
+  const avatar = companyInitials ? (
+    <Avatar label={companyInitials} shape="square" tone={tone} size={32} />
+  ) : (
+    <Avatar person={{ firstName, lastName }} tone={tone} size={32} />
+  );
+
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -43,7 +51,7 @@ export function UserMenu({ firstName, lastName, name, tone }: UserMenuProps) {
         onClick={() => setOpen((v) => !v)}
         className="flex size-11 items-center justify-center rounded-card"
       >
-        <Avatar person={{ firstName, lastName }} tone={tone} size={32} />
+        {avatar}
       </button>
       {open && (
         <div
@@ -51,7 +59,7 @@ export function UserMenu({ firstName, lastName, name, tone }: UserMenuProps) {
           className="absolute bottom-0 left-full z-40 ml-2 flex w-48 flex-col gap-3 rounded-card border border-line bg-card p-3 shadow-raised phone:bottom-full phone:left-auto phone:right-0 phone:mb-2 phone:ml-0"
         >
           <div className="flex items-center gap-[10px]">
-            <Avatar person={{ firstName, lastName }} tone={tone} size={32} />
+            {avatar}
             <span className="min-w-0 truncate text-[13px] font-semibold text-ink">{name}</span>
           </div>
           <SignOutButton redirectUrl="/">

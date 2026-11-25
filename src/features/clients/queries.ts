@@ -74,3 +74,22 @@ export async function getFirstPortalProjectId(userId: string) {
   });
   return first?.projectId ?? null;
 }
+
+/** Whether the person can see this project as a client (or any project, if none is given). */
+export async function hasClientAccess(userId: string, projectId?: string) {
+  const row = await db.clientAccess.findFirst({
+    where: { userId, ...(projectId ? { projectId } : {}), project: { status: "ACTIVE" } },
+    select: { id: true },
+  });
+  return row !== null;
+}
+
+/** The client company a person belongs to ("Brightline Bakery"), used for their avatar. */
+export async function getClientCompanyName(userId: string) {
+  const row = await db.clientAccess.findFirst({
+    where: { userId },
+    orderBy: { createdAt: "asc" },
+    select: { client: { select: { name: true } } },
+  });
+  return row?.client.name ?? null;
+}
