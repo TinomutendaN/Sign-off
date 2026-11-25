@@ -51,6 +51,11 @@ export function avatarTone(userId: string): AvatarTone {
   return TONES[hash % TONES.length];
 }
 
+/** Dollars without needless cents: 190 → "$190", 15.833… → "$15.83". */
+export function money(amount: number): string {
+  return `$${amount.toFixed(2).replace(/\.00$/, "")}`;
+}
+
 /** Two-letter initials for a workspace or client name: "Northfold Studio" → "NS". */
 export function nameInitials(name: string): string {
   const words = name.trim().split(/\s+/).filter(Boolean);

@@ -173,7 +173,8 @@ signoff/
 │  │  ├─ deliverables/ { actions.ts, queries.ts, schemas.ts, components/ }   # uploads, approvals
 │  │  ├─ activity/     { queries.ts, record.ts, components/ }
 │  │  ├─ billing/      { plans.ts, queries.ts, components/ }                 # limits, upgrade pop-up
-│  │  └─ admin/        { queries.ts, components/ }                           # revenue, subscribers
+│  │  ├─ admin/        { queries.ts, components/ }                           # revenue, subscribers
+│  │  └─ marketing/    { components/ }                                       # public page sections: Landing hero, How it works, audience cards, closing band, footer
 │  │
 │  ├─ components/
 │  │  ├─ ui/                   # Button, Panel, Card, Pill, Avatar, ProgressBar, Field, Tabs

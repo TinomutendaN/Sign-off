@@ -77,6 +77,8 @@
   /* Corners */
   --radius-window: 28px;
   --radius-dialog: 24px;
+  --radius-section: 22px; /* Landing and Pricing grey panels, navy band */
+  --radius-feature: 16px; /* plan cards, tilted landing card */
   --radius-panel: 20px;
   --radius-column: 18px;
   --radius-side: 14px;
@@ -87,7 +89,8 @@
   /* Shadows */
   --shadow-window: 0 30px 70px rgba(76, 64, 180, 0.14), 0 2px 6px rgba(76, 64, 180, 0.06);
   --shadow-card: 0 1px 3px rgba(31, 29, 58, 0.07), 0 0 0 1px rgba(31, 29, 58, 0.03);
-  --shadow-tile: 0 2px 8px rgba(31, 29, 58, 0.08), 0 0 0 1px rgba(31, 29, 58, 0.03);
+  --shadow-mini: 0 1px 3px rgba(31, 29, 58, 0.07); /* landing mini cards, audience cards */
+  --shadow-tile:0 2px 8px rgba(31, 29, 58, 0.08), 0 0 0 1px rgba(31, 29, 58, 0.03);
   --shadow-tab: 0 2px 8px rgba(31, 29, 58, 0.08); /* selected top-bar link */
   --shadow-side: 0 1px 3px rgba(31, 29, 58, 0.06);
   --shadow-side-card: 0 1px 3px rgba(31, 29, 58, 0.05);
@@ -107,6 +110,13 @@
 }
 
 @layer base {
+  /* Top-bar "How it works" and "Client portal" scroll to their Landing sections. */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
   /* Links default to violet, as in the design source. Components set their own colour. */
   a {
     color: var(--color-violet-icon);

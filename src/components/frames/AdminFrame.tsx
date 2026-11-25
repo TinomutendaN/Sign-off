@@ -23,7 +23,7 @@ export function AdminFrame({ children }: { children: ReactNode }) {
             <>
               <RailLink href="#" icon={<SettingsIcon />} ariaLabel="Settings" />
               <Suspense fallback={<span className="size-11" />}>
-                <UserMenuSlot />
+                <UserMenuSlot as="admin" />
               </Suspense>
             </>
           }

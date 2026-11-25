@@ -5,6 +5,7 @@ import { useState } from "react";
 import { CloseIcon } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { ProgressBar } from "@/components/ui/ProgressBar";
+import { PLANS } from "@/features/billing/plans";
 import { SideCard } from "./SideCard";
 
 type PlanCardProps = {
@@ -26,7 +27,7 @@ export function PlanCard({ projectCount, variant }: PlanCardProps) {
 
   const onBilling = pathname === "/billing";
   const free = variant === "free" || onBilling;
-  const freeLimit = 2; // TODO(Step 10): from the Free plan's project feature
+  const freeLimit = PLANS.free.limits.projects ?? 0; // TODO(Step 10): from the Free plan's feature in Clerk
 
   return (
     <SideCard>

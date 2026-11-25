@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PAID_PLANS, PERIODS } from "@/features/billing/plans";
 
 /** The four demo role cards. The browser only ever sends one of these keys, never a user ID. */
 export const demoRoleSchema = z.enum(["owner", "member", "client", "admin"]);
@@ -6,8 +7,8 @@ export type DemoRole = z.infer<typeof demoRoleSchema>;
 
 /** A plan chosen on Pricing: /sign-up?plan=pro&period=annual. */
 export const chosenPlanSchema = z.object({
-  plan: z.enum(["pro", "agency"]),
-  period: z.enum(["monthly", "annual"]),
+  plan: z.enum(PAID_PLANS),
+  period: z.enum(PERIODS),
 });
 export type ChosenPlan = z.infer<typeof chosenPlanSchema>;
 

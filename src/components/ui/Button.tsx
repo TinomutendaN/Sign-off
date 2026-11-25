@@ -2,13 +2,17 @@ import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 import { cx } from "./cx";
 
-type Variant = "primary" | "outline" | "navy";
-type Size = "sm" | "bar" | "md" | "block";
+type Variant = "primary" | "outline" | "navy" | "light" | "on-navy";
+type Size = "sm" | "bar" | "md" | "lg" | "block";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-violet text-white shadow-violet hover:text-white",
+  // Violet glow is set by size below (bigger under the large Landing button).
+  primary: "bg-violet text-white hover:text-white",
   outline: "border border-line-strong bg-card text-ink shadow-xs hover:text-ink",
   navy: "bg-ink text-white shadow-navy hover:text-white",
+  // On the navy closing band: white "Start free" and outlined "Try the demo"
+  light: "bg-card text-ink hover:text-ink",
+  "on-navy": "border border-navy-line text-white hover:text-white",
 };
 
 const sizes: Record<Size, string> = {
@@ -18,6 +22,8 @@ const sizes: Record<Size, string> = {
   bar: "gap-2 rounded-control px-4 py-[9px] text-sm",
   // Dialog and form buttons: "Upgrade · $190 a year"
   md: "gap-2 rounded-control px-4 py-3 text-sm",
+  // Landing calls to action: "Try the demo →", "See pricing", "Start free"
+  lg: "gap-2 rounded-card px-5 py-[13px] text-[15px]",
   // Full-width buttons in side-panel cards: "Manage billing"
   block: "w-full gap-2 rounded-lg p-[10px] text-[13px]",
 };
@@ -32,6 +38,7 @@ export function Button(props: AsLink | AsButton) {
   const classes = cx(
     "inline-flex items-center justify-center text-center font-medium transition-opacity disabled:cursor-not-allowed disabled:opacity-60",
     variants[variant],
+    variant === "primary" && (size === "lg" ? "shadow-violet-lg" : "shadow-violet"),
     sizes[size],
     className,
   );

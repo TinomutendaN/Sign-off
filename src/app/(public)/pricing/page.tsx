@@ -1,6 +1,14 @@
-import { ScreenPlaceholder } from "@/components/frames/ScreenPlaceholder";
+import { PricingFaq } from "@/features/billing/components/PricingFaq";
+import { PricingPlans } from "@/features/billing/components/PricingPlans";
+import { PricingTrustRow } from "@/features/billing/components/PricingTrustRow";
 
 // 02 Pricing
 export default function PricingPage() {
-  return <section className="px-10 py-14 phone:px-[10px] phone:py-7"><ScreenPlaceholder title="Pricing" step={4} /></section>;
+  return (
+    <>
+      <PricingPlans />
+      <PricingTrustRow />
+      <PricingFaq />
+    </>
+  );
 }
