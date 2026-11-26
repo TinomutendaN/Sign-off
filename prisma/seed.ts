@@ -10,6 +10,7 @@
 // The anchor is DEMO_ANCHOR_DATE (YYYY-MM-DD) or, if unset, today in Harare.
 // DEMO_ANCHOR_DATE=2026-11-24 reproduces the designs exactly.
 
+import { statSync } from "node:fs";
 import { createClerkClient } from "@clerk/nextjs/server";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import {
@@ -88,8 +89,13 @@ function monthDay(monthsAgo: number, dayOfMonth: number, time = "10:00"): Date {
   return localDate(y, mi, Math.min(dayOfMonth, daysInMonth(y, mi)), time);
 }
 
-const MB = 1024 * 1024;
-const KB = 1024;
+/**
+ * A sample file in public/demo-files. Name, URL and size come from the real file, so every
+ * Download link works and the sizes shown are honest.
+ */
+function demoFile(fileName: string) {
+  return { fileName, fileUrl: `/demo-files/${fileName}`, size: statSync(`public/demo-files/${fileName}`).size };
+}
 
 // ---------- Reset ----------
 
@@ -362,9 +368,7 @@ async function seedAgency(tx: Prisma.TransactionClient) {
   await tx.taskFile.create({
     data: {
       taskId: taskIds["Build menu page with prices"],
-      fileName: "brightline-prices.xlsx",
-      fileUrl: "/demo-files/brightline-prices.xlsx",
-      size: 46 * KB,
+      ...demoFile("brightline-prices.xlsx"),
       addedById: THANDI,
       createdAt: day(-7, "12:00"),
     },
@@ -375,9 +379,7 @@ async function seedAgency(tx: Prisma.TransactionClient) {
     data: {
       milestoneId: brand.id,
       title: "Sitemap and page list",
-      fileName: "sitemap.pdf",
-      fileUrl: "/demo-files/sitemap.pdf",
-      size: Math.round(0.8 * MB),
+      ...demoFile("sitemap.pdf"),
       note: "Every page we plan to build, including the new wholesale page.",
       status: "APPROVED",
       sentById: AMA,
@@ -389,9 +391,7 @@ async function seedAgency(tx: Prisma.TransactionClient) {
     data: {
       milestoneId: brand.id,
       title: "Colour palette and fonts",
-      fileName: "palette.pdf",
-      fileUrl: "/demo-files/palette.pdf",
-      size: Math.round(1.6 * MB),
+      ...demoFile("palette.pdf"),
       note: "The bakery brown palette with the heading and body fonts.",
       status: "APPROVED",
       sentById: LEO,
@@ -403,9 +403,7 @@ async function seedAgency(tx: Prisma.TransactionClient) {
     data: {
       milestoneId: pages.id,
       title: "Logo refresh options",
-      fileName: "logo-options.pdf",
-      fileUrl: "/demo-files/logo-options.pdf",
-      size: Math.round(2.6 * MB),
+      ...demoFile("logo-options.pdf"),
       note: "Three takes on the wheat mark. Which one feels most like Brightline?",
       status: "CHANGES_REQUESTED",
       sentById: LEO,
@@ -424,9 +422,7 @@ async function seedAgency(tx: Prisma.TransactionClient) {
     data: {
       milestoneId: pages.id,
       title: "Homepage design, version 2",
-      fileName: "homepage-v2.pdf",
-      fileUrl: "/demo-files/homepage-v2.pdf",
-      size: Math.round(4.2 * MB),
+      ...demoFile("homepage-v2.pdf"),
       note: "We moved the order button above the fold and used the warmer photo you picked. Let us know if the menu section feels right.",
       status: "WAITING",
       sentById: LEO,

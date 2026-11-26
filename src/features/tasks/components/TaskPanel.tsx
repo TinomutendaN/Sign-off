@@ -5,6 +5,7 @@ import { useEffect, useId, useOptimistic, useRef, useState, useTransition } from
 import { CloseIcon, FileIcon, LinkIcon } from "@/components/icons";
 import { cx } from "@/components/ui/cx";
 import type { TaskStatus } from "@/generated/prisma/enums";
+import { downloadHref } from "@/features/deliverables/files";
 import { setTaskStatus } from "../actions";
 import type { TaskDetail, TaskOptions } from "../board";
 import { STATUS_LABEL, TYPE_TAG } from "../labels";
@@ -166,7 +167,7 @@ export function TaskPanel({ task, options }: TaskPanelProps) {
                   From {f.from} · {f.size}
                 </span>
               </span>
-              <a href={f.url} download={f.name} className="text-xs font-medium">
+              <a href={downloadHref(f.url)} download={f.name} className="text-xs font-medium">
                 Download
               </a>
             </div>

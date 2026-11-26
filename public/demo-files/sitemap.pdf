@@ -1,0 +1,45 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Length 724 >>
+stream
+0.427 0.365 0.941 rg 56 790 500 6 re f
+0.122 0.114 0.227 rg
+BT /F1 10 Tf 56 760 Td (SIGNOFF DEMO FILE) Tj ET
+BT /F1 24 Tf 56 732 Td (Sitemap and page list) Tj ET
+BT /F1 12 Tf 56 698 Td (Website redesign  -  Brightline Bakery  -  Milestone 1. Brand & sitemap) Tj ET
+BT /F1 12 Tf 56 662 Td (What this file represents:) Tj ET
+BT /F1 11 Tf 56 644 Td (Every page planned for the new site, including the wholesale page.) Tj ET
+BT /F1 11 Tf 56 609 Td (This is a SIGNoFF demo file. It stands in for the real design file in the) Tj ET
+BT /F1 11 Tf 56 594 Td (portfolio demo, so the Download link has something real to download.) Tj ET
+BT /F1 11 Tf 56 579 Td (Brightline Bakery and Northfold Studio are made-up demo companies.) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Title (SIGNoFF demo file) /Producer (SIGNoFF) >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000338 00000 n 
+0000001112 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R /Info 6 0 R >>
+startxref
+1180
+%%EOF

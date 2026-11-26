@@ -212,21 +212,29 @@ model Comment {
 }
 
 model Deliverable {
-  id          String            @id @default(cuid())
-  milestoneId String
-  title       String
-  fileUrl     String
-  fileName    String
-  size        Int // bytes
-  note        String?
-  status      DeliverableStatus @default(WAITING)
-  sentById    String
-  sentAt      DateTime
-  createdAt   DateTime          @default(now())
+  id                String            @id @default(cuid())
+  milestoneId       String
+  title             String
+  fileUrl           String
+  fileName          String
+  size              Int // bytes
+  note              String?
+  status            DeliverableStatus @default(WAITING)
+  sentById          String
+  sentAt            DateTime
+  // Blob pathname (orgs/{orgId}/projects/{projectId}/…), so a demo reset can delete visitors' uploads.
+  // Null for the seeded sample files in /public/demo-files.
+  filePathname      String?
+  // The Changes requested deliverable this one replaces ("Upload new version"). A version can be
+  // replaced once. Current deliverables are the ones with no nextVersion; older ones stay as history.
+  previousVersionId String?           @unique
+  createdAt         DateTime          @default(now())
 
-  milestone Milestone  @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
-  decisions Decision[]
-  tasks     Task[]
+  milestone       Milestone    @relation(fields: [milestoneId], references: [id], onDelete: Cascade)
+  previousVersion Deliverable? @relation("DeliverableVersions", fields: [previousVersionId], references: [id], onDelete: SetNull)
+  nextVersion     Deliverable? @relation("DeliverableVersions")
+  decisions       Decision[]
+  tasks           Task[]
 
   @@index([milestoneId])
   @@index([status])

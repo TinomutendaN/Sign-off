@@ -1,6 +1,6 @@
 import { getProjectHeader } from "@/features/projects/queries";
 import { getMemberDirectory } from "@/features/workspaces/queries";
-import { dateTime, displayName, fileSize, initials, longDate, toDateInput } from "@/lib/format";
+import { dateTime, displayName, fileSize, initials, toDateInput } from "@/lib/format";
 import type { Person, TaskDetail, TaskOptions } from "../board";
 import { getTaskDetail } from "../queries";
 import { TaskPanel } from "./TaskPanel";
@@ -43,7 +43,7 @@ export async function TaskPanelSlot({ searchParams, projectId, orgId, userId }: 
     type: task.type,
     status: task.status,
     assigneeId: task.assigneeId,
-    due: task.dueDate ? { label: longDate(task.dueDate), input: toDateInput(task.dueDate) } : null,
+    due: task.dueDate ? toDateInput(task.dueDate) : null,
     milestoneId: task.milestoneId,
     files: task.files.map((f) => ({
       id: f.id,

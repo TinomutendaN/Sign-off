@@ -35,7 +35,7 @@ type TaskDetailsProps = {
 export function TaskDetails({ task, options, status, onStatus }: TaskDetailsProps) {
   const [fields, setFields] = useOptimistic<Fields>({
     assigneeId: task.assigneeId,
-    due: task.due?.input ?? null,
+    due: task.due,
     milestoneId: task.milestoneId,
     type: task.type,
   });

@@ -1,0 +1,4 @@
+# Sample files must keep their exact bytes (PDF offsets, seeded sizes).
+*.pdf binary
+*.xlsx binary
+*.zip binary
