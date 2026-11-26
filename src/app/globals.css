@@ -143,3 +143,9 @@
 .scroll-x::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* Thin vertical scrollbar (the page area inside the app window, the side panel) */
+.scroll-y {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-scroll) transparent;
+}
