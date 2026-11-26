@@ -14,6 +14,8 @@ export type BoardTask = {
   status: TaskStatus;
   assigneeId: string | null;
   due: string | null;
+  /** "2026-11-28", for the instant task panel (it words the date itself). */
+  dueInput: string | null;
   milestone: string | null;
   comments: number;
   badge: DeliverableStatus | null;
@@ -31,8 +33,8 @@ export type TaskDetail = {
   type: TaskType;
   status: TaskStatus;
   assigneeId: string | null;
-  /** "28 Nov 2026" and the date field's "2026-11-28". */
-  due: { label: string; input: string } | null;
+  /** The date field's "2026-11-28" (the panel words it "28 Nov 2026"). */
+  due: string | null;
   milestoneId: string | null;
   files: { id: string; name: string; url: string; from: string; size: string }[];
   comments: TaskComment[];
