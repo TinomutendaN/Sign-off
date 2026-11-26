@@ -62,3 +62,37 @@ export function nameInitials(name: string): string {
   const letters = words.length > 1 ? words[0][0] + words[1][0] : (words[0] ?? "?").slice(0, 2);
   return letters.toUpperCase();
 }
+
+// ---------- Dates (shown in the studio's time zone, like the seed) ----------
+
+const TIME_ZONE = "Africa/Harare";
+
+function parts(date: Date) {
+  const get = (opts: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat("en-GB", { timeZone: TIME_ZONE, ...opts }).format(date);
+  return { day: get({ day: "numeric" }), month: get({ month: "short" }), year: get({ year: "numeric" }) };
+}
+
+/** "2 Dec" */
+export function shortDate(date: Date): string {
+  const p = parts(date);
+  return `${p.day} ${p.month}`;
+}
+
+/** "12 Dec 2026" */
+export function longDate(date: Date): string {
+  const p = parts(date);
+  return `${p.day} ${p.month} ${p.year}`;
+}
+
+/** "Today, 14:20" or "22 Nov, 15:40" */
+export function dateTime(date: Date, now: Date = new Date()): string {
+  const time = new Intl.DateTimeFormat("en-GB", {
+    timeZone: TIME_ZONE,
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).format(date);
+  const sameDay = longDate(date) === longDate(now);
+  return `${sameDay ? "Today" : shortDate(date)}, ${time}`;
+}

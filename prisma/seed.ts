@@ -371,7 +371,7 @@ async function seedAgency(tx: Prisma.TransactionClient) {
   });
 
   // Deliverables and the client's decisions
-  await tx.deliverable.create({
+  const sitemapDel = await tx.deliverable.create({
     data: {
       milestoneId: brand.id,
       title: "Sitemap and page list",
@@ -385,7 +385,7 @@ async function seedAgency(tx: Prisma.TransactionClient) {
       decisions: { create: { clientUserId: THANDI, kind: "APPROVED", createdAt: day(-10, "16:40") } },
     },
   });
-  await tx.deliverable.create({
+  const paletteDel = await tx.deliverable.create({
     data: {
       milestoneId: brand.id,
       title: "Colour palette and fonts",
@@ -399,7 +399,7 @@ async function seedAgency(tx: Prisma.TransactionClient) {
       decisions: { create: { clientUserId: THANDI, kind: "APPROVED", createdAt: day(-6, "14:02") } },
     },
   });
-  await tx.deliverable.create({
+  const logoDel = await tx.deliverable.create({
     data: {
       milestoneId: pages.id,
       title: "Logo refresh options",
@@ -420,7 +420,7 @@ async function seedAgency(tx: Prisma.TransactionClient) {
       },
     },
   });
-  await tx.deliverable.create({
+  const homepageDel = await tx.deliverable.create({
     data: {
       milestoneId: pages.id,
       title: "Homepage design, version 2",
@@ -433,6 +433,16 @@ async function seedAgency(tx: Prisma.TransactionClient) {
       sentAt: day(-2, "15:40"),
     },
   });
+
+  // Each sent deliverable belongs to the task it came from; the card badge reads its status.
+  for (const [title, deliverable] of [
+    ["Sitemap and page list", sitemapDel],
+    ["Colour palette and fonts", paletteDel],
+    ["Logo refresh options", logoDel],
+    ["Homepage design, version 2", homepageDel],
+  ] as const) {
+    await tx.task.update({ where: { id: taskIds[title] }, data: { deliverableId: deliverable.id } });
+  }
 
   // ----- Spring campaign -----
   const spring = await tx.project.create({

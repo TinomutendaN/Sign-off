@@ -40,6 +40,7 @@ File names (one per screen, as exported from the design canvas). The "Descriptio
    - the "Screen wording to update for Clerk" section in `AGENTS.md` (the images still mention the Stripe portal)
    - phone and tablet layouts: the images show laptop width; follow the responsive rules (side panel hides on tablet, icon menu becomes a bottom tab bar on phones)
 5. **Never invent screens, sections or features** that aren't in the images or in `AGENTS.md`.
+6. **Pricing intentionally differs from `02 Pricing.png`.** By the owner's request, `/pricing` fits on one screen and has no lavender page border. Do not change it back to match the image.
 
 ## Decision making
 If something is unclear or could be improved, suggest a better approach. If a new library would significantly help, recommend it, explain why, and ask before adding it.

@@ -39,7 +39,7 @@ export function Tabs({ items, label, variant = "underline", size = "sm", onSelec
             onSelect={onSelect}
             role="switch"
             className={cx(
-              "flex items-center rounded-switch font-medium",
+              "flex shrink-0 items-center whitespace-nowrap rounded-switch font-medium",
               size === "sm" ? "gap-1.5 px-3 py-[7px] text-[13px]" : "gap-2 px-4 py-[9px] text-sm",
               item.selected ? "bg-card text-ink shadow-switch" : "text-muted",
             )}
