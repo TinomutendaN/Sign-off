@@ -20,7 +20,7 @@ const sizes: Record<Size, string> = {
   sm: "gap-2 rounded-control px-[14px] py-[9px] text-[13px]",
   // Top bar: "Try the demo"
   bar: "gap-2 rounded-control px-4 py-[9px] text-sm",
-  // Dialog and form buttons: "Upgrade · $190 a year"
+  // Dialog and form buttons: "Upgrade · $189.96 a year"
   md: "gap-2 rounded-control px-4 py-3 text-sm",
   // Landing calls to action: "Try the demo →", "See pricing", "Start free"
   lg: "gap-2 rounded-card px-5 py-[13px] text-[15px]",

@@ -585,9 +585,15 @@ async function seedAgency(tx: Prisma.TransactionClient) {
 
 // ---------- Subscriptions (admin dashboard history) ----------
 
+/** Dollars → cents (189.96 → 18996). */
+function cents(dollars: number): number {
+  return Math.round(dollars * 100);
+}
+
+// Prices per period in cents, from features/billing/plans.ts (what Clerk charges).
 const PRICE: Record<"PRO" | "AGENCY", Record<BillingPeriod, number>> = {
-  PRO: { MONTHLY: 1900, ANNUAL: 19000 },
-  AGENCY: { MONTHLY: 4900, ANNUAL: 49000 },
+  PRO: { MONTHLY: cents(PLANS.pro.monthly), ANNUAL: cents(PLANS.pro.annual) },
+  AGENCY: { MONTHLY: cents(PLANS.agency.monthly), ANNUAL: cents(PLANS.agency.annual) },
 };
 
 type Kind = "PM" | "PA" | "AM" | "AA";

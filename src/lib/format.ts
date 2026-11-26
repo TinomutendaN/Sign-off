@@ -51,7 +51,7 @@ export function avatarTone(userId: string): AvatarTone {
   return TONES[hash % TONES.length];
 }
 
-/** Dollars without needless cents: 190 → "$190", 15.833… → "$15.83". */
+/** Dollars without needless cents: 19 → "$19", 189.96 → "$189.96", 15.83 → "$15.83". */
 export function money(amount: number): string {
   return `$${amount.toFixed(2).replace(/\.00$/, "")}`;
 }

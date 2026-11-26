@@ -60,7 +60,7 @@ export async function syncOrgSubscription(orgId: string): Promise<SyncResult> {
   const cancelled = paid.status === "canceled" || paid.canceledAt != null;
   const status = cancelled ? "CANCELLED" : "ACTIVE";
   const plan = planKey === "agency" ? "AGENCY" : "PRO";
-  // The designed price in cents ($190, not Clerk's $189.96), like the seeded demo rows.
+  // The plan's price in cents from plans.ts (what Clerk charges), like the seeded demo rows.
   const amount = Math.round(PLANS[planKey][period === "ANNUAL" ? "annual" : "monthly"] * 100);
   // Never create a row for a plan that is already cancelled (e.g. the demo reset ending it).
   if (!existing && cancelled) return { orgId, plan: planKey, status: "NONE" };

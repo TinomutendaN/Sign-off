@@ -2,8 +2,8 @@
 // Pricing, the sign-up plan note, Billing and the upgrade pop-up all read from here.
 // Demo prices (AGENTS.md). The plans themselves live in Clerk Billing (Organization plans with
 // the slugs below); which plan a workspace is on comes from Clerk's has() or its subscription.
-// Clerk stores annual prices as a monthly equivalent ($15.83), so its checkout charges $189.96;
-// our screens show the designed $190 / $490.
+// Annual prices are what Clerk really charges: Clerk stores them as a monthly equivalent
+// ($15.83 / $40.83), so a year costs 12 × that ($189.96 / $489.96). Every screen reads them from here.
 
 import { money } from "@/lib/format";
 
@@ -42,7 +42,7 @@ export const PLANS: Record<PlanKey, Plan> = {
     key: "pro",
     name: "Pro",
     monthly: 19,
-    annual: 190,
+    annual: 189.96,
     popular: true,
     cta: "Choose Pro",
     limits: { workspaces: 1, projects: null, members: 15, storageGb: 25 },
@@ -59,7 +59,7 @@ export const PLANS: Record<PlanKey, Plan> = {
     key: "agency",
     name: "Agency",
     monthly: 49,
-    annual: 490,
+    annual: 489.96,
     popular: false,
     cta: "Choose Agency",
     // Clerk caps an organization at 20 members without a paid add-on.
@@ -76,12 +76,12 @@ export const PLANS: Record<PlanKey, Plan> = {
 
 export const PLAN_ORDER: readonly PlanKey[] = ["free", "pro", "agency"];
 
-/** What one period costs: "$190". */
+/** What one period costs: "$189.96". */
 export function periodPrice(plan: PlanKey, period: Period): string {
   return money(PLANS[plan][period]);
 }
 
-/** The big price on a plan card: Pro annual → "$15.83" "a month" "Billed $190 a year". */
+/** The big price on a plan card: Pro annual → "$15.83" "a month" "Billed $189.96 a year". */
 export function priceFor(plan: PlanKey, period: Period): { price: string; per: string; sub: string } {
   const p = PLANS[plan];
   if (p.monthly === 0) return { price: money(0), per: "forever", sub: "No card needed" };
