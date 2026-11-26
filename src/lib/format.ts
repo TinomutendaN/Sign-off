@@ -56,6 +56,21 @@ export function money(amount: number): string {
   return `$${amount.toFixed(2).replace(/\.00$/, "")}`;
 }
 
+/** Whole dollars from cents, with thousands separators: 489810 → "$4,898". */
+export function dollars(cents: number): string {
+  return `$${Math.round(cents / 100).toLocaleString("en-US")}`;
+}
+
+/** Dollars and cents from cents, always two decimals: 4900 → "$49.00", 1583 → "$15.83". */
+export function dollarsCents(cents: number): string {
+  return `$${(cents / 100).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+/** A ratio as a percentage with one decimal: 0.0821 → "8.2%". */
+export function percent1(ratio: number): string {
+  return `${(Math.round(ratio * 1000) / 10).toFixed(1)}%`;
+}
+
 /** Two-letter initials for a workspace or client name: "Northfold Studio" → "NS". */
 export function nameInitials(name: string): string {
   const words = name.trim().split(/\s+/).filter(Boolean);
@@ -77,6 +92,28 @@ function parts(date: Date) {
 export function shortDate(date: Date): string {
   const p = parts(date);
   return `${p.day} ${p.month}`;
+}
+
+/** "Sep", "Nov": three-letter month in studio time (en-GB would say "Sept"). */
+export function monthShort(date: Date): string {
+  return new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, month: "short" }).format(date);
+}
+
+/** "October" in studio time. */
+export function monthLong(date: Date): string {
+  return new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, month: "long" }).format(date);
+}
+
+/** "2 Sep" this year, "2 Sep 2025" in any other year. */
+export function shortDateYear(date: Date, now: Date = new Date()): string {
+  const p = parts(date);
+  const label = `${p.day} ${monthShort(date)}`;
+  return p.year === parts(now).year ? label : `${label} ${p.year}`;
+}
+
+/** "14:32" in studio time. */
+export function clockTime(date: Date): string {
+  return new Intl.DateTimeFormat("en-GB", { timeZone: TIME_ZONE, hour: "2-digit", minute: "2-digit", hour12: false }).format(date);
 }
 
 /** "12 Dec 2026" */

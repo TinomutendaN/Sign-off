@@ -27,10 +27,26 @@ type SideLinkProps = {
   /** Path prefix that selects this link. Omit for inactive links. */
   match?: string;
   exact?: boolean;
+  /** No screen behind it yet: shown greyed out, not a link. */
+  inactive?: boolean;
 };
 
 /** A side-panel row. Selected: soft grey fill and semibold. */
 export function SideLink(props: SideLinkProps) {
+  if (props.inactive) {
+    const { dot, title, count } = props;
+    return (
+      <span
+        aria-disabled="true"
+        title="Coming soon"
+        className="flex cursor-not-allowed items-center gap-[10px] rounded-control px-[10px] py-2 text-[13px] font-medium text-ink opacity-60"
+      >
+        <span className={cx("size-2 shrink-0 rounded-[3px]", dots[dot] ?? dots.violet)} />
+        <span className="min-w-0 flex-1 truncate">{title}</span>
+        {count !== undefined && <span className="text-[11px] font-normal text-muted">{count}</span>}
+      </span>
+    );
+  }
   return (
     <Suspense fallback={<SideLinkView {...props} selected={false} />}>
       <SideLinkWithPath {...props} />

@@ -176,7 +176,10 @@ signoff/
 │  │  ├─ deliverables/ { actions.ts, queries.ts, schemas.ts, components/ }   # uploads, approvals
 │  │  ├─ activity/     { queries.ts, record.ts, components/ }
 │  │  ├─ billing/      { plans.ts, queries.ts, actions.ts, sync.ts, components/ }   # limits, checkout, upgrade pop-up, webhook sync
-│  │  ├─ admin/        { queries.ts, components/ }                           # revenue, subscribers
+│  │  ├─ admin/        { queries.ts, actions.ts, schemas.ts, components/ }   # revenue, subscribers, CSV export
+│  │  ├─ dashboard/    { actions.ts, queries.ts, schemas.ts, components/ }   # agency Dashboard: stat cards, waiting on clients, send reminder
+│  │  ├─ portal/       { queries.ts, wording.ts, components/ }               # client home and client project view
+│  │  ├─ auth/         { actions.ts, queries.ts, schemas.ts, clerkFlow.ts, afterWorkspace.ts, components/ }   # sign-in and sign-up screens, demo login
 │  │  └─ marketing/    { components/ }                                       # public page sections: Landing hero, How it works, audience cards, closing band, footer
 │  │
 │  ├─ components/

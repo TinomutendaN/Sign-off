@@ -17,6 +17,8 @@ type RailLinkProps = {
   /** Match the path exactly instead of by prefix. */
   exact?: boolean;
   hideOnPhone?: boolean;
+  /** No screen behind it yet: shown greyed out, not a link. */
+  inactive?: boolean;
 };
 
 /**
@@ -26,6 +28,7 @@ type RailLinkProps = {
  * On the server that address is unknown, so the first paint there is unselected.
  */
 export function RailLink(props: RailLinkProps) {
+  if (props.inactive) return <InactiveRailItem {...props} />;
   return (
     <Suspense fallback={<RailLinkWithBrowserPath {...props} />}>
       <RailLinkWithPath {...props} />
@@ -52,6 +55,24 @@ function RailLinkWithBrowserPath(props: RailLinkProps) {
     () => null,
   );
   return <RailLinkView {...props} selected={isSelected(pathname, props)} />;
+}
+
+function InactiveRailItem({ icon, label, ariaLabel, hideOnPhone = false }: RailLinkProps) {
+  return (
+    <span
+      aria-disabled="true"
+      aria-label={label ? undefined : ariaLabel}
+      title="Coming soon"
+      className={cx(
+        "flex cursor-not-allowed items-center rounded-card text-muted opacity-60",
+        label ? "w-[60px] flex-col gap-[5px] py-[9px] text-[11px]" : "size-11 justify-center",
+        hideOnPhone && "phone:hidden",
+      )}
+    >
+      <span className="flex">{icon}</span>
+      {label}
+    </span>
+  );
 }
 
 function RailLinkView({ href, icon, label, ariaLabel, hideOnPhone = false, selected }: RailLinkProps & { selected: boolean }) {

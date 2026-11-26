@@ -21,7 +21,7 @@ export function AdminFrame({ children }: { children: ReactNode }) {
           label="Admin"
           bottom={
             <>
-              <RailLink href="#" icon={<SettingsIcon />} ariaLabel="Settings" />
+              <RailLink href="#" icon={<SettingsIcon />} ariaLabel="Settings" inactive />
               <Suspense fallback={<span className="size-11" />}>
                 <UserMenuSlot as="admin" />
               </Suspense>
@@ -30,7 +30,7 @@ export function AdminFrame({ children }: { children: ReactNode }) {
         >
           <RailLink href="/admin" icon={<ChartIcon />} label="Overview" match={["/admin"]} exact />
           <RailLink href="/admin/subscribers" icon={<PeopleIcon />} label="Users" match={["/admin/subscribers"]} />
-          <RailLink href="#" icon={<BillingIcon />} label="Plans" />
+          <RailLink href="#" icon={<BillingIcon />} label="Plans" inactive />
         </AppRail>
       }
       side={
@@ -65,9 +65,9 @@ function AdminLinksFallback() {
     <SideSection label="ADMIN">
       <SideLink href="/admin" dot="violet" title="Overview" />
       <SideLink href="/admin/subscribers" dot="green" title="Subscribers" />
-      <SideLink href="#" dot="blue" title="Workspaces" />
-      <SideLink href="#" dot="amber" title="Plans & prices" />
-      <SideLink href="#" dot="idle" title="Payment events" />
+      <SideLink href="#" dot="blue" title="Workspaces" inactive />
+      <SideLink href="#" dot="amber" title="Plans & prices" inactive />
+      <SideLink href="#" dot="idle" title="Payment events" inactive />
     </SideSection>
   );
 }

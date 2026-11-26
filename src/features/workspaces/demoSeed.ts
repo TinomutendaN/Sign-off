@@ -605,11 +605,13 @@ const KIND: Record<Kind, { plan: Plan; period: BillingPeriod }> = {
 };
 
 // New paying subscribers per month, oldest first: the 11 months before the anchor month.
-// Worked out so that monthly recurring revenue (annual price ÷ 12) at each month end is:
-//   1210, 1480, 1795, 2050, 2390, 2610, 2980, 3240, 3560, 3910, 4527
+// Monthly recurring revenue at each month end, as the Admin dashboard computes it
+// (features/admin/queries.ts: annual price ÷ 12 rounded to the cent per subscription):
+//   $1,209, 1,480, 1,795, 2,050, 2,390, 2,610, 2,980, 3,240, 3,560, 3,910, 4,526
 // The first row also holds everyone who joined before that month.
-// (The design's last-but-one month says $4,525; no mix of plans matching the other
-// numbers on the screens gives exactly that, so it lands on $4,527.)
+// (The design shows $1,210 and $4,525 for the first and last of these; no mix of plans
+// matching the other numbers on the screens gives exactly that. The anchor month lands on
+// the design's $4,882 on Free and $4,898 once Northfold upgrades to Pro annual.)
 //               [Pro monthly, Pro annual, Agency monthly, Agency annual]
 const COHORTS: [number, number, number, number][] = [
   [24, 12, 9, 3], // 11 months ago (and earlier)

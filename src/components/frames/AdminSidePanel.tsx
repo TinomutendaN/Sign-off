@@ -13,9 +13,9 @@ export async function AdminSidePanel() {
     <SideSection label="ADMIN">
       <SideLink href="/admin" match="/admin" exact dot="violet" title="Overview" />
       <SideLink href="/admin/subscribers" match="/admin/subscribers" dot="green" title="Subscribers" count={paying} />
-      <SideLink href="#" dot="blue" title="Workspaces" count={workspaces} />
-      <SideLink href="#" dot="amber" title="Plans & prices" />
-      <SideLink href="#" dot="idle" title="Payment events" />
+      <SideLink href="#" dot="blue" title="Workspaces" count={workspaces} inactive />
+      <SideLink href="#" dot="amber" title="Plans & prices" inactive />
+      <SideLink href="#" dot="idle" title="Payment events" inactive />
     </SideSection>
   );
 }

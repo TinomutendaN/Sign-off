@@ -16,6 +16,7 @@ const tones: Record<SquareTone, string> = {
 };
 
 const sizes = {
+  28: "size-7 rounded-lg text-[10px]",
   34: "size-[34px] rounded-control text-[11px]",
   44: "size-11 rounded-card text-sm",
   56: "size-14 rounded-[14px] text-lg",

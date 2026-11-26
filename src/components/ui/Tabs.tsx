@@ -108,6 +108,8 @@ function TabControl({
     return (
       <Link
         href={item.href}
+        // Switch links only change a filter on the same screen: keep the scroll position.
+        scroll={role === "switch" ? false : undefined}
         role={role === "tab" ? "tab" : undefined}
         aria-selected={role === "tab" ? item.selected : undefined}
         aria-current={item.selected ? "page" : undefined}
