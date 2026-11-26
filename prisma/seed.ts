@@ -4,6 +4,8 @@
 //   - agency data belonging to DEMO_ORG_ID (Northfold Studio)
 //   - Subscription rows with isDemo = true
 //   - the team notes on the Northfold memberships in Clerk (publicMetadata.note)
+//   - what visitors did in Clerk (resetDemoClerk): invitations, extra members, invited client
+//     accounts, the workspace name and its member limit
 // Real sign-ups (other organizations, isDemo = false) are never touched.
 //
 // Dates: every date is an offset from an anchor day, so the live demo never goes stale.
@@ -42,6 +44,7 @@ const LEO = requireEnv("DEMO_LEO_USER_ID");
 const AMA = requireEnv("DEMO_AMA_USER_ID");
 const JEN = requireEnv("DEMO_JEN_USER_ID");
 const THANDI = requireEnv("DEMO_CLIENT_USER_ID");
+const ADMIN = process.env.DEMO_ADMIN_USER_ID?.trim();
 
 const clerk = createClerkClient({ secretKey: requireEnv("CLERK_SECRET_KEY") });
 
@@ -797,12 +800,88 @@ async function seedTeamNotes() {
   }
 }
 
+// ---------- Demo reset in Clerk ----------
+
+const WORKSPACE_NAME = "Northfold Studio";
+// Pro's team member limit (features/billing/plans.ts). TODO(Step 10): set from the plan.
+const MEMBER_LIMIT = 15;
+
+/**
+ * Undoes what visitors can do to the public demo workspace in Clerk. Runs before the database
+ * reset, because the ClientInvite rows are how it finds the invitations and accounts to remove.
+ * Never touches the DEMO_* people or ADMIN_USER_IDS. An invited client account is deleted only
+ * if it was created after its invite (made through it); an older account just loses access.
+ */
+async function resetDemoClerk() {
+  const protectedIds = new Set(
+    [TINO, LEO, AMA, JEN, THANDI, ADMIN, ...(process.env.ADMIN_USER_IDS ?? "").split(",")]
+      .map((id) => id?.trim())
+      .filter((id): id is string => Boolean(id)),
+  );
+  const demoTeam = new Set([TINO, LEO, AMA, JEN]);
+
+  // 1. Client invitations made in the demo workspace, and the accounts made through them.
+  const invites = await db.clientInvite.findMany({
+    where: { orgId: ORG },
+    select: { invitationId: true, claimedByUserId: true, createdAt: true },
+  });
+  let revoked = 0;
+  let deleted = 0;
+  for (const invite of invites) {
+    // Claimed invites can still be pending in Clerk (claimed by email, link never opened).
+    await clerk.invitations.revokeInvitation(invite.invitationId).then(
+      () => (revoked += 1),
+      () => {}, // already accepted, revoked or expired
+    );
+    const userId = invite.claimedByUserId;
+    if (!userId || protectedIds.has(userId)) continue;
+    const user = await clerk.users.getUser(userId).catch(() => null);
+    if (user && user.createdAt >= invite.createdAt.getTime() - 60_000) {
+      await clerk.users.deleteUser(userId);
+      deleted += 1;
+    }
+  }
+
+  // 2. Team invitations waiting in the demo workspace.
+  const pending = await clerk.organizations.getOrganizationInvitationList({
+    organizationId: ORG,
+    status: ["pending"],
+    limit: 500,
+  });
+  for (const invitation of pending.data) {
+    await clerk.organizations.revokeOrganizationInvitation({
+      organizationId: ORG,
+      invitationId: invitation.id,
+      requestingUserId: TINO,
+    });
+  }
+
+  // 3. Anyone who joined the demo team besides the four demo people.
+  const memberships = await clerk.organizations.getOrganizationMembershipList({ organizationId: ORG, limit: 500 });
+  let removed = 0;
+  for (const m of memberships.data) {
+    const userId = m.publicUserData?.userId;
+    if (userId && !demoTeam.has(userId)) {
+      await clerk.organizations.deleteOrganizationMembership({ organizationId: ORG, userId });
+      removed += 1;
+    }
+  }
+
+  // 4. The workspace name (Owners can rename it) and its member limit.
+  await clerk.organizations.updateOrganization(ORG, { name: WORKSPACE_NAME, maxAllowedMemberships: MEMBER_LIMIT });
+
+  console.log(
+    `Clerk reset: ${revoked + pending.data.length} invitations revoked, ${deleted} invited accounts deleted, ${removed} extra members removed.`,
+  );
+}
+
 // ---------- Run ----------
 
 async function main() {
   const anchor = `${ANCHOR.y}-${pad(ANCHOR.m)}-${pad(ANCHOR.d)}`;
   console.log(`Seeding demo data with anchor date ${anchor}${process.env.DEMO_ANCHOR_DATE?.trim() ? "" : " (today)"}…`);
 
+  await resetDemoClerk();
   await db.$transaction(
     async (tx) => {
       await reset(tx);

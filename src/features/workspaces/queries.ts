@@ -66,3 +66,44 @@ export async function getMemberDirectory(orgId: string): Promise<Member[]> {
       };
     });
 }
+
+/** An invited person's display name, from the part of their email before the @: "kuda.m@…" → "Kuda". */
+export function inviteeName(email: string) {
+  const word = email.split("@")[0].split("+")[0].split(/[._-]/)[0] || "Invitee";
+  return word[0].toUpperCase() + word.slice(1).toLowerCase();
+}
+
+/**
+ * Team settings (09). Read fresh from Clerk on every visit, so a new invite shows straight away.
+ * Members carry their name parts, role and note (organization membership metadata); pending
+ * invitations carry a name made from the address, never the address itself.
+ */
+export async function getTeamSettings(orgId: string) {
+  const clerk = await clerkClient();
+  const [org, memberships, invitations] = await Promise.all([
+    clerk.organizations.getOrganization({ organizationId: orgId }),
+    clerk.organizations.getOrganizationMembershipList({ organizationId: orgId, limit: 100 }),
+    clerk.organizations.getOrganizationInvitationList({ organizationId: orgId, status: ["pending"], limit: 100 }),
+  ]);
+
+  const members = memberships.data
+    .filter((m) => m.publicUserData?.userId)
+    .sort((a, b) => a.createdAt - b.createdAt)
+    .map((m) => {
+      const note = m.publicMetadata?.note;
+      return {
+        id: m.publicUserData!.userId,
+        firstName: m.publicUserData!.firstName,
+        lastName: m.publicUserData!.lastName,
+        tone: avatarTone(m.publicUserData!.userId),
+        isOwner: m.role === "org:admin",
+        note: typeof note === "string" && note.trim() ? note.trim() : null,
+      };
+    });
+
+  const pending = invitations.data
+    .sort((a, b) => a.createdAt - b.createdAt)
+    .map((i) => ({ id: i.id, name: inviteeName(i.emailAddress), createdAt: new Date(i.createdAt) }));
+
+  return { name: org.name, maxMembers: org.maxAllowedMemberships, members, pending };
+}

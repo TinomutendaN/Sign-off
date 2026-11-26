@@ -38,3 +38,9 @@ export const codeSchema = z.object({
     .trim()
     .regex(/^\d{6}$/, "Enter the 6-digit code."),
 });
+
+/** The invited sign-up: name and password only (the email comes from the invitation). */
+export const inviteSignUpSchema = z.object({
+  name: z.string().trim().min(1, "Enter your name.").max(80, "Keep your name under 80 characters."),
+  password: z.string().min(8, "Use at least 8 characters for your password."),
+});

@@ -94,12 +94,37 @@ model Client {
   name         String
   contactName  String
   contactEmail String
-  createdAt    DateTime @default(now())
+  // When the latest invitation was sent (or re-sent). Null for clients added without an invite.
+  invitedAt    DateTime?
+  createdAt    DateTime  @default(now())
 
   projects Project[]
   access   ClientAccess[]
+  invites  ClientInvite[]
 
   @@index([orgId])
+}
+
+// A client invitation. The invited person claims it when they first land after signing in:
+// their verified email matches `email`, so they get ClientAccess to `projectId`.
+// Also how the demo reset finds the Clerk invitations and users that visitors created.
+model ClientInvite {
+  id              String    @id @default(cuid())
+  email           String // lower-case
+  clientId        String
+  projectId       String
+  orgId           String
+  invitationId    String // Clerk invitation ID (replaced on "Resend invite")
+  createdAt       DateTime  @default(now())
+  claimedAt       DateTime?
+  claimedByUserId String?
+
+  client  Client  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([email, claimedAt])
+  @@index([orgId])
+  @@index([clientId])
 }
 
 // Links a client's Clerk user to the projects they may see.
@@ -132,6 +157,7 @@ model Project {
   milestones Milestone[]
   tasks      Task[]
   access     ClientAccess[]
+  invites    ClientInvite[]
   activity   Activity[]
 
   @@index([orgId, status])

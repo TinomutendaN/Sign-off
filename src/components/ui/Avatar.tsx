@@ -1,7 +1,7 @@
 import { initials, type AvatarTone as BaseTone } from "@/lib/format";
 import { cx } from "./cx";
 
-export type AvatarTone = BaseTone | "peach" | "navy";
+export type AvatarTone = BaseTone | "peach" | "navy" | "grey";
 
 const tones: Record<AvatarTone, string> = {
   violet: "bg-av-tm text-av-tm-ink",
@@ -10,6 +10,7 @@ const tones: Record<AvatarTone, string> = {
   blue: "bg-av-js text-blue-ink",
   peach: "bg-peach-2 text-peach-ink",
   navy: "bg-ink text-white",
+  grey: "bg-soft-2 text-ink-3", // invited, not joined yet
 };
 
 const sizes = {

@@ -215,7 +215,7 @@ if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db;
 1. In the Clerk dashboard, create **Organization** plans: Free, Pro ($19 a month / $190 a year), Agency ($49 a month / $490 a year), with features for the limits (projects, team members, storage).
 2. Pricing (02) and Billing (11): plan buttons start Clerk's checkout for the chosen plan and period. "Manage subscription" opens Clerk's subscription details. Use the Clerk wording from `AGENTS.md`.
 3. `features/billing/plans.ts`: plan limits from Clerk's `has()`. Creating a third project on Free opens the upgrade pop-up (12) instead.
-4. `api/webhooks/clerk/route.ts`: verify with `verifyWebhook`, then save subscription events into `Subscription` (and handle the client invitation events from step 8).
+4. `api/webhooks/clerk/route.ts`: verify with `verifyWebhook`, then save subscription events into `Subscription`. Client invites need no webhook: they are claimed when the invited person first lands after signing in (Step 9, `ClientInvite`).
 
 **Done when:** a test card upgrade moves Northfold from Free to Pro, the limit lifts, and a new `Subscription` row appears.
 

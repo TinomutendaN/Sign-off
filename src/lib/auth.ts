@@ -8,6 +8,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { claimClientInvites } from "@/features/clients/actions";
 import { hasClientAccess } from "@/features/clients/queries";
 import { getUserOrgIds } from "@/features/workspaces/queries";
 
@@ -38,6 +39,10 @@ export function isAdminUser(userId: string) {
 
 async function landingFor(userId: string, activeOrgId: string | null | undefined): Promise<Landing> {
   if (isAdminUser(userId)) return { path: "/admin" };
+
+  // Client invites are claimed here, the first time an invited person lands after signing in
+  // (their verified email matches an unclaimed invite). New sign-ups and existing accounts alike.
+  await claimClientInvites();
 
   const orgIds = await getUserOrgIds(userId);
   if (orgIds.length > 0) {
