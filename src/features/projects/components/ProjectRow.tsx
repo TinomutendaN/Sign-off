@@ -5,7 +5,9 @@ import { Pill } from "@/components/ui/Pill";
 import { ProgressBar, type BarTone } from "@/components/ui/ProgressBar";
 import type { Member } from "@/features/workspaces/queries";
 
-export type ProjectKind = "waiting" | "active" | "archived";
+import type { ProjectKind } from "../progress";
+
+export type { ProjectKind };
 
 export type ProjectRowData = {
   id: string;

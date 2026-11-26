@@ -5,7 +5,7 @@
 // - Otherwise a milestone is the average of its tasks: To do 0, In progress 0.5, In review 0.7, Done 1.
 // - A project is the average of its milestones.
 
-import type { MilestoneStatus, TaskStatus } from "@/generated/prisma/enums";
+import type { MilestoneStatus, ProjectStatus, TaskStatus } from "@/generated/prisma/enums";
 
 export const TASK_WEIGHT: Record<TaskStatus, number> = {
   TODO: 0,
@@ -39,4 +39,22 @@ export function projectProgress(milestones: ProgressMilestone[]): number {
 /** The first milestone not yet approved, or null when every milestone is approved. */
 export function currentMilestone<T extends ProgressMilestone>(milestones: T[]): T | null {
   return [...milestones].sort((a, b) => a.number - b.number).find((m) => m.status !== "APPROVED") ?? null;
+}
+
+/** "2. Page designs", or what to show when there is no current milestone. */
+export function milestoneLabel(milestones: ProgressMilestone[]): string {
+  const current = currentMilestone(milestones);
+  if (current) return `${current.number}. ${current.name}`;
+  return milestones.length ? "All milestones approved" : "No milestones yet";
+}
+
+export type ProjectKind = "waiting" | "active" | "archived";
+
+/**
+ * The project's status pill, shared by the Projects list and the Dashboard: archived, waiting on
+ * client (any milestone waiting), otherwise on track.
+ */
+export function projectKind(project: { status: ProjectStatus; milestones: { status: MilestoneStatus }[] }): ProjectKind {
+  if (project.status === "ARCHIVED") return "archived";
+  return project.milestones.some((m) => m.status === "WAITING") ? "waiting" : "active";
 }

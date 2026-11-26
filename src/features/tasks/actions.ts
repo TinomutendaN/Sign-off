@@ -123,6 +123,7 @@ export async function moveTask(input: unknown): Promise<ActionResult> {
   }
 
   revalidatePath(`/projects/${projectId}`, "layout");
+  revalidatePath("/dashboard");
   return { ok: true };
 }
 
@@ -178,6 +179,7 @@ export async function createTask(input: unknown): Promise<ActionResult> {
   }
 
   revalidatePath(`/projects/${projectId}`, "layout");
+  revalidatePath("/dashboard");
   return { ok: true };
 }
 
@@ -214,6 +216,7 @@ export async function setTaskStatus(input: unknown): Promise<ActionResult> {
   }
 
   if (projectId) revalidatePath(`/projects/${projectId}`, "layout");
+  revalidatePath("/dashboard");
   return { ok: true };
 }
 
@@ -268,6 +271,7 @@ export async function updateTask(input: unknown): Promise<ActionResult> {
   }
 
   revalidatePath(`/projects/${task.projectId}`, "layout");
+  revalidatePath("/dashboard");
   return { ok: true };
 }
 
@@ -303,5 +307,6 @@ export async function postComment(input: unknown): Promise<ActionResult> {
   }
 
   revalidatePath(`/projects/${task.projectId}`, "layout");
+  revalidatePath("/dashboard");
   return { ok: true };
 }

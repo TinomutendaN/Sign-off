@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import { cx } from "@/components/ui/cx";
+import { cx } from "./cx";
 
-type PortalSectionProps = {
+type SectionProps = {
   title: ReactNode;
   /** Right of the title: a count or a small grey label. */
   aside?: ReactNode;
@@ -9,8 +9,8 @@ type PortalSectionProps = {
   children: ReactNode;
 };
 
-/** A grey #E8E7F0 portal panel with its 16 px title row. */
-export function PortalSection({ title, aside, className, children }: PortalSectionProps) {
+/** A grey #E8E7F0 section panel with its 16 px title row (Client home, client project view, Dashboard). */
+export function Section({ title, aside, className, children }: SectionProps) {
   return (
     <section className={cx("flex min-w-0 flex-col gap-[10px] rounded-column bg-panel px-[10px] pt-3 pb-[10px]", className)}>
       <div className="flex items-center justify-between gap-3 px-2 pt-1.5 pb-1">

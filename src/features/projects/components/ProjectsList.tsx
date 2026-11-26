@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { KanbanIcon, PlusIcon, SearchIcon } from "@/components/icons";
+import { KanbanIcon, SearchIcon } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { ScreenHeader } from "@/components/ui/ScreenHeader";
 import { Tabs } from "@/components/ui/Tabs";
-import { UpgradePrompt } from "@/features/billing/components/UpgradePrompt";
 import type { PaidPlanKey } from "@/features/billing/plans";
 import { archiveProject } from "../actions";
+import { NewProjectButton } from "./NewProjectButton";
 import { ProjectRow, type ProjectKind, type ProjectRowData } from "./ProjectRow";
 
 type Filter = "all" | "active" | "waiting" | "archived";
@@ -44,7 +44,6 @@ export function ProjectsList({ projects, subtitle, limitReached, planIds, archiv
   const router = useRouter();
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
-  const [upgrade, setUpgrade] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [archiving, startArchive] = useTransition();
 
@@ -78,15 +77,7 @@ export function ProjectsList({ projects, subtitle, limitReached, planIds, archiv
             className="w-full border-0 bg-transparent text-ink outline-none placeholder:text-muted"
           />
         </label>
-        {limitReached ? (
-          <Button icon={<PlusIcon />} onClick={() => setUpgrade(true)}>
-            New project
-          </Button>
-        ) : (
-          <Button href="/clients" icon={<PlusIcon />}>
-            New project
-          </Button>
-        )}
+        <NewProjectButton limitReached={limitReached} planIds={planIds} />
       </ScreenHeader>
 
       <Tabs
@@ -141,7 +132,6 @@ export function ProjectsList({ projects, subtitle, limitReached, planIds, archiv
       </section>
 
       <div className="px-1 text-xs text-muted">Archived projects don&apos;t count towards your plan&apos;s project limit.</div>
-      <UpgradePrompt open={upgrade} onClose={() => setUpgrade(false)} planIds={planIds} />
     </>
   );
 }

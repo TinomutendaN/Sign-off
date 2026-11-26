@@ -53,20 +53,26 @@ export async function getProjectActivity(projectId: string) {
   });
 }
 
-/** Activity rows → lines worded for the agency, with names and avatars. */
-export function toActivityLines(
-  rows: Awaited<ReturnType<typeof getProjectActivity>>,
-  clientName: string,
+type ActivityRow = Awaited<ReturnType<typeof getProjectActivity>>[number];
+
+/**
+ * Activity rows → lines worded for the agency, with names and avatars. `clientName` is one name
+ * (a project's pages) or read per row (the Dashboard, which mixes projects).
+ */
+export function toActivityLines<R extends ActivityRow>(
+  rows: R[],
+  clientName: string | ((row: R) => string),
   members: Member[],
 ): ActivityLine[] {
   const now = new Date();
   return rows.map((row) => {
+    const client = typeof clientName === "string" ? clientName : clientName(row);
     const member = members.find((m) => m.id === row.actorId);
     const isClient = row.actorKind === "CLIENT";
-    const who = isClient ? clientName : member ? displayName(member) : "A former team member";
+    const who = isClient ? client : member ? displayName(member) : "A former team member";
     const avatar = isClient
-      ? { label: nameInitials(clientName), tone: "peach" as const }
+      ? { label: nameInitials(client), tone: "peach" as const }
       : { label: member ? initials(member) : "?", tone: member?.tone ?? ("violet" as const) };
-    return { id: row.id, who, text: agencyWording(row, clientName), when: dateTime(row.createdAt, now), avatar };
+    return { id: row.id, who, text: agencyWording(row, client), when: dateTime(row.createdAt, now), avatar };
   });
 }

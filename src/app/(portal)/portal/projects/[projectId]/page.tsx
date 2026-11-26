@@ -9,7 +9,7 @@ import { FilePreview } from "@/features/deliverables/components/FilePreview";
 import { downloadHref } from "@/features/deliverables/files";
 import { ApprovalCard } from "@/features/portal/components/ApprovalCard";
 import { EarlierDeliverableRow } from "@/features/portal/components/EarlierDeliverableRow";
-import { PortalSection } from "@/features/portal/components/PortalSection";
+import { Section } from "@/components/ui/Section";
 import { getPortalProject } from "@/features/portal/queries";
 import { CLIENT_MILESTONE_LOOK, decidedLine, sentLine, toClientActivityLines } from "@/features/portal/wording";
 import { MilestoneStrip } from "@/features/projects/components/MilestoneStrip";
@@ -67,7 +67,7 @@ export default async function ClientProjectPage({ params, searchParams }: PagePr
 
       <div className="flex flex-wrap items-start gap-[14px]">
         <div className="flex min-w-0 flex-[999_1_520px] flex-col gap-[14px]">
-          <PortalSection
+          <Section
             title="Needs your approval"
             aside={
               single && (
@@ -111,9 +111,9 @@ export default async function ClientProjectPage({ params, searchParams }: PagePr
                 Nothing needs your approval right now.
               </div>
             )}
-          </PortalSection>
+          </Section>
 
-          <PortalSection title="Earlier deliverables" aside={<span className="text-xs text-muted">{earlier.length}</span>}>
+          <Section title="Earlier deliverables" aside={<span className="text-xs text-muted">{earlier.length}</span>}>
             {earlier.map(({ d }) => (
               <EarlierDeliverableRow
                 key={d.id}
@@ -127,7 +127,7 @@ export default async function ClientProjectPage({ params, searchParams }: PagePr
             {earlier.length === 0 && (
               <div className="rounded-card bg-card p-4 text-[13px] text-muted shadow-card">No earlier deliverables yet.</div>
             )}
-          </PortalSection>
+          </Section>
         </div>
 
         <ActivityFeed

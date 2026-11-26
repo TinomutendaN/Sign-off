@@ -97,6 +97,47 @@ export function dateTime(date: Date, now: Date = new Date()): string {
   return `${sameDay ? "Today" : shortDate(date)}, ${time}`;
 }
 
+/** "Thu 26 Nov" */
+export function weekdayDate(date: Date): string {
+  const weekday = new Intl.DateTimeFormat("en-GB", { timeZone: TIME_ZONE, weekday: "short" }).format(date);
+  return `${weekday} ${shortDate(date)}`;
+}
+
+/** "Thursday, 26 November" */
+export function longDay(date: Date): string {
+  const get = (opts: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat("en-GB", { timeZone: TIME_ZONE, ...opts }).format(date);
+  return `${get({ weekday: "long" })}, ${get({ day: "numeric" })} ${get({ month: "long" })}`;
+}
+
+/** "Good morning" before 12:00, "Good afternoon" before 17:00, then "Good evening" (studio time). */
+export function greeting(now: Date = new Date()): string {
+  const hour = Number(
+    new Intl.DateTimeFormat("en-GB", { timeZone: TIME_ZONE, hour: "2-digit", hour12: false }).format(now),
+  );
+  if (hour < 12) return "Good morning";
+  if (hour < 17) return "Good afternoon";
+  return "Good evening";
+}
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+/** Midnight at the start of a date's day in the studio's time zone. */
+function startOfDay(date: Date): Date {
+  return new Date(`${toDateInput(date)}T00:00:00+02:00`); // Harare has no daylight saving
+}
+
+/** The Dashboard's "this week": today 00:00 to the end of today + 6 days, studio time. */
+export function next7Days(now: Date = new Date()): { start: Date; end: Date } {
+  const start = startOfDay(now);
+  return { start, end: new Date(start.getTime() + 7 * DAY_MS - 1) };
+}
+
+/** Whole calendar days from `from` to `to` in studio time: sent yesterday → 1. */
+export function daysBetween(from: Date, to: Date): number {
+  return Math.round((startOfDay(to).getTime() - startOfDay(from).getTime()) / DAY_MS);
+}
+
 /** The "2026-11-28" value a date field shows for a stored date (studio time zone). */
 export function toDateInput(date: Date): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: TIME_ZONE }).format(date);

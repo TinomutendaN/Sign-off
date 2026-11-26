@@ -4,7 +4,7 @@ import { ActivityFeed } from "@/features/activity/components/ActivityFeed";
 import { FilePreview } from "@/features/deliverables/components/FilePreview";
 import { ApprovalSummaryCard } from "@/features/portal/components/ApprovalSummaryCard";
 import { PortalProjectCard } from "@/features/portal/components/PortalProjectCard";
-import { PortalSection } from "@/features/portal/components/PortalSection";
+import { Section } from "@/components/ui/Section";
 import { getPortalHome } from "@/features/portal/queries";
 import { sentLine, toClientActivityLines } from "@/features/portal/wording";
 import { projectProgress } from "@/features/projects/progress";
@@ -42,7 +42,7 @@ export default async function PortalHomePage() {
         <NotificationBell />
       </div>
 
-      <PortalSection
+      <Section
         title="Needs your approval"
         aside={
           waiting.length > 0 && (
@@ -76,10 +76,10 @@ export default async function PortalHomePage() {
             Nothing needs your approval right now.
           </div>
         )}
-      </PortalSection>
+      </Section>
 
       <div className="flex flex-wrap items-start gap-[14px]">
-        <PortalSection
+        <Section
           title="Your projects"
           aside={<span className="text-xs text-muted">{projects.length}</span>}
           className="flex-[999_1_520px]"
@@ -97,7 +97,7 @@ export default async function PortalHomePage() {
               />
             ))}
           </div>
-        </PortalSection>
+        </Section>
         <ActivityFeed
           title="Latest updates"
           compact

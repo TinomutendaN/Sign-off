@@ -109,6 +109,7 @@ export async function sendDeliverable(input: unknown): Promise<ActionResult> {
 
   revalidatePath(`/projects/${projectId}`, "layout");
   revalidatePath("/portal", "layout");
+  revalidatePath("/dashboard");
   return { ok: true };
 }
 

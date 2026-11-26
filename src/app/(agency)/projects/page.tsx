@@ -1,7 +1,7 @@
 import { getPlanIds, projectLimitReached } from "@/features/billing/queries";
 import type { ProjectRowData } from "@/features/projects/components/ProjectRow";
 import { ProjectsList } from "@/features/projects/components/ProjectsList";
-import { currentMilestone, projectProgress } from "@/features/projects/progress";
+import { milestoneLabel, projectKind, projectProgress } from "@/features/projects/progress";
 import { listProjects, projectTeam } from "@/features/projects/queries";
 import { getMemberDirectory, getWorkspaceSummary } from "@/features/workspaces/queries";
 import { requireRole } from "@/lib/auth";
@@ -22,7 +22,6 @@ export default async function ProjectsPage({ searchParams }: PageProps<"/project
 
   const rows: ProjectRowData[] = projects.map((p) => {
     const archived = p.status === "ARCHIVED";
-    const current = currentMilestone(p.milestones);
     const finishedAt = p.milestones.reduce<Date | null>(
       (latest, m) => (m.approvedAt && (!latest || m.approvedAt > latest) ? m.approvedAt : latest),
       null,
@@ -33,16 +32,12 @@ export default async function ProjectsPage({ searchParams }: PageProps<"/project
       name: p.name,
       clientName: p.client.name,
       colour: archived ? "idle" : p.colour,
-      milestoneLabel: current
-        ? `${current.number}. ${current.name}`
-        : p.milestones.length
-          ? "All milestones approved"
-          : "No milestones yet",
+      milestoneLabel: milestoneLabel(p.milestones),
       progress: projectProgress(p.milestones),
       dateLabel: archived ? "Finished" : "Due",
       date: date ? longDate(date) : null,
       team: projectTeam(p.tasks, members),
-      kind: archived ? "archived" : p.milestones.some((m) => m.status === "WAITING") ? "waiting" : "active",
+      kind: projectKind(p),
     };
   });
 

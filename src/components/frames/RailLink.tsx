@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Suspense, type ReactNode } from "react";
+import { Suspense, useSyncExternalStore, type ReactNode } from "react";
 import { cx } from "@/components/ui/cx";
 
 type RailLinkProps = {
@@ -21,21 +21,37 @@ type RailLinkProps = {
 
 /**
  * One icon-menu item. The selected item is a white tile with a soft shadow and a violet icon.
- * On dynamic routes the path is only known at request time, so the item first renders unselected.
+ * On dynamic routes (/projects/[projectId]) usePathname waits for the request, so while it does
+ * the item reads the browser's address instead, keeping the highlight from blinking off.
+ * On the server that address is unknown, so the first paint there is unselected.
  */
 export function RailLink(props: RailLinkProps) {
   return (
-    <Suspense fallback={<RailLinkView {...props} selected={false} />}>
+    <Suspense fallback={<RailLinkWithBrowserPath {...props} />}>
       <RailLinkWithPath {...props} />
     </Suspense>
   );
 }
 
+function isSelected(pathname: string | null, { match = [], exact = false }: RailLinkProps) {
+  if (!pathname) return false;
+  return match.some((m) => (exact ? pathname === m : pathname === m || pathname.startsWith(`${m}/`)));
+}
+
 function RailLinkWithPath(props: RailLinkProps) {
   const pathname = usePathname();
-  const { match = [], exact = false } = props;
-  const selected = match.some((m) => (exact ? pathname === m : pathname === m || pathname.startsWith(`${m}/`)));
-  return <RailLinkView {...props} selected={selected} />;
+  return <RailLinkView {...props} selected={isSelected(pathname, props)} />;
+}
+
+const noSubscribe = () => () => {};
+
+function RailLinkWithBrowserPath(props: RailLinkProps) {
+  const pathname = useSyncExternalStore(
+    noSubscribe,
+    () => window.location.pathname,
+    () => null,
+  );
+  return <RailLinkView {...props} selected={isSelected(pathname, props)} />;
 }
 
 function RailLinkView({ href, icon, label, ariaLabel, hideOnPhone = false, selected }: RailLinkProps & { selected: boolean }) {
