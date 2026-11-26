@@ -43,17 +43,24 @@ export function agencyWording({ type, subject, detail }: Event, clientName: stri
   }
 }
 
-/** A project's activity, newest first, including team-only lines. */
-export async function getProjectActivity(projectId: string, clientName: string, members: Member[]) {
-  const rows = await db.activity.findMany({
+/** A project's activity rows, newest first, including team-only lines. */
+export async function getProjectActivity(projectId: string) {
+  return db.activity.findMany({
     where: { projectId },
     orderBy: { createdAt: "desc" },
     take: 100,
     select: { id: true, actorId: true, actorKind: true, type: true, subject: true, detail: true, createdAt: true },
   });
+}
 
+/** Activity rows → lines worded for the agency, with names and avatars. */
+export function toActivityLines(
+  rows: Awaited<ReturnType<typeof getProjectActivity>>,
+  clientName: string,
+  members: Member[],
+): ActivityLine[] {
   const now = new Date();
-  return rows.map((row): ActivityLine => {
+  return rows.map((row) => {
     const member = members.find((m) => m.id === row.actorId);
     const isClient = row.actorKind === "CLIENT";
     const who = isClient ? clientName : member ? displayName(member) : "A former team member";

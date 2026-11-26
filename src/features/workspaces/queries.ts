@@ -1,11 +1,28 @@
-import { clerkClient } from "@clerk/nextjs/server";
-import { cache } from "react";
+import { clerkClient, createClerkClient } from "@clerk/nextjs/server";
+import { cacheLife, cacheTag } from "next/cache";
 import { avatarTone, type AvatarTone } from "@/lib/format";
+
+// Workspace name and team rarely change, so they're remembered for a few minutes instead of
+// asking Clerk on every page. Cached functions can't read the request, so they use a Clerk
+// client built from the secret key. When membership changes (Step 9 invites, role changes),
+// call revalidateTag(workspaceTag(orgId)) so the new team shows straight away.
+
+/** Cache tag for one workspace's Clerk data (name, members). */
+export function workspaceTag(orgId: string) {
+  return `workspace:${orgId}`;
+}
+
+function cachedClerk() {
+  return createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+}
 
 /** Workspace name and member count for the agency side panel. */
 export async function getWorkspaceSummary(orgId: string) {
-  const clerk = await clerkClient();
-  const org = await clerk.organizations.getOrganization({ organizationId: orgId, includeMembersCount: true });
+  "use cache";
+  cacheLife("minutes");
+  cacheTag(workspaceTag(orgId));
+
+  const org = await cachedClerk().organizations.getOrganization({ organizationId: orgId, includeMembersCount: true });
   return { name: org.name, membersCount: org.membersCount ?? 0 };
 }
 
@@ -25,13 +42,16 @@ export type Member = {
   isOwner: boolean;
 };
 
-/**
- * The workspace's team, in the order they joined (the Owner first), keyed by Clerk user ID.
- * Cached per request, because the header, board and list all need it.
- */
-export const getMemberDirectory = cache(async (orgId: string): Promise<Member[]> => {
-  const clerk = await clerkClient();
-  const { data } = await clerk.organizations.getOrganizationMembershipList({ organizationId: orgId, limit: 100 });
+/** The workspace's team, in the order they joined (the Owner first). */
+export async function getMemberDirectory(orgId: string): Promise<Member[]> {
+  "use cache";
+  cacheLife("minutes");
+  cacheTag(workspaceTag(orgId));
+
+  const { data } = await cachedClerk().organizations.getOrganizationMembershipList({
+    organizationId: orgId,
+    limit: 100,
+  });
   return data
     .filter((m) => m.publicUserData?.userId)
     .sort((a, b) => a.createdAt - b.createdAt)
@@ -45,4 +65,4 @@ export const getMemberDirectory = cache(async (orgId: string): Promise<Member[]>
         isOwner: m.role === "org:admin",
       };
     });
-});
+}

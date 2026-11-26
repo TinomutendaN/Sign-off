@@ -11,10 +11,13 @@ import { requireRole } from "@/lib/auth";
 export default async function ListPage({ params }: { params: Promise<{ projectId: string }> }) {
   const { projectId } = await params;
   const { orgId } = await requireRole("MEMBER");
-  const project = await getProjectHeader(projectId, orgId);
+  // All three at once; nothing is shown unless the project is in this workspace.
+  const [project, rows, members] = await Promise.all([
+    getProjectHeader(projectId, orgId),
+    getProjectTasks(projectId),
+    getMemberDirectory(orgId),
+  ]);
   if (!project) notFound();
-
-  const [rows, members] = await Promise.all([getProjectTasks(projectId), getMemberDirectory(orgId)]);
 
   return <TaskTable projectId={projectId} tasks={toBoardTasks(rows)} people={toPeople(members)} />;
 }
