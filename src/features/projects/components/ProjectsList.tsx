@@ -1,10 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { KanbanIcon, PlusIcon, SearchIcon } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { ScreenHeader } from "@/components/ui/ScreenHeader";
 import { Tabs } from "@/components/ui/Tabs";
+import { UpgradePrompt } from "@/features/billing/components/UpgradePrompt";
+import type { PaidPlanKey } from "@/features/billing/plans";
+import { archiveProject } from "../actions";
 import { ProjectRow, type ProjectKind, type ProjectRowData } from "./ProjectRow";
 
 type Filter = "all" | "active" | "waiting" | "archived";
@@ -23,10 +28,34 @@ function matches(kind: ProjectKind, filter: Filter) {
   return kind === filter;
 }
 
+type ProjectsListProps = {
+  projects: ProjectRowData[];
+  subtitle: string;
+  /** The plan allows no more active projects: "+ New project" opens the upgrade pop-up. */
+  limitReached: boolean;
+  planIds: Record<PaidPlanKey, string | null>;
+  /** ?archive=1: show Archive buttons on active rows (Owners) and a hint. */
+  archiveMode: boolean;
+  canArchive: boolean;
+};
+
 /** Search box, filter tabs with counts, and the project rows. */
-export function ProjectsList({ projects, subtitle }: { projects: ProjectRowData[]; subtitle: string }) {
+export function ProjectsList({ projects, subtitle, limitReached, planIds, archiveMode, canArchive }: ProjectsListProps) {
+  const router = useRouter();
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
+  const [upgrade, setUpgrade] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [archiving, startArchive] = useTransition();
+
+  function archive(projectId: string) {
+    setError(null);
+    startArchive(async () => {
+      const result = await archiveProject({ projectId });
+      if (!result.ok) return setError(result.error);
+      router.replace("/projects");
+    });
+  }
 
   const q = query.trim().toLowerCase();
   const rows = projects.filter(
@@ -49,9 +78,15 @@ export function ProjectsList({ projects, subtitle }: { projects: ProjectRowData[
             className="w-full border-0 bg-transparent text-ink outline-none placeholder:text-muted"
           />
         </label>
-        <Button href="/clients" icon={<PlusIcon />}>
-          New project
-        </Button>
+        {limitReached ? (
+          <Button icon={<PlusIcon />} onClick={() => setUpgrade(true)}>
+            New project
+          </Button>
+        ) : (
+          <Button href="/clients" icon={<PlusIcon />}>
+            New project
+          </Button>
+        )}
       </ScreenHeader>
 
       <Tabs
@@ -65,10 +100,39 @@ export function ProjectsList({ projects, subtitle }: { projects: ProjectRowData[
         }))}
       />
 
+      {archiveMode && (
+        <div role="status" className="flex flex-wrap items-center gap-3 rounded-side bg-violet-tint px-4 py-3 text-sm text-violet-ink">
+          <span className="flex-[1_1_300px]">
+            {canArchive
+              ? "Choose a project to archive. Archived projects don't count towards your plan's project limit."
+              : "Only the workspace owner can archive projects."}
+          </span>
+          <Link href="/projects" className="text-[13px] font-semibold">
+            Done
+          </Link>
+        </div>
+      )}
+      {error && (
+        <p role="alert" className="m-0 px-1 text-[13px] text-red-ink">
+          {error}
+        </p>
+      )}
+
       <section className="flex flex-col gap-[10px] rounded-column bg-panel p-[10px]">
-        {rows.map((p) => (
-          <ProjectRow key={p.id} project={p} />
-        ))}
+        {rows.map((p) =>
+          archiveMode && canArchive && p.kind !== "archived" ? (
+            <div key={p.id} className="flex items-center gap-[10px] phone:flex-col phone:items-stretch">
+              <div className="min-w-0 flex-1">
+                <ProjectRow project={p} />
+              </div>
+              <Button variant="outline" disabled={archiving} onClick={() => archive(p.id)}>
+                Archive
+              </Button>
+            </div>
+          ) : (
+            <ProjectRow key={p.id} project={p} />
+          ),
+        )}
         {rows.length === 0 && (
           <div className="rounded-card border-[1.5px] border-dashed border-line-dash p-7 text-center text-[13px] text-muted">
             {q ? "No projects match your search." : "No projects here yet."}
@@ -77,6 +141,7 @@ export function ProjectsList({ projects, subtitle }: { projects: ProjectRowData[
       </section>
 
       <div className="px-1 text-xs text-muted">Archived projects don&apos;t count towards your plan&apos;s project limit.</div>
+      <UpgradePrompt open={upgrade} onClose={() => setUpgrade(false)} planIds={planIds} />
     </>
   );
 }

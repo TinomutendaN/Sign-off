@@ -15,7 +15,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <ClerkProvider>
+    // Clerk's own windows (checkout, subscription details) use the design's violet, navy and Inter.
+    <ClerkProvider
+      appearance={{
+        variables: {
+          colorPrimary: "var(--color-violet)",
+          colorForeground: "var(--color-ink)",
+          fontFamily: "var(--font-sans)",
+          borderRadius: "10px",
+        },
+      }}
+    >
       <html lang="en" data-scroll-behavior="smooth" className={`${inter.variable} h-full antialiased`}>
         <body className="min-h-full flex flex-col bg-page font-sans text-ink">{children}</body>
       </html>

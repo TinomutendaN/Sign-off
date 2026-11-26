@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { CopyLink } from "@/components/ui/CopyLink";
 import { Field } from "@/components/ui/Field";
+import type { PaidPlanKey } from "@/features/billing/plans";
+import { UpgradePrompt } from "@/features/billing/components/UpgradePrompt";
 import { createClientInvite, type InviteSent } from "../actions";
 import { clientInviteSchema } from "../schemas";
 
@@ -13,15 +15,17 @@ type InviteClientPanelProps = {
   /** The invite just created or re-sent, shown as the "Invite sent" state. */
   sent: InviteSent | null;
   onSent: (sent: InviteSent | null) => void;
+  planIds: Record<PaidPlanKey, string | null>;
 };
 
 /**
  * "Invite a client": company, contact and first project, then "Create project and send invite".
  * Afterwards it shows the invite link with Copy. In the demo workspace no email is sent.
  */
-export function InviteClientPanel({ sent, onSent }: InviteClientPanelProps) {
+export function InviteClientPanel({ sent, onSent, planIds }: InviteClientPanelProps) {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [upgrade, setUpgrade] = useState(false);
 
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -31,6 +35,8 @@ export function InviteClientPanel({ sent, onSent }: InviteClientPanelProps) {
     setBusy(true);
     const result = await createClientInvite(parsed.data);
     setBusy(false);
+    // The plan's project limit: the upgrade pop-up instead of an error line.
+    if (!result.ok && result.limit === "projects") return setUpgrade(true);
     if (!result.ok) return setError(result.error);
     onSent(result);
   }
@@ -91,6 +97,7 @@ export function InviteClientPanel({ sent, onSent }: InviteClientPanelProps) {
           </form>
         )}
       </Card>
+      <UpgradePrompt open={upgrade} onClose={() => setUpgrade(false)} planIds={planIds} />
     </section>
   );
 }

@@ -1,6 +1,8 @@
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { NextResponse } from "next/server";
-import { ALLOWED_TYPES, uploadLimitBytes, uploadPrefix } from "@/features/deliverables/files";
+import { GB } from "@/features/billing/plans";
+import { getPlanLimits, storageUsed } from "@/features/billing/queries";
+import { ALLOWED_TYPES, STORAGE_FULL, uploadLimitBytes, uploadPrefix } from "@/features/deliverables/files";
 import { getProjectForUpload } from "@/features/deliverables/queries";
 import { uploadPayloadSchema } from "@/features/deliverables/schemas";
 import { checkRole } from "@/lib/auth";
@@ -8,7 +10,8 @@ import { checkRole } from "@/lib/auth";
 class Forbidden extends Error {}
 
 // Vercel Blob client uploads: the browser asks here for a short-lived upload token, then sends
-// the file straight to Blob. Only Owners and Team members of the project's workspace get one.
+// the file straight to Blob. Only Owners and Team members of the project's workspace get one,
+// and only while the file fits in what's left of the plan's storage (Free 1 GB, Pro 25, Agency 100).
 // There's no onUploadCompleted callback: the sendDeliverable Server Action saves the record.
 export async function POST(request: Request) {
   let body: HandleUploadBody;
@@ -33,9 +36,14 @@ export async function POST(request: Request) {
         if (!project) throw new Forbidden("This project isn't in your workspace.");
         if (!pathname.startsWith(uploadPrefix(access.orgId, project.id))) throw new Forbidden("Wrong upload folder.");
 
+        const [{ limits }, used] = await Promise.all([getPlanLimits(), storageUsed(access.orgId)]);
+        const left = limits.storageGb * GB - used;
+        if (payload.data.size > left) throw new Forbidden(STORAGE_FULL);
+
         return {
           allowedContentTypes: ALLOWED_TYPES,
-          maximumSizeInBytes: uploadLimitBytes(access.orgId),
+          // The token itself refuses a bigger file, whatever size the browser claimed.
+          maximumSizeInBytes: Math.max(0, Math.min(uploadLimitBytes(access.orgId), left)),
           addRandomSuffix: true,
         };
       },

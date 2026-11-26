@@ -12,6 +12,7 @@ import { AuthModeSwitch } from "./AuthModeSwitch";
 import { AuthSubmit } from "./AuthSubmit";
 import { CodeStep } from "./CodeStep";
 import { PlanNote } from "./PlanNote";
+import { afterWorkspaceUrl } from "../afterWorkspace";
 
 type SignUpFormProps = { plan: ChosenPlan | null; query: string };
 
@@ -36,7 +37,7 @@ export function SignUpForm({ plan, query }: SignUpFormProps) {
     try {
       const org = await clerk.createOrganization({ name });
       await openWorkspace(clerk, org.id);
-      go(decorate("/dashboard"));
+      go(decorate(afterWorkspaceUrl(plan)));
     } catch {
       // The account exists; the "Create your workspace" state lets them try the workspace again.
       go(decorate("/sign-up"));

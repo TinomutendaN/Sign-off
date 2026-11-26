@@ -1,12 +1,59 @@
+"use client";
+
+import { useAuth } from "@clerk/nextjs";
 import { CheckIcon } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { cx } from "@/components/ui/cx";
-import { PLANS, priceFor, signUpHref, type Period, type PlanKey } from "../plans";
+import { PLANS, planFromHas, priceFor, signUpHref, type PaidPlanKey, type Period, type PlanKey } from "../plans";
+import { PlanCheckoutButton } from "./PlanCheckoutButton";
 
-/** One white plan card on Pricing. The popular plan (Pro) gets the violet outline and button. */
-export function PricingPlanCard({ planKey, period }: { planKey: PlanKey; period: Period }) {
+type PricingPlanCardProps = {
+  planKey: PlanKey;
+  period: Period;
+  planIds: Record<PaidPlanKey, string | null>;
+};
+
+/**
+ * One white plan card on Pricing. The popular plan (Pro) gets the violet outline and button.
+ * Signed out (or not a workspace Owner), the button goes to sign-up with the plan chosen. A signed-in
+ * Owner gets Clerk's checkout straight away, and "Current plan" on the plan they're on.
+ */
+export function PricingPlanCard({ planKey, period, planIds }: PricingPlanCardProps) {
   const plan = PLANS[planKey];
   const { price, per, sub } = priceFor(planKey, period);
+  const { isLoaded, orgId, orgRole, has } = useAuth();
+  const owner = isLoaded && orgId && orgRole === "org:admin";
+  const current = owner ? planFromHas(has) : null;
+  const variant = plan.popular ? "primary" : "outline";
+
+  function action() {
+    if (!owner) {
+      return (
+        <Button href={signUpHref(planKey, period)} variant={variant} size="md">
+          {plan.cta}
+        </Button>
+      );
+    }
+    if (current === planKey) {
+      return (
+        <Button variant={variant} size="md" disabled>
+          Current plan
+        </Button>
+      );
+    }
+    if (planKey === "free") {
+      return (
+        <Button href="/billing" variant={variant} size="md">
+          Change on Billing
+        </Button>
+      );
+    }
+    return (
+      <PlanCheckoutButton planId={planIds[planKey]} period={period} variant={variant}>
+        {plan.cta}
+      </PlanCheckoutButton>
+    );
+  }
 
   return (
     <article
@@ -30,9 +77,7 @@ export function PricingPlanCard({ planKey, period }: { planKey: PlanKey; period:
         </div>
         <div className="min-h-4 text-xs text-muted">{sub}</div>
       </div>
-      <Button href={signUpHref(planKey, period)} variant={plan.popular ? "primary" : "outline"} size="md">
-        {plan.cta}
-      </Button>
+      {action()}
       <div className="h-px bg-soft-2" />
       <ul className="m-0 flex list-none flex-col gap-2 p-0">
         {plan.features.map((feature) => (

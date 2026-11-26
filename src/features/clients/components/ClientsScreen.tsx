@@ -3,13 +3,23 @@
 import { useState } from "react";
 import { PeopleIcon, SearchIcon } from "@/components/icons";
 import { ScreenHeader } from "@/components/ui/ScreenHeader";
+import type { PaidPlanKey } from "@/features/billing/plans";
 import { resendClientInvite, type InviteSent } from "../actions";
 import type { ClientSummary } from "../queries";
 import { ClientCard } from "./ClientCard";
 import { InviteClientPanel } from "./InviteClientPanel";
 
 /** 05 Clients: header with search, "All clients" cards and the "Invite a client" panel. */
-export function ClientsScreen({ clients, workspaceName }: { clients: ClientSummary[]; workspaceName: string }) {
+export function ClientsScreen({
+  clients,
+  workspaceName,
+  planIds,
+}: {
+  clients: ClientSummary[];
+  workspaceName: string;
+  /** Clerk plan IDs, for the upgrade pop-up's checkout buttons. */
+  planIds: Record<PaidPlanKey, string | null>;
+}) {
   const [query, setQuery] = useState("");
   const [sent, setSent] = useState<InviteSent | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -65,7 +75,7 @@ export function ClientsScreen({ clients, workspaceName }: { clients: ClientSumma
             </p>
           )}
         </section>
-        <InviteClientPanel sent={sent} onSent={setSent} />
+        <InviteClientPanel sent={sent} onSent={setSent} planIds={planIds} />
       </div>
     </>
   );

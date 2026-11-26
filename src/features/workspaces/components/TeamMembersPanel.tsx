@@ -24,7 +24,7 @@ export function TeamMembersPanel({ team, userId, seatNote }: { team: Team; userI
       key: m.id,
       avatar: { label: initials(m), tone: m.tone },
       name: `${displayName(m)}${m.id === userId ? " (you)" : ""}`,
-      // The earliest Owner pays (TODO(Step 10): the subscription's payer from Clerk Billing).
+      // The earliest Owner pays: Clerk bills the workspace itself, not a person, so this is the stand-in.
       note: m.note ?? (m.id === payer ? "Pays for the workspace" : ""),
       role: m.isOwner ? ("Owner" as const) : ("Team member" as const),
     })),

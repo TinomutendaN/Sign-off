@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   // Stop `next dev` from writing its own block into our AGENTS.md.
   agentRules: false,
+  // The nightly demo reset reads the sample files' real sizes.
+  outputFileTracingIncludes: { "/api/cron/reset-demo": ["./public/demo-files/**"] },
   turbopack: {
     rules: {
       "*.css": {

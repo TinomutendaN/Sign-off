@@ -1,6 +1,7 @@
 import { SettingsIcon } from "@/components/icons";
 import { ScreenHeader } from "@/components/ui/ScreenHeader";
 import { PLANS } from "@/features/billing/plans";
+import { getBillingState } from "@/features/billing/queries";
 import { listClientAccess } from "@/features/clients/queries";
 import { ClientAccessPanel } from "@/features/workspaces/components/ClientAccessPanel";
 import { InviteTeamPanel } from "@/features/workspaces/components/InviteTeamPanel";
@@ -14,11 +15,16 @@ import { requireRole } from "@/lib/auth";
 // 09 Team settings. Everyone in the workspace can see it; only Owners can rename or invite.
 export default async function SettingsPage() {
   const { orgId, userId, isOwner } = await requireRole("MEMBER");
-  const [team, clients, origin] = await Promise.all([getTeamSettings(orgId), listClientAccess(orgId), requestOrigin()]);
+  const [team, clients, origin, billing] = await Promise.all([
+    getTeamSettings(orgId),
+    listClientAccess(orgId),
+    requestOrigin(),
+    getBillingState(orgId),
+  ]);
 
   const seats = team.members.length + team.pending.length;
-  // TODO(Step 10): the plan name from Clerk Billing (the side panel's plan card is also fixed to Pro).
-  const seatNote = `${seats} of ${team.maxMembers} team members on ${PLANS.pro.name}`;
+  const plan = PLANS[billing.plan];
+  const seatNote = `${seats} of ${plan.limits.members} team members on ${plan.name}`;
 
   return (
     <>

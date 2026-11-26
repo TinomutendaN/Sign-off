@@ -13,6 +13,9 @@ export const ALLOWED_TYPES = [
   "application/x-zip-compressed",
 ];
 
+/** Shown when a file would take the workspace past its plan's storage. */
+export const STORAGE_FULL = "Your plan's file storage is full. Upgrade for more space, or remove old files.";
+
 /** For the file picker. */
 export const ACCEPT = ".pdf,.png,.jpg,.jpeg,.webp,.gif,.zip," + ALLOWED_TYPES.join(",");
 

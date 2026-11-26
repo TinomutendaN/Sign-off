@@ -143,3 +143,19 @@
 .scroll-x::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/* Receipts print on their own: everything but the .receipt card is hidden on paper. */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .receipt,
+  .receipt * {
+    visibility: visible;
+  }
+  .receipt {
+    position: absolute;
+    inset: 0 auto auto 0;
+    box-shadow: none;
+  }
+}

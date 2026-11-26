@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { Tabs } from "@/components/ui/Tabs";
-import { PLAN_ORDER, type Period } from "../plans";
+import { PLAN_ORDER, type PaidPlanKey, type Period } from "../plans";
 import { PricingPlanCard } from "./PricingPlanCard";
 
 /**
  * Pricing heading block plus the three plan cards. The Monthly / Annual switch (Annual by default)
  * updates every price, the "Billed…" line and where each plan button goes.
  */
-export function PricingPlans() {
+export function PricingPlans({ planIds }: { planIds: Record<PaidPlanKey, string | null> }) {
   const [period, setPeriod] = useState<Period>("annual");
 
   return (
@@ -46,7 +46,7 @@ export function PricingPlans() {
         className="mx-auto grid w-full max-w-[1180px] grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-[10px] rounded-section bg-panel p-[10px]"
       >
         {PLAN_ORDER.map((key) => (
-          <PricingPlanCard key={key} planKey={key} period={period} />
+          <PricingPlanCard key={key} planKey={key} period={period} planIds={planIds} />
         ))}
       </section>
     </>

@@ -19,7 +19,7 @@
 
 import { statSync } from "node:fs";
 import { join } from "node:path";
-import { createClerkClient, type ClerkClient } from "@clerk/nextjs/server";
+import { createClerkClient } from "@clerk/nextjs/server";
 import { PLANS } from "@/features/billing/plans";
 import type { BillingPeriod, Plan, Prisma, PrismaClient } from "@/generated/prisma/client";
 import { resetDemoBilling, resetDemoFiles } from "./demoReset";
@@ -37,7 +37,7 @@ function requireEnv(name: string): string {
 }
 
 let db: PrismaClient;
-let clerk: ClerkClient;
+let clerk: ReturnType<typeof createClerkClient>;
 let ORG: string;
 let TINO: string;
 let LEO: string;

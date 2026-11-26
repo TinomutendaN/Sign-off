@@ -3,6 +3,7 @@
 import { clerkClient } from "@clerk/nextjs/server";
 import { isClerkAPIResponseError } from "@clerk/nextjs/errors";
 import { revalidatePath, updateTag } from "next/cache";
+import { getPlanLimits } from "@/features/billing/queries";
 import { checkRole } from "@/lib/auth";
 import { isDemoOrg, requestOrigin } from "./demo";
 import { inviteeName, workspaceTag } from "./queries";
@@ -69,6 +70,24 @@ export async function inviteTeamMember(input: unknown): Promise<TeamInviteResult
 
   try {
     const clerk = await clerkClient();
+
+    // The plan's team size (Free 5, Pro 15, Agency 20) counts members and waiting invites.
+    // Clerk enforces the same number (maxAllowedMemberships); this check gives a clear message.
+    const [{ plan, limits }, memberships, pending] = await Promise.all([
+      getPlanLimits(),
+      clerk.organizations.getOrganizationMembershipList({ organizationId: access.orgId, limit: 1 }),
+      clerk.organizations.getOrganizationInvitationList({ organizationId: access.orgId, status: ["pending"], limit: 1 }),
+    ]);
+    if (memberships.totalCount + pending.totalCount >= limits.members) {
+      return {
+        ok: false,
+        error:
+          plan === "agency"
+            ? `Your workspace has all ${limits.members} team members its plan allows.`
+            : `Your workspace has all ${limits.members} team members its plan allows. Upgrade to add more.`,
+      };
+    }
+
     const invitation = await clerk.organizations.createOrganizationInvitation({
       organizationId: access.orgId,
       inviterUserId: access.userId,

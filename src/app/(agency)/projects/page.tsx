@@ -1,3 +1,4 @@
+import { getPlanIds, projectLimitReached } from "@/features/billing/queries";
 import type { ProjectRowData } from "@/features/projects/components/ProjectRow";
 import { ProjectsList } from "@/features/projects/components/ProjectsList";
 import { currentMilestone, projectProgress } from "@/features/projects/progress";
@@ -6,13 +7,17 @@ import { getMemberDirectory, getWorkspaceSummary } from "@/features/workspaces/q
 import { requireRole } from "@/lib/auth";
 import { longDate } from "@/lib/format";
 
-// 06 Projects list
-export default async function ProjectsPage() {
-  const { orgId } = await requireRole("MEMBER");
-  const [projects, workspace, members] = await Promise.all([
+// 06 Projects list. On Free with both projects in use, "+ New project" opens the upgrade pop-up (12).
+// ?archive=1 (from the pop-up's "Archive a project instead") shows Archive buttons to Owners.
+export default async function ProjectsPage({ searchParams }: PageProps<"/projects">) {
+  const { orgId, isOwner } = await requireRole("MEMBER");
+  const { archive } = await searchParams;
+  const [projects, workspace, members, limitReached, planIds] = await Promise.all([
     listProjects(orgId),
     getWorkspaceSummary(orgId),
     getMemberDirectory(orgId),
+    projectLimitReached(orgId),
+    getPlanIds(),
   ]);
 
   const rows: ProjectRowData[] = projects.map((p) => {
@@ -45,6 +50,13 @@ export default async function ProjectsPage() {
   const archived = rows.length - active;
 
   return (
-    <ProjectsList projects={rows} subtitle={`${workspace.name} · ${active} active, ${archived} archived`} />
+    <ProjectsList
+      projects={rows}
+      subtitle={`${workspace.name} · ${active} active, ${archived} archived`}
+      limitReached={limitReached}
+      planIds={planIds}
+      archiveMode={archive === "1"}
+      canArchive={isOwner}
+    />
   );
 }

@@ -3,6 +3,7 @@
 import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { recordActivity } from "@/features/activity/record";
+import { projectLimitReached } from "@/features/billing/queries";
 import { isDemoOrg, requestOrigin } from "@/features/workspaces/demo";
 import { checkRole } from "@/lib/auth";
 import { db } from "@/lib/db";
@@ -17,7 +18,8 @@ export type InviteSent = {
   contactName: string;
   projectName: string;
 };
-export type InviteResult = InviteSent | { ok: false; error: string };
+/** `limit: "projects"`: the plan allows no more active projects, so the UI opens the upgrade pop-up. */
+export type InviteResult = InviteSent | { ok: false; error: string; limit?: "projects" };
 
 /** New projects take the first colour no active project in the workspace uses. */
 const PROJECT_COLOURS = ["violet", "amber", "green", "blue", "red"] as const;
@@ -45,7 +47,8 @@ function revalidateClientScreens() {
 }
 
 /**
- * "Create project and send invite" (Owners and Team members). Creates the client, their first
+ * "Create project and send invite" (Owners and Team members). Refused with `limit: "projects"`
+ * when the plan's project limit is reached (Free: 2 active). Otherwise creates the client, their first
  * project with a "1. Getting started" milestone, a Clerk invitation and the ClientInvite row the
  * invited person claims when they first sign in (claimClientInvites).
  */
@@ -57,6 +60,11 @@ export async function createClientInvite(input: unknown): Promise<InviteResult> 
   if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? "Check the invite details." };
   const { company, contactName, contactEmail, projectName } = parsed.data;
   const { orgId, userId } = access;
+
+  // Checked on the server, so the limit holds even if the pop-up is skipped.
+  if (await projectLimitReached(orgId)) {
+    return { ok: false, limit: "projects", error: "You've used both Free projects. Upgrade to start a third project." };
+  }
 
   const used = await db.project.findMany({ where: { orgId, status: "ACTIVE" }, select: { colour: true } });
   const colour = PROJECT_COLOURS.find((c) => !used.some((p) => p.colour === c)) ?? PROJECT_COLOURS[used.length % 5];

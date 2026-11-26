@@ -3,8 +3,8 @@ import { CHANGES_COMMENT_REQUIRED } from "./decisions";
 
 const id = z.string().min(1).max(40);
 
-/** What the upload panel sends to the upload route, alongside the file. */
-export const uploadPayloadSchema = z.object({ projectId: id });
+/** What the upload panel sends to the upload route, alongside the file (its size in bytes). */
+export const uploadPayloadSchema = z.object({ projectId: id, size: z.number().int().nonnegative() });
 
 /** "Send to client for approval": a file already uploaded to Blob, plus its details. */
 export const sendDeliverableSchema = z.object({

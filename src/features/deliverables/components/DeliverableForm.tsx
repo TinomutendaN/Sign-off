@@ -11,7 +11,7 @@ import { Field } from "@/components/ui/Field";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { fileSize } from "@/lib/format";
 import { sendDeliverable } from "../actions";
-import { ACCEPT, ALLOWED_TYPES, limitLabel, titleFromFileName } from "../files";
+import { ACCEPT, ALLOWED_TYPES, limitLabel, STORAGE_FULL, titleFromFileName } from "../files";
 
 export type FormOptions = {
   projectId: string;
@@ -88,7 +88,7 @@ export function DeliverableForm({
       const blob = await upload(uploadFolder + chosen.name, chosen, {
         access: "public",
         handleUploadUrl: "/api/uploads",
-        clientPayload: JSON.stringify({ projectId }),
+        clientPayload: JSON.stringify({ projectId, size: chosen.size }),
         contentType: chosen.type,
         abortSignal: controller.signal,
         onUploadProgress: ({ percentage }) => {
@@ -103,7 +103,9 @@ export function DeliverableForm({
       setFile(null);
       const message = e instanceof Error ? e.message : "";
       setError(
-        /not allowed|access|forbidden|workspace/i.test(message)
+        /storage is full/i.test(message)
+          ? STORAGE_FULL
+          : /not allowed|access|forbidden|workspace/i.test(message)
           ? "You can't upload files to this project."
           : "The upload didn't finish. Check your connection and try again.",
       );

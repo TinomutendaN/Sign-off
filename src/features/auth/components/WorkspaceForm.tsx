@@ -10,6 +10,7 @@ import { AuthFootnote } from "./AuthFootnote";
 import { AuthHeading } from "./AuthHeading";
 import { AuthSubmit } from "./AuthSubmit";
 import { PlanNote } from "./PlanNote";
+import { afterWorkspaceUrl } from "../afterWorkspace";
 
 type WorkspaceFormProps = {
   plan: ChosenPlan | null;
@@ -21,7 +22,8 @@ type WorkspaceFormProps = {
 
 /**
  * "Create your workspace" for someone already signed in with no workspace and no client
- * access. Creates the Clerk organization (they become Owner), makes it active, opens /dashboard.
+ * access. Creates the Clerk organization (they become Owner), makes it active, and opens /dashboard,
+ * or Billing with checkout for the plan they chose on Pricing.
  */
 export function WorkspaceForm({ plan, defaultName, personName }: WorkspaceFormProps) {
   const clerk = useClerk();
@@ -38,7 +40,7 @@ export function WorkspaceForm({ plan, defaultName, personName }: WorkspaceFormPr
     try {
       const org = await clerk.createOrganization({ name: parsed.data.workspaceName });
       await openWorkspace(clerk, org.id);
-      go("/dashboard");
+      go(afterWorkspaceUrl(plan));
     } catch (err) {
       setBusy(false);
       setError(errorMessage(err));

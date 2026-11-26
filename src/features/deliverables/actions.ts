@@ -4,10 +4,12 @@ import { head } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { Prisma } from "@/generated/prisma/client";
 import { recordActivity } from "@/features/activity/record";
+import { GB } from "@/features/billing/plans";
+import { getPlanLimits, storageUsed } from "@/features/billing/queries";
 import { checkClient, checkRole } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { milestoneStatusAfter, taskMoveAfter } from "./decisions";
-import { ALLOWED_TYPES, isBlobUrl, uploadPrefix } from "./files";
+import { ALLOWED_TYPES, isBlobUrl, STORAGE_FULL, uploadPrefix } from "./files";
 import { decideDeliverableSchema, sendDeliverableSchema } from "./schemas";
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
@@ -51,6 +53,8 @@ export async function sendDeliverable(input: unknown): Promise<ActionResult> {
   if (blob.pathname !== file.pathname || !ALLOWED_TYPES.includes(blob.contentType)) {
     return { ok: false, error: "That file wasn't uploaded to this project." };
   }
+  const [{ limits }, used] = await Promise.all([getPlanLimits(), storageUsed(access.orgId)]);
+  if (used + blob.size > limits.storageGb * GB) return { ok: false, error: STORAGE_FULL };
 
   try {
     await db.$transaction(async (tx) => {

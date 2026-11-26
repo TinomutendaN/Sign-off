@@ -147,7 +147,9 @@ signoff/
 │  │  │  │     ├─ milestones/page.tsx    # Milestones + send for approval
 │  │  │  │     └─ activity/page.tsx
 │  │  │  ├─ settings/page.tsx            # 09 Team settings
-│  │  │  └─ billing/page.tsx             # 10 Billing
+│  │  │  └─ billing/
+│  │  │     ├─ page.tsx                  # 10 Billing
+│  │  │     └─ receipts/[paymentId]/page.tsx   # printable receipt for one payment
 │  │  │
 │  │  ├─ (portal)/             # Client frame
 │  │  │  ├─ layout.tsx                   # checks: signed in + has ClientAccess
@@ -162,17 +164,18 @@ signoff/
 │  │  │     └─ subscribers/page.tsx      # 14 Subscribers
 │  │  │
 │  │  └─ api/
-│  │     ├─ webhooks/clerk/route.ts      # billing + invitation events → database
-│  │     └─ uploads/route.ts             # Vercel Blob upload token
+│  │     ├─ webhooks/clerk/route.ts      # billing events → database
+│  │     ├─ uploads/route.ts             # Vercel Blob upload token
+│  │     └─ cron/reset-demo/route.ts     # nightly demo reset (Vercel Cron, CRON_SECRET)
 │  │
 │  ├─ features/                # one folder per feature: logic + its own UI
-│  │  ├─ workspaces/   { actions.ts, queries.ts, components/ }
+│  │  ├─ workspaces/   { actions.ts, queries.ts, demo.ts, demoReset.ts, demoSeed.ts, components/ }   # demo data and reset
 │  │  ├─ clients/      { actions.ts, queries.ts, schemas.ts, components/ }
 │  │  ├─ projects/     { actions.ts, queries.ts, schemas.ts, components/ }
 │  │  ├─ tasks/        { actions.ts, queries.ts, schemas.ts, components/ }   # Kanban, task panel
 │  │  ├─ deliverables/ { actions.ts, queries.ts, schemas.ts, components/ }   # uploads, approvals
 │  │  ├─ activity/     { queries.ts, record.ts, components/ }
-│  │  ├─ billing/      { plans.ts, queries.ts, components/ }                 # limits, upgrade pop-up
+│  │  ├─ billing/      { plans.ts, queries.ts, actions.ts, sync.ts, components/ }   # limits, checkout, upgrade pop-up, webhook sync
 │  │  ├─ admin/        { queries.ts, components/ }                           # revenue, subscribers
 │  │  └─ marketing/    { components/ }                                       # public page sections: Landing hero, How it works, audience cards, closing band, footer
 │  │
@@ -222,8 +225,8 @@ signoff/
    - `components/ui`: the design's building blocks (grey panel, white card, pill, avatar, progress bar), so the look stays consistent.
    - `components/frames`: the four app frames, including the phone bottom tab bar.
    - `lib/`: only the three things every feature needs: the database client, the role checks and formatting.
-8. **Only two API routes.**
-   - Clerk's webhooks need a real address, and so do Vercel Blob uploads. Everything else is a Server Action.
+8. **Only three API routes.**
+   - Clerk's webhooks need a real address, and so do Vercel Blob uploads and the nightly Vercel Cron demo reset. Everything else is a Server Action.
 9. **Access rules live in one file.**
    - `lib/auth.ts` holds `requireRole("OWNER")`, `requireClient(projectId)` and `requireAdmin()`.
    - Every action and layout calls these, so if a rule changes it changes everywhere.
