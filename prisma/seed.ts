@@ -423,6 +423,8 @@ async function seedAgency(tx: Prisma.TransactionClient) {
       milestoneId: pages.id,
       title: "Homepage design, version 2",
       ...demoFile("homepage-v2.pdf"),
+      // The client's preview box shows the design's illustration of the PDF.
+      previewUrl: "/demo-files/homepage-v2-preview.png",
       note: "We moved the order button above the fold and used the warmer photo you picked. Let us know if the menu section feels right.",
       status: "WAITING",
       sentById: LEO,

@@ -197,19 +197,19 @@ if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = db;
 **Done when:** an uploaded file appears under its milestone as "Waiting on client".
 
 ### Step 8 — Client portal and approvals (6h)
-1. Client invites: the invite form creates a `Client`, a `Project` and a Clerk **invitation** with the client and project IDs in its metadata. When the invited person signs up, the Clerk webhook creates their `ClientAccess` row.
-2. Client home (13): what needs their approval, their projects with milestone statuses, latest updates.
-3. Client project view (14): preview, file download, note, comment box, **Approve** and **Request changes** (a comment is required for changes). Each decision updates the deliverable and milestone, and records activity.
-4. Clients only ever see their own projects and never see team comments.
+1. Client home (13): what needs their approval, their projects with milestone statuses, latest updates.
+2. Client project view (14): preview, file download, note, comment box, **Approve** and **Request changes** (a comment is required for changes). Each decision updates the deliverable and milestone, and records activity.
+3. Clients only ever see their own projects and never see team comments.
 
 **Done when:** an agency sends a deliverable, the client approves it in the portal, and the agency's board, milestones and dashboard show "Approved by client".
 
 ### Step 9 — Clients and Team settings (4h)
-1. Clients (05): client cards with their projects and stats, "See their portal", and the invite form with a copyable invite link.
-2. Team settings (10): workspace name, team members from the Clerk organization, client access list, invite a team member (Clerk organization invitation, role Team member or Owner), and the "What each role can do" box.
-3. Only Owners can invite, change roles or edit workspace details.
+1. Client invites: the invite form creates a `Client`, a `Project` and a Clerk **invitation** with the client and project IDs in its metadata. When the invited person signs up, the Clerk webhook creates their `ClientAccess` row.
+2. Clients (05): client cards with their projects and stats, "See their portal", and the invite form with a copyable invite link.
+3. Team settings (10): workspace name, team members from the Clerk organization, client access list, invite a team member (Clerk organization invitation, role Team member or Owner), and the "What each role can do" box.
+4. Only Owners can invite, change roles or edit workspace details.
 
-**Done when:** inviting a team member sends a Clerk invitation and the new person appears as pending.
+**Done when:** inviting a client creates their client and project and sends a Clerk invitation, and once they sign up they see that project in the portal; inviting a team member sends a Clerk invitation and the new person appears as pending.
 
 ### Step 10 — Billing, plan limits and upgrade pop-up (6h)
 1. In the Clerk dashboard, create **Organization** plans: Free, Pro ($19 a month / $190 a year), Agency ($49 a month / $490 a year), with features for the limits (projects, team members, storage).

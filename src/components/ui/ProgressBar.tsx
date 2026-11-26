@@ -12,7 +12,7 @@ const bars: Record<BarTone, string> = {
   idle: "bg-idle",
 };
 
-const tracks = { white: "bg-card", track: "bg-track", soft: "bg-soft-2" } as const;
+const tracks = { white: "bg-card", track: "bg-track", soft: "bg-soft-2", panel: "bg-panel" } as const;
 const heights = { 5: "h-[5px] rounded-[3px]", 6: "h-1.5 rounded-[3px]", 7: "h-[7px] rounded-[4px]", 8: "h-2 rounded-[4px]" } as const;
 
 type ProgressBarProps = {

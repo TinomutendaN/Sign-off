@@ -19,7 +19,7 @@ export async function getPortalSidebar(userId: string) {
           id: true,
           name: true,
           colour: true,
-          milestones: { select: { _count: { select: { deliverables: { where: { status: "WAITING" } } } } } },
+          milestones: { select: { _count: { select: { deliverables: { where: { status: "WAITING", nextVersion: { is: null } } } } } } },
         },
       },
     },

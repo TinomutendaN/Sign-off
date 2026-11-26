@@ -1,6 +1,7 @@
-import { BellIcon, ExternalLinkIcon, MonitorIcon, PlusIcon, StarIcon } from "@/components/icons";
+import { ExternalLinkIcon, MonitorIcon, PlusIcon, StarIcon } from "@/components/icons";
 import { AvatarStack } from "@/components/ui/AvatarStack";
 import { Button } from "@/components/ui/Button";
+import { NotificationBell } from "@/components/ui/NotificationBell";
 import { ScreenHeader } from "@/components/ui/ScreenHeader";
 import type { Member } from "@/features/workspaces/queries";
 
@@ -22,15 +23,7 @@ export function ProjectHeader({ projectId, name, subtitle, team }: ProjectHeader
     >
       <div className="flex flex-wrap items-center gap-[14px]">
         <AvatarStack people={team} size={32} />
-        {/* Notifications arrive in a later step; the bell is shown as designed. */}
-        <span
-          role="img"
-          aria-label="Notifications"
-          className="relative flex size-9 items-center justify-center rounded-control text-muted"
-        >
-          <BellIcon />
-          <span className="absolute top-[7px] right-2 size-[7px] rounded-full border-[1.5px] border-card bg-alert" />
-        </span>
+        <NotificationBell />
         {/* No agency-side design for the client's view yet, so it's shown but inactive. */}
         <Button variant="outline" icon={<ExternalLinkIcon />} disabled title="Coming soon">
           Client view

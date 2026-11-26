@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { CHANGES_COMMENT_REQUIRED } from "./decisions";
 
 const id = z.string().min(1).max(40);
 
@@ -20,3 +21,17 @@ export const sendDeliverableSchema = z.object({
   replacesId: id.optional(),
 });
 export type SendDeliverableInput = z.infer<typeof sendDeliverableSchema>;
+
+/** The client's Approve or Request changes. A comment is needed when asking for changes. */
+export const decideDeliverableSchema = z
+  .object({
+    projectId: id,
+    deliverableId: id,
+    kind: z.enum(["APPROVED", "CHANGES_REQUESTED"]),
+    comment: z.string().trim().max(2000, "Keep the comment under 2,000 characters.").optional(),
+  })
+  .refine((d) => d.kind === "APPROVED" || (d.comment ?? "").length > 0, {
+    message: CHANGES_COMMENT_REQUIRED,
+    path: ["comment"],
+  });
+export type DecideDeliverableInput = z.infer<typeof decideDeliverableSchema>;

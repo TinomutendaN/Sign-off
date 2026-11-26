@@ -4,10 +4,11 @@ import { head } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { Prisma } from "@/generated/prisma/client";
 import { recordActivity } from "@/features/activity/record";
-import { checkRole } from "@/lib/auth";
+import { checkClient, checkRole } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { milestoneStatusAfter, taskMoveAfter } from "./decisions";
 import { ALLOWED_TYPES, isBlobUrl, uploadPrefix } from "./files";
-import { sendDeliverableSchema } from "./schemas";
+import { decideDeliverableSchema, sendDeliverableSchema } from "./schemas";
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
 
@@ -103,5 +104,138 @@ export async function sendDeliverable(input: unknown): Promise<ActionResult> {
   }
 
   revalidatePath(`/projects/${projectId}`, "layout");
+  revalidatePath("/portal", "layout");
+  return { ok: true };
+}
+
+const TASK_STEP = 1000;
+
+/**
+ * The client's Approve or Request changes on a deliverable waiting on them. Decisions are final.
+ * Saves the decision, then applies the agreed rules (decisions.ts): the milestone is worked out
+ * again from its current deliverables (Approved → approvedAt, a "completed milestone" line and the
+ * next Up next milestone starts), and on Approve the linked task moves to the top of Done.
+ */
+export async function decideDeliverable(input: unknown): Promise<ActionResult> {
+  const parsed = decideDeliverableSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? "Check your decision." };
+  const { projectId, deliverableId, kind } = parsed.data;
+  const comment = parsed.data.comment || null;
+
+  const access = await checkClient(projectId);
+  if (!access.ok) return access;
+
+  try {
+    await db.$transaction(
+      async (tx) => {
+        // One read for everything the rules need: the milestone, its other current deliverables
+        // and the tasks linked to this deliverable.
+        const deliverable = await tx.deliverable.findFirst({
+          where: { id: deliverableId, milestone: { projectId }, nextVersion: { is: null } },
+          select: {
+            id: true,
+            title: true,
+            tasks: { where: { projectId }, orderBy: { order: "asc" }, select: { id: true, status: true } },
+            milestone: {
+              select: {
+                id: true,
+                number: true,
+                name: true,
+                status: true,
+                project: { select: { orgId: true } },
+                deliverables: { where: { nextVersion: { is: null } }, select: { id: true, status: true } },
+              },
+            },
+          },
+        });
+        if (!deliverable) throw new Refused("That deliverable isn't in this project.");
+
+        // Only the first decision counts, even if two arrive at once.
+        const claimed = await tx.deliverable.updateMany({
+          where: { id: deliverable.id, status: "WAITING" },
+          data: { status: kind },
+        });
+        if (claimed.count === 0) throw new Refused("This has already been decided.");
+
+        await tx.decision.create({
+          data: { deliverableId: deliverable.id, clientUserId: access.userId, kind, comment },
+        });
+
+        const now = new Date();
+        const { milestone } = deliverable;
+        const orgId = milestone.project.orgId;
+
+        await recordActivity(tx, {
+          orgId,
+          projectId,
+          actorId: access.userId,
+          actorKind: "CLIENT",
+          type: kind === "APPROVED" ? "DELIVERABLE_APPROVED" : "CHANGES_REQUESTED",
+          subject: deliverable.title,
+          detail: kind === "CHANGES_REQUESTED" ? comment : null,
+          visibleToClient: true,
+          createdAt: now,
+        });
+
+        // The linked task(s): Approve → top of Done. Request changes leaves them in place.
+        const target = taskMoveAfter(kind);
+        const moving = target ? deliverable.tasks.filter((t) => t.status !== target) : [];
+        if (target && moving.length > 0) {
+          const first = await tx.task.findFirst({
+            where: { projectId, status: target },
+            orderBy: { order: "asc" },
+            select: { order: true },
+          });
+          let order = (first?.order ?? TASK_STEP * (moving.length + 1)) - TASK_STEP * moving.length;
+          for (const t of moving) {
+            await tx.task.update({
+              where: { id: t.id },
+              data: { status: target, order, ...(target === "DONE" && { completedAt: now }) },
+            });
+            order += TASK_STEP;
+          }
+        }
+
+        // The milestone, from its current deliverables (this one now carries the decision).
+        const statuses = milestone.deliverables.map((d) => (d.id === deliverable.id ? kind : d.status));
+        const next = milestoneStatusAfter(statuses);
+        if (next !== milestone.status) {
+          await tx.milestone.update({
+            where: { id: milestone.id },
+            data: { status: next, approvedAt: next === "APPROVED" ? now : null },
+          });
+        }
+        if (next === "APPROVED" && milestone.status !== "APPROVED") {
+          await recordActivity(tx, {
+            orgId,
+            projectId,
+            actorId: access.userId,
+            actorKind: "CLIENT",
+            type: "MILESTONE_COMPLETED",
+            subject: milestone.name,
+            detail: String(milestone.number),
+            visibleToClient: true,
+            createdAt: new Date(now.getTime() + 1),
+          });
+          // The next milestone starts, if it hasn't already.
+          await tx.milestone.updateMany({
+            where: { projectId, number: milestone.number + 1, status: "UP_NEXT" },
+            data: { status: "IN_PROGRESS" },
+          });
+        }
+      },
+      // A decision writes up to nine rows; allow for a slow connection to the database.
+      { timeout: 20_000 },
+    );
+  } catch (error) {
+    if (error instanceof Refused) return { ok: false, error: error.message };
+    console.error("decideDeliverable failed", error);
+    return { ok: false, error: "Your decision couldn't be saved. Please try again." };
+  }
+
+  revalidatePath("/portal", "layout");
+  revalidatePath(`/projects/${projectId}`, "layout");
+  revalidatePath("/projects");
+  revalidatePath("/dashboard");
   return { ok: true };
 }

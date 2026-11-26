@@ -225,6 +225,9 @@ model Deliverable {
   // Blob pathname (orgs/{orgId}/projects/{projectId}/…), so a demo reset can delete visitors' uploads.
   // Null for the seeded sample files in /public/demo-files.
   filePathname      String?
+  // A picture shown in the client's preview box instead of the file tile. Set only for the seeded
+  // Homepage v2 (an illustration of the PDF's first page); uploads preview from the file itself.
+  previewUrl        String?
   // The Changes requested deliverable this one replaces ("Upload new version"). A version can be
   // replaced once. Current deliverables are the ones with no nextVersion; older ones stay as history.
   previousVersionId String?           @unique

@@ -9,6 +9,8 @@ type ActivityInput = {
   subject: string;
   detail?: string | null;
   visibleToClient?: boolean;
+  /** Defaults to now. Set it when one action records two lines, so they sort in order. */
+  createdAt?: Date;
 };
 
 /** The one place that writes an activity line. Call it inside the action's transaction. */
@@ -23,6 +25,7 @@ export async function recordActivity(tx: Prisma.TransactionClient, input: Activi
       subject: input.subject,
       detail: input.detail ?? null,
       visibleToClient: input.visibleToClient ?? false,
+      ...(input.createdAt && { createdAt: input.createdAt }),
     },
   });
 }
