@@ -96,3 +96,21 @@ export function dateTime(date: Date, now: Date = new Date()): string {
   const sameDay = longDate(date) === longDate(now);
   return `${sameDay ? "Today" : shortDate(date)}, ${time}`;
 }
+
+/** The "2026-11-28" value a date field shows for a stored date (studio time zone). */
+export function toDateInput(date: Date): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: TIME_ZONE }).format(date);
+}
+
+/** A date field's "2026-11-28" → that day at 09:00 studio time, the same time the seed uses. */
+export function fromDateInput(ymd: string): Date {
+  return new Date(`${ymd}T09:00:00+02:00`); // Harare has no daylight saving
+}
+
+/** File sizes as the designs write them: "46 KB", "3.1 MB". */
+export function fileSize(bytes: number): string {
+  const KB = 1024;
+  const MB = KB * 1024;
+  if (bytes >= MB) return `${(bytes / MB).toFixed(1).replace(/\.0$/, "")} MB`;
+  return `${Math.max(1, Math.round(bytes / KB))} KB`;
+}

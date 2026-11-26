@@ -22,6 +22,32 @@ export type BoardTask = {
 export type Person = { name: string; initials: string; tone: AvatarTone };
 export type People = Record<string, Person>;
 
+/** Everything the task panel shows, worded on the server. Team-only: never sent to the client portal. */
+export type TaskDetail = {
+  id: string;
+  projectName: string;
+  title: string;
+  description: string | null;
+  type: TaskType;
+  status: TaskStatus;
+  assigneeId: string | null;
+  /** "28 Nov 2026" and the date field's "2026-11-28". */
+  due: { label: string; input: string } | null;
+  milestoneId: string | null;
+  files: { id: string; name: string; url: string; from: string; size: string }[];
+  comments: TaskComment[];
+};
+
+export type TaskComment = { id: string; author: Person; when: string; text: string };
+
+/** The choices the panel's small menus offer. */
+export type TaskOptions = {
+  team: { id: string; person: Person }[];
+  milestones: { id: string; label: string }[];
+  /** The signed-in person, for the comment that appears before the server confirms it. */
+  me: Person;
+};
+
 export function toPeople(members: Member[]): People {
   return Object.fromEntries(
     members.map((m) => [m.id, { name: displayName(m), initials: initials(m), tone: m.tone }]),

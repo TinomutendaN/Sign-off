@@ -19,11 +19,21 @@ export const STATUS_TONE: Record<TaskStatus, PillTone> = {
   DONE: "green",
 };
 
+export const TYPES = ["DESIGN", "BUILD", "CONTENT", "FIX"] as const satisfies readonly TaskType[];
+
 export const TYPE_LABEL: Record<TaskType, string> = {
   DESIGN: "Design",
   BUILD: "Build",
   CONTENT: "Content",
   FIX: "Fix",
+};
+
+/** The type pill in the task panel (Build is the design's pale-blue pill). */
+export const TYPE_TONE: Record<TaskType, PillTone> = {
+  DESIGN: "amber",
+  BUILD: "progress",
+  CONTENT: "green",
+  FIX: "red",
 };
 
 /** The 30×4 tag bar at the top of each card: Design amber, Build blue, Content green, Fix red. */

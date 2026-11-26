@@ -6,7 +6,15 @@ import { recordActivity } from "@/features/activity/record";
 import { checkRole } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { STATUS_LABEL } from "./labels";
-import { createTaskSchema, moveTaskSchema } from "./schemas";
+import { getMemberDirectory } from "@/features/workspaces/queries";
+import { fromDateInput } from "@/lib/format";
+import {
+  createTaskSchema,
+  moveTaskSchema,
+  postCommentSchema,
+  setTaskStatusSchema,
+  updateTaskSchema,
+} from "./schemas";
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
 
@@ -28,11 +36,41 @@ async function renumberColumn(tx: Prisma.TransactionClient, projectId: string, s
   }
 }
 
+type Access = { orgId: string; userId: string };
+type MovingTask = { id: string; projectId: string; status: TaskStatus; title: string };
+
 /**
- * Saves a card's new column and position. Entering Done records "finished …" (shown on the
- * Dashboard and to the client); other column changes record "moved … to …"; a reorder
- * inside the same column records nothing.
+ * Writes a task's new column and position. Entering Done sets completedAt and records
+ * "finished …" (shown on the Dashboard and to the client); leaving Done clears completedAt;
+ * other column changes record "moved … to …"; a reorder inside the same column records nothing.
  */
+async function saveMove(tx: Prisma.TransactionClient, access: Access, task: MovingTask, status: TaskStatus, order: number) {
+  const enteringDone = status === "DONE" && task.status !== "DONE";
+  const leavingDone = status !== "DONE" && task.status === "DONE";
+  await tx.task.update({
+    where: { id: task.id },
+    data: {
+      status,
+      order,
+      ...(enteringDone && { completedAt: new Date() }),
+      ...(leavingDone && { completedAt: null }),
+    },
+  });
+
+  if (status !== task.status) {
+    await recordActivity(tx, {
+      orgId: access.orgId,
+      projectId: task.projectId,
+      actorId: access.userId,
+      type: enteringDone ? "TASK_DONE" : "TASK_MOVED",
+      subject: task.title,
+      detail: enteringDone ? null : STATUS_LABEL[status],
+      visibleToClient: enteringDone,
+    });
+  }
+}
+
+/** Saves a dragged card's new column and position, between the cards it was dropped between. */
 export async function moveTask(input: unknown): Promise<ActionResult> {
   const access = await checkRole("MEMBER");
   if (!access.ok) return access;
@@ -74,29 +112,7 @@ export async function moveTask(input: unknown): Promise<ActionResult> {
       else if (next) order = next.order - STEP;
       else order = STEP;
 
-      const enteringDone = status === "DONE" && task.status !== "DONE";
-      const leavingDone = status !== "DONE" && task.status === "DONE";
-      await tx.task.update({
-        where: { id: taskId },
-        data: {
-          status,
-          order,
-          ...(enteringDone && { completedAt: new Date() }),
-          ...(leavingDone && { completedAt: null }),
-        },
-      });
-
-      if (status !== task.status) {
-        await recordActivity(tx, {
-          orgId: access.orgId,
-          projectId: task.projectId,
-          actorId: access.userId,
-          type: enteringDone ? "TASK_DONE" : "TASK_MOVED",
-          subject: task.title,
-          detail: enteringDone ? null : STATUS_LABEL[status],
-          visibleToClient: enteringDone,
-        });
-      }
+      await saveMove(tx, access, task, status, order);
       return task.projectId;
     });
   } catch (error) {
@@ -162,5 +178,130 @@ export async function createTask(input: unknown): Promise<ActionResult> {
   }
 
   revalidatePath(`/projects/${projectId}`, "layout");
+  return { ok: true };
+}
+
+/** A status pill in the task panel: the task moves to the end of that column (same rules as a drag). */
+export async function setTaskStatus(input: unknown): Promise<ActionResult> {
+  const access = await checkRole("MEMBER");
+  if (!access.ok) return access;
+
+  const parsed = setTaskStatusSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: "That status couldn't be saved." };
+  const { taskId, status } = parsed.data;
+
+  let projectId: string | null;
+  try {
+    projectId = await db.$transaction(async (tx) => {
+      const task = await tx.task.findFirst({
+        where: { id: taskId, project: { orgId: access.orgId } },
+        select: { id: true, projectId: true, status: true, title: true },
+      });
+      if (!task) throw new BoardChanged();
+      if (task.status === status) return null;
+
+      const last = await tx.task.findFirst({
+        where: { projectId: task.projectId, status, id: { not: taskId } },
+        orderBy: { order: "desc" },
+        select: { order: true },
+      });
+      await saveMove(tx, access, task, status, (last?.order ?? 0) + STEP);
+      return task.projectId;
+    });
+  } catch (error) {
+    if (error instanceof BoardChanged) return { ok: false, error: "This task isn't in your workspace any more." };
+    return { ok: false, error: "That status couldn't be saved. Please try again." };
+  }
+
+  if (projectId) revalidatePath(`/projects/${projectId}`, "layout");
+  return { ok: true };
+}
+
+/** Changes the assignee, due date, milestone or type from the task panel's small menus. */
+export async function updateTask(input: unknown): Promise<ActionResult> {
+  const access = await checkRole("MEMBER");
+  if (!access.ok) return access;
+
+  const parsed = updateTaskSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? "That change couldn't be saved." };
+  const change = parsed.data;
+
+  const task = await db.task.findFirst({
+    where: { id: change.taskId, project: { orgId: access.orgId } },
+    select: { id: true, projectId: true },
+  });
+  if (!task) return { ok: false, error: "This task isn't in your workspace any more." };
+
+  let data: Prisma.TaskUncheckedUpdateInput;
+  switch (change.field) {
+    case "assignee": {
+      if (change.value) {
+        const members = await getMemberDirectory(access.orgId);
+        if (!members.some((m) => m.id === change.value)) return { ok: false, error: "That person isn't on the team." };
+      }
+      data = { assigneeId: change.value };
+      break;
+    }
+    case "dueDate":
+      data = { dueDate: change.value ? fromDateInput(change.value) : null };
+      break;
+    case "milestone": {
+      if (change.value) {
+        const milestone = await db.milestone.findFirst({
+          where: { id: change.value, projectId: task.projectId },
+          select: { id: true },
+        });
+        if (!milestone) return { ok: false, error: "That milestone isn't in this project." };
+      }
+      data = { milestoneId: change.value };
+      break;
+    }
+    case "type":
+      data = { type: change.value };
+      break;
+  }
+
+  try {
+    await db.task.update({ where: { id: task.id }, data });
+  } catch {
+    return { ok: false, error: "That change couldn't be saved. Please try again." };
+  }
+
+  revalidatePath(`/projects/${task.projectId}`, "layout");
+  return { ok: true };
+}
+
+/** Posts a team-only comment on a task (never shown to clients) and records "commented on …". */
+export async function postComment(input: unknown): Promise<ActionResult> {
+  const access = await checkRole("MEMBER");
+  if (!access.ok) return access;
+
+  const parsed = postCommentSchema.safeParse(input);
+  if (!parsed.success) return { ok: false, error: parsed.error.issues[0]?.message ?? "Check your comment." };
+  const { taskId, text } = parsed.data;
+
+  const task = await db.task.findFirst({
+    where: { id: taskId, project: { orgId: access.orgId } },
+    select: { id: true, projectId: true, title: true },
+  });
+  if (!task) return { ok: false, error: "This task isn't in your workspace any more." };
+
+  try {
+    await db.$transaction(async (tx) => {
+      await tx.comment.create({ data: { taskId, authorId: access.userId, text } });
+      await recordActivity(tx, {
+        orgId: access.orgId,
+        projectId: task.projectId,
+        actorId: access.userId,
+        type: "TASK_COMMENTED",
+        subject: task.title,
+        visibleToClient: false,
+      });
+    });
+  } catch {
+    return { ok: false, error: "Your comment couldn't be posted. Please try again." };
+  }
+
+  revalidatePath(`/projects/${task.projectId}`, "layout");
   return { ok: true };
 }

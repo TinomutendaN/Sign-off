@@ -84,7 +84,7 @@ export function TaskTable({ projectId, tasks, people }: TaskTableProps) {
                   <tr key={t.id} className="border-t border-soft-2">
                     <td className="px-2 py-3">
                       <Link
-                        href={`/projects/${projectId}?task=${t.id}`}
+                        href={`/projects/${projectId}/list?task=${t.id}`}
                         scroll={false}
                         className="flex items-center gap-[10px] font-medium text-ink hover:text-violet-ink"
                       >
