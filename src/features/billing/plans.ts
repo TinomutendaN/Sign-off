@@ -14,7 +14,6 @@ export type PlanKey = "free" | PaidPlanKey;
 type Plan = {
   key: PlanKey;
   name: string;
-  blurb: string;
   /** Price in dollars for each period. Free is 0. */
   monthly: number;
   annual: number;
@@ -29,7 +28,6 @@ export const PLANS: Record<PlanKey, Plan> = {
   free: {
     key: "free",
     name: "Free",
-    blurb: "For trying SIGNoFF with your first client.",
     monthly: 0,
     annual: 0,
     popular: false,
@@ -40,7 +38,6 @@ export const PLANS: Record<PlanKey, Plan> = {
   pro: {
     key: "pro",
     name: "Pro",
-    blurb: "For freelancers with a steady list of clients.",
     monthly: 19,
     annual: 190,
     popular: true,
@@ -58,7 +55,6 @@ export const PLANS: Record<PlanKey, Plan> = {
   agency: {
     key: "agency",
     name: "Agency",
-    blurb: "For small agencies running several teams.",
     monthly: 49,
     annual: 490,
     popular: false,

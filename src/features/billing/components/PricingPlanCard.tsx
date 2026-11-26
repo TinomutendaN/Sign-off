@@ -11,7 +11,7 @@ export function PricingPlanCard({ planKey, period }: { planKey: PlanKey; period:
   return (
     <article
       className={cx(
-        "relative flex flex-col gap-[18px] rounded-feature bg-card p-6",
+        "relative flex flex-col gap-4 rounded-feature bg-card p-6",
         plan.popular ? "shadow-plan-featured outline-2 outline-violet" : "shadow-card",
       )}
     >
@@ -23,7 +23,6 @@ export function PricingPlanCard({ planKey, period }: { planKey: PlanKey; period:
           </span>
         )}
       </div>
-      <p className="m-0 min-h-[42px] text-sm leading-normal text-muted">{plan.blurb}</p>
       <div className="flex flex-col gap-1">
         <div className="flex items-baseline gap-1.5">
           <span className="text-[40px] font-semibold tracking-[-0.02em]">{price}</span>
@@ -35,7 +34,7 @@ export function PricingPlanCard({ planKey, period }: { planKey: PlanKey; period:
         {plan.cta}
       </Button>
       <div className="h-px bg-soft-2" />
-      <ul className="m-0 flex list-none flex-col gap-[11px] p-0">
+      <ul className="m-0 flex list-none flex-col gap-2.5 p-0">
         {plan.features.map((feature) => (
           <li key={feature} className="flex items-start gap-[10px] text-sm leading-[1.45] text-ink-2">
             <CheckIcon className="mt-px shrink-0 text-violet" />

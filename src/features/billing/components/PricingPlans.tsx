@@ -14,19 +14,17 @@ export function PricingPlans() {
 
   return (
     <>
-      <section className="flex flex-col items-center gap-4 px-6 pt-12 pb-7 text-center phone:px-[10px] phone:pt-7">
+      {/* Trimmed from the design on request: the whole page fits on one laptop screen. */}
+      <section className="flex flex-col items-center gap-3 px-6 pt-7 pb-5 text-center phone:px-[10px] phone:pt-6">
         <span className="text-xs font-semibold tracking-[0.06em] text-violet-icon">PRICING</span>
-        <h1 className="m-0 max-w-[720px] text-[44px] leading-[1.1] font-semibold tracking-[-0.02em] phone:text-[32px]">
+        <h1 className="m-0 text-[36px] leading-[1.15] font-semibold tracking-[-0.02em] phone:text-[28px]">
           Simple plans for freelancers and small agencies
         </h1>
-        <p className="m-0 max-w-[560px] text-base leading-[1.6] text-muted">
-          Start free with your first client. Upgrade when you take on more projects. Your clients never pay.
-        </p>
         <Tabs
           variant="switch"
           size="md"
           label="Billing period"
-          className="mt-2 items-center"
+          className="mt-1 items-center"
           onSelect={(key) => setPeriod(key as Period)}
           items={[
             { key: "monthly", label: "Monthly", selected: period === "monthly" },
