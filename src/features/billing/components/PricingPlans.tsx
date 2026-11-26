@@ -15,8 +15,7 @@ export function PricingPlans() {
   return (
     <>
       {/* Trimmed from the design on request: the whole page fits on one laptop screen. */}
-      <section className="flex flex-col items-center gap-3 px-6 pt-7 pb-5 text-center phone:px-[10px] phone:pt-6">
-        <span className="text-xs font-semibold tracking-[0.06em] text-violet-icon">PRICING</span>
+      <section className="flex flex-col items-center gap-3 px-6 pt-5 pb-4 text-center phone:px-[10px]">
         <h1 className="m-0 text-[36px] leading-[1.15] font-semibold tracking-[-0.02em] phone:text-[28px]">
           Simple plans for freelancers and small agencies
         </h1>
