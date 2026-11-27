@@ -41,6 +41,7 @@ File names (one per screen, as exported from the design canvas). The "Descriptio
    - phone and tablet layouts: the images show laptop width; follow the responsive rules (side panel hides on tablet, icon menu becomes a bottom tab bar on phones)
 5. **Never invent screens, sections or features** that aren't in the images or in `AGENTS.md`.
 6. **Pricing intentionally differs from `02 Pricing.png`.** By the owner's request, `/pricing` fits on one screen and has no lavender page border. Do not change it back to match the image.
+   **Landing has no lavender border either.** By the owner's request, `/` fills the screen edge to edge (`<FlushWindow />`); its content keeps the design's widths. Do not change it back.
 7. **Signed-in screens have no lavender border.** By the owner's request, the agency, client portal and admin frames fill the screen edge to edge (no lavender margin, no rounded window) and the whole page scrolls. The images show a rounded window on a lavender page; do not change it back.
 
 ## Decision making

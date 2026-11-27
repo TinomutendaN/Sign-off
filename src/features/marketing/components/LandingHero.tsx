@@ -6,7 +6,8 @@ import { MiniBoard } from "./MiniBoard";
 /** Landing hero: headline and calls to action on the left, the board picture on the right. */
 export function LandingHero() {
   return (
-    <section className="flex flex-wrap items-center gap-10 px-10 pt-14 pb-12 phone:px-[10px] phone:py-7">
+    // Capped at the old window width (1440 px), so it keeps the design's proportions now the window fills the screen.
+    <section className="mx-auto flex w-full max-w-[1420px] flex-wrap items-center gap-10 px-10 pt-14 pb-12 phone:px-[10px] phone:py-7">
       <div className="flex min-w-0 flex-[1_1_440px] flex-col gap-5">
         <span className="self-start rounded-full bg-violet-tint px-[10px] py-[5px] text-xs font-semibold text-violet-ink">
           For freelancers and small agencies
