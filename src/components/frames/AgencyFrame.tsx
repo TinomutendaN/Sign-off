@@ -16,6 +16,7 @@ export function AgencyFrame({ children }: { children: ReactNode }) {
       rail={
         <AppRail
           label="Main"
+          home="/dashboard"
           bottom={
             <>
               <RailLink href="#" icon={<HelpIcon />} ariaLabel="Help" hideOnPhone />

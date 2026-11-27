@@ -19,6 +19,7 @@ export function AdminFrame({ children }: { children: ReactNode }) {
       rail={
         <AppRail
           label="Admin"
+          home="/admin"
           bottom={
             <>
               <RailLink href="#" icon={<SettingsIcon />} ariaLabel="Settings" inactive />

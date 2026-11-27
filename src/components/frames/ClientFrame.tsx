@@ -17,6 +17,7 @@ export function ClientFrame({ children }: { children: ReactNode }) {
       rail={
         <AppRail
           label="Main"
+          home="/portal"
           bottom={
             <>
               <RailLink href="#" icon={<HelpIcon />} ariaLabel="Help" hideOnPhone />
