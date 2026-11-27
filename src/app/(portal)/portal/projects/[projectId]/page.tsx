@@ -1,25 +1,27 @@
 import { redirect } from "next/navigation";
-import type { DecisionKind } from "@/generated/prisma/enums";
+import { Suspense } from "react";
+import { PageSkeleton } from "@/components/frames/PageSkeleton";
 import { MonitorIcon } from "@/components/icons";
 import { NotificationBell } from "@/components/ui/NotificationBell";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { ScreenHeader } from "@/components/ui/ScreenHeader";
+import { Section } from "@/components/ui/Section";
 import { ActivityFeed } from "@/features/activity/components/ActivityFeed";
 import { FilePreview } from "@/features/deliverables/components/FilePreview";
 import { downloadHref } from "@/features/deliverables/files";
 import { ApprovalCard } from "@/features/portal/components/ApprovalCard";
 import { EarlierDeliverableRow } from "@/features/portal/components/EarlierDeliverableRow";
-import { Section } from "@/components/ui/Section";
 import { getPortalProject } from "@/features/portal/queries";
 import { CLIENT_MILESTONE_LOOK, decidedLine, sentLine, toClientActivityLines } from "@/features/portal/wording";
 import { MilestoneStrip } from "@/features/projects/components/MilestoneStrip";
 import { projectProgress } from "@/features/projects/progress";
+import type { DecisionKind } from "@/generated/prisma/enums";
 import { requireClient } from "@/lib/auth";
 import { fileSize, longDate } from "@/lib/format";
 
 // 12 Client project view. ?decided={deliverableId} keeps a just-decided deliverable in
 // "Needs your approval" with its confirmation, in place of the buttons.
-export default async function ClientProjectPage({ params, searchParams }: PageProps<"/portal/projects/[projectId]">) {
+async function ClientProjectPageContent({ params, searchParams }: PageProps<"/portal/projects/[projectId]">) {
   const { projectId } = await params;
   const { decided } = await searchParams;
   const { userId } = await requireClient(projectId);
@@ -136,5 +138,14 @@ export default async function ClientProjectPage({ params, searchParams }: PagePr
         />
       </div>
     </>
+  );
+}
+
+// The page streams in under its own boundary, so a click shows the skeleton straight away.
+export default function ClientProjectPage(props: Parameters<typeof ClientProjectPageContent>[0]) {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <ClientProjectPageContent {...props} />
+    </Suspense>
   );
 }

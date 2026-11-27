@@ -85,7 +85,7 @@ const TIME_ZONE = "Africa/Harare";
 function parts(date: Date) {
   const get = (opts: Intl.DateTimeFormatOptions) =>
     new Intl.DateTimeFormat("en-GB", { timeZone: TIME_ZONE, ...opts }).format(date);
-  return { day: get({ day: "numeric" }), month: get({ month: "short" }), year: get({ year: "numeric" }) };
+  return { day: get({ day: "numeric" }), month: monthShort(date), year: get({ year: "numeric" }) };
 }
 
 /** "2 Dec" */
@@ -107,7 +107,7 @@ export function monthLong(date: Date): string {
 /** "2 Sep" this year, "2 Sep 2025" in any other year. */
 export function shortDateYear(date: Date, now: Date = new Date()): string {
   const p = parts(date);
-  const label = `${p.day} ${monthShort(date)}`;
+  const label = `${p.day} ${p.month}`;
   return p.year === parts(now).year ? label : `${label} ${p.year}`;
 }
 

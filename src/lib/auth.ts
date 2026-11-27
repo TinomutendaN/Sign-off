@@ -8,6 +8,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { claimClientInvites } from "@/features/clients/actions";
 import { hasClientAccess } from "@/features/clients/queries";
 import { getUserOrgIds } from "@/features/workspaces/queries";
@@ -42,6 +43,8 @@ async function landingFor(userId: string, activeOrgId: string | null | undefined
 
   // Client invites are claimed here, the first time an invited person lands after signing in
   // (their verified email matches an unclaimed invite). New sign-ups and existing accounts alike.
+  // It writes rows (random IDs, timestamps), so it must only ever run for a real request.
+  await connection();
   await claimClientInvites();
 
   const orgIds = await getUserOrgIds(userId);

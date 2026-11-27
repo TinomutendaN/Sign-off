@@ -1,12 +1,14 @@
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { ActivityFeed } from "@/features/activity/components/ActivityFeed";
 import { getProjectActivity, toActivityLines } from "@/features/activity/queries";
+import { TabSkeleton } from "@/features/projects/components/TabSkeleton";
 import { getProjectHeader } from "@/features/projects/queries";
 import { getMemberDirectory } from "@/features/workspaces/queries";
 import { requireRole } from "@/lib/auth";
 
 // Project Activity tab (no design; styled like the Activity panel on the client project view)
-export default async function ActivityPage({ params }: { params: Promise<{ projectId: string }> }) {
+async function ActivityPageContent({ params }: { params: Promise<{ projectId: string }> }) {
   const { projectId } = await params;
   const { orgId } = await requireRole("MEMBER");
   // All three at once; nothing is shown unless the project is in this workspace.
@@ -18,4 +20,13 @@ export default async function ActivityPage({ params }: { params: Promise<{ proje
   if (!project) notFound();
 
   return <ActivityFeed lines={toActivityLines(rows, project.client.name, members)} />;
+}
+
+// The page streams in under its own boundary, so a click shows the skeleton straight away.
+export default function ActivityPage(props: Parameters<typeof ActivityPageContent>[0]) {
+  return (
+    <Suspense fallback={<TabSkeleton />}>
+      <ActivityPageContent {...props} />
+    </Suspense>
+  );
 }

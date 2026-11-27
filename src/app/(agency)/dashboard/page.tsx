@@ -1,5 +1,8 @@
 import { currentUser } from "@clerk/nextjs/server";
+import { connection } from "next/server";
+import { Suspense } from "react";
 import type { ReactNode } from "react";
+import { PageSkeleton } from "@/components/frames/PageSkeleton";
 import { Button } from "@/components/ui/Button";
 import { NotificationBell } from "@/components/ui/NotificationBell";
 import { Section } from "@/components/ui/Section";
@@ -49,8 +52,9 @@ function EmptyBox({ children }: { children: ReactNode }) {
 }
 
 // 04 Dashboard
-export default async function DashboardPage() {
+async function DashboardPageContent() {
   const { orgId } = await requireRole("MEMBER");
+  await connection(); // "now" is read per request, never prerendered
   const now = new Date();
   const [data, members, user, limitReached, planIds] = await Promise.all([
     getDashboard(orgId, now),
@@ -205,5 +209,13 @@ export default async function DashboardPage() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <DashboardPageContent />
+    </Suspense>
   );
 }

@@ -62,7 +62,7 @@ export function Tabs({ items, label, variant = "underline", size = "sm", onSelec
           onSelect={onSelect}
           role="tab"
           className={cx(
-            "-mb-px flex items-center gap-2 border-b-2 px-[14px] py-3 text-sm",
+            "-mb-px flex items-center gap-2 border-b-2 px-[14px] py-3 text-sm whitespace-nowrap phone:gap-1.5 phone:px-2",
             item.selected ? "border-violet font-semibold text-ink" : "border-transparent font-medium text-muted",
           )}
         >
@@ -81,11 +81,9 @@ export function Tabs({ items, label, variant = "underline", size = "sm", onSelec
           {item.extra}
         </TabControl>
       ))}
+      {/* Hidden on phones so the tabs keep to one row (the project "Filter" is inactive anyway). */}
       {end && (
-        <>
-          <div className="flex-1" />
-          {end}
-        </>
+        <div className="flex flex-1 justify-end phone:hidden">{end}</div>
       )}
     </div>
   );

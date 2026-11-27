@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { AddDeliverablePanel } from "@/features/deliverables/components/AddDeliverablePanel";
 import { MilestoneSection } from "@/features/deliverables/components/MilestoneSection";
 import { uploadLimitBytes, uploadPrefix } from "@/features/deliverables/files";
 import { getMilestoneDeliverables } from "@/features/deliverables/queries";
+import { TabSkeleton } from "@/features/projects/components/TabSkeleton";
 import { currentMilestone } from "@/features/projects/progress";
 import { getProjectHeader } from "@/features/projects/queries";
 import { getMemberDirectory } from "@/features/workspaces/queries";
@@ -10,7 +12,7 @@ import { requireRole } from "@/lib/auth";
 
 // 07 Milestones + send for approval. The project header and tabs come from the layout.
 // ?replace={deliverableId} ("Upload new version") opens the panel prefilled.
-export default async function MilestonesPage({ params }: { params: Promise<{ projectId: string }> }) {
+async function MilestonesPageContent({ params }: { params: Promise<{ projectId: string }> }) {
   const { projectId } = await params;
   const { orgId } = await requireRole("MEMBER");
   const [project, milestones, members] = await Promise.all([
@@ -58,5 +60,14 @@ export default async function MilestonesPage({ params }: { params: Promise<{ pro
         replaceable={replaceable}
       />
     </div>
+  );
+}
+
+// The page streams in under its own boundary, so a click shows the skeleton straight away.
+export default function MilestonesPage(props: Parameters<typeof MilestonesPageContent>[0]) {
+  return (
+    <Suspense fallback={<TabSkeleton />}>
+      <MilestonesPageContent {...props} />
+    </Suspense>
   );
 }

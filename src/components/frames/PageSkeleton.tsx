@@ -1,7 +1,8 @@
 import { Skeleton } from "@/components/ui/Skeleton";
 
-// Shown straight away while an agency page loads, so a click never looks frozen.
-export default function AgencyLoading() {
+// Shown straight away while a signed-in page streams in, so a click never looks frozen.
+// Each page wraps its content in <Suspense fallback={<PageSkeleton />}>.
+export function PageSkeleton() {
   return (
     <div role="status" aria-label="Loading" className="flex flex-col gap-[18px]">
       <div className="flex items-center gap-[14px]">

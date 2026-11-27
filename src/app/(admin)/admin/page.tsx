@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { connection } from "next/server";
+import { Suspense } from "react";
+import { PageSkeleton } from "@/components/frames/PageSkeleton";
 import { ChartIcon } from "@/components/icons";
 import { Pill } from "@/components/ui/Pill";
 import { ScreenHeader } from "@/components/ui/ScreenHeader";
@@ -21,10 +24,11 @@ const RANGES = [
 ] as const;
 
 // 13 Admin dashboard. ?range=3|6|12 picks how many months the revenue chart shows.
-export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
+async function AdminPageContent({ searchParams }: PageProps<"/admin">) {
   await requireAdmin();
   const { range: rawRange } = await searchParams;
   const range = rangeSchema.parse(Array.isArray(rawRange) ? rawRange[0] : rawRange);
+  await connection(); // "now" is read per request, never prerendered
   const now = new Date();
   const data = await getAdminOverview(now);
   const months = data.months.slice(-Number(range));
@@ -87,5 +91,14 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
         <SubscriberTable rows={data.newest} />
       </Section>
     </>
+  );
+}
+
+// The page streams in under its own boundary, so a click shows the skeleton straight away.
+export default function AdminPage(props: Parameters<typeof AdminPageContent>[0]) {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <AdminPageContent {...props} />
+    </Suspense>
   );
 }

@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { TabSkeleton } from "@/features/projects/components/TabSkeleton";
 import { getProjectHeader } from "@/features/projects/queries";
 import { toPeople } from "@/features/tasks/board";
 import { KanbanBoard } from "@/features/tasks/components/KanbanBoard";
@@ -10,7 +11,7 @@ import { getMemberDirectory } from "@/features/workspaces/queries";
 import { requireRole } from "@/lib/auth";
 
 // 07 Board (?task=id opens 08 Task detail)
-export default async function BoardPage({
+async function BoardPageContent({
   params,
   searchParams,
 }: {
@@ -35,5 +36,14 @@ export default async function BoardPage({
         <TaskPanelSlot searchParams={searchParams} projectId={projectId} orgId={orgId} userId={userId} />
       </Suspense>
     </>
+  );
+}
+
+// The page streams in under its own boundary, so a click shows the skeleton straight away.
+export default function BoardPage(props: Parameters<typeof BoardPageContent>[0]) {
+  return (
+    <Suspense fallback={<TabSkeleton />}>
+      <BoardPageContent {...props} />
+    </Suspense>
   );
 }

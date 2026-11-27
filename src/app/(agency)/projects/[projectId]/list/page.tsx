@@ -1,16 +1,17 @@
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { TabSkeleton } from "@/features/projects/components/TabSkeleton";
 import { getProjectHeader } from "@/features/projects/queries";
 import { toPeople } from "@/features/tasks/board";
-import { TaskTable } from "@/features/tasks/components/TaskTable";
 import { TaskPanelSlot } from "@/features/tasks/components/TaskPanelSlot";
+import { TaskTable } from "@/features/tasks/components/TaskTable";
 import { getProjectTasks } from "@/features/tasks/queries";
 import { toBoardTasks } from "@/features/tasks/toBoardTasks";
 import { getMemberDirectory } from "@/features/workspaces/queries";
 import { requireRole } from "@/lib/auth";
 
 // Project List tab (no design; styled like the Subscribers table). ?task=id opens 08 Task detail.
-export default async function ListPage({
+async function ListPageContent({
   params,
   searchParams,
 }: {
@@ -35,5 +36,14 @@ export default async function ListPage({
         <TaskPanelSlot searchParams={searchParams} projectId={projectId} orgId={orgId} userId={userId} />
       </Suspense>
     </>
+  );
+}
+
+// The page streams in under its own boundary, so a click shows the skeleton straight away.
+export default function ListPage(props: Parameters<typeof ListPageContent>[0]) {
+  return (
+    <Suspense fallback={<TabSkeleton />}>
+      <ListPageContent {...props} />
+    </Suspense>
   );
 }

@@ -1,10 +1,12 @@
 import { currentUser } from "@clerk/nextjs/server";
+import { Suspense } from "react";
+import { PageSkeleton } from "@/components/frames/PageSkeleton";
 import { NotificationBell } from "@/components/ui/NotificationBell";
+import { Section } from "@/components/ui/Section";
 import { ActivityFeed } from "@/features/activity/components/ActivityFeed";
 import { FilePreview } from "@/features/deliverables/components/FilePreview";
 import { ApprovalSummaryCard } from "@/features/portal/components/ApprovalSummaryCard";
 import { PortalProjectCard } from "@/features/portal/components/PortalProjectCard";
-import { Section } from "@/components/ui/Section";
 import { getPortalHome } from "@/features/portal/queries";
 import { sentLine, toClientActivityLines } from "@/features/portal/wording";
 import { projectProgress } from "@/features/projects/progress";
@@ -12,7 +14,7 @@ import { requireClient } from "@/lib/auth";
 import { firstName, longDate } from "@/lib/format";
 
 // 11 Client home
-export default async function PortalHomePage() {
+async function PortalHomePageContent() {
   const { userId } = await requireClient();
   const [data, user] = await Promise.all([getPortalHome(userId), currentUser()]);
   // requireClient() has checked there is at least one shared project; this only guards a race.
@@ -106,5 +108,13 @@ export default async function PortalHomePage() {
         />
       </div>
     </>
+  );
+}
+
+export default function PortalHomePage() {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <PortalHomePageContent />
+    </Suspense>
   );
 }

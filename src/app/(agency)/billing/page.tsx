@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import { PageSkeleton } from "@/components/frames/PageSkeleton";
 import { BillingIcon } from "@/components/icons";
 import { Button } from "@/components/ui/Button";
 import { ScreenHeader } from "@/components/ui/ScreenHeader";
@@ -21,7 +23,7 @@ function chosenCheckout(plan: unknown, period: unknown): { plan: PaidPlanKey; pe
 }
 
 // 10 Billing (only the workspace owner can see this page)
-export default async function BillingPage({ searchParams }: PageProps<"/billing">) {
+async function BillingPageContent({ searchParams }: PageProps<"/billing">) {
   const { orgId } = await requireRole("OWNER");
   const { checkout, period } = await searchParams;
 
@@ -77,5 +79,14 @@ export default async function BillingPage({ searchParams }: PageProps<"/billing"
         </BillingSection>
       </div>
     </>
+  );
+}
+
+// The page streams in under its own boundary, so a click shows the skeleton straight away.
+export default function BillingPage(props: Parameters<typeof BillingPageContent>[0]) {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <BillingPageContent {...props} />
+    </Suspense>
   );
 }

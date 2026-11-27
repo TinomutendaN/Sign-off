@@ -1,3 +1,6 @@
+import { connection } from "next/server";
+import { Suspense } from "react";
+import { PageSkeleton } from "@/components/frames/PageSkeleton";
 import { PeopleIcon } from "@/components/icons";
 import { Pill } from "@/components/ui/Pill";
 import { ScreenHeader } from "@/components/ui/ScreenHeader";
@@ -25,7 +28,7 @@ function hrefFor(filter: SubscriberFilter) {
 
 // 14 Subscribers. Filters, search and page live in the URL; "Cancelled" means every cancelled
 // subscription (not only this month's).
-export default async function SubscribersPage({ searchParams }: PageProps<"/admin/subscribers">) {
+async function SubscribersPageContent({ searchParams }: PageProps<"/admin/subscribers">) {
   await requireAdmin();
   const params = await searchParams;
   const filter = subscriberFilterSchema.parse({
@@ -34,6 +37,7 @@ export default async function SubscribersPage({ searchParams }: PageProps<"/admi
     q: first(params.q),
     page: first(params.page),
   });
+  await connection(); // "now" is read per request, never prerendered
   const data = await listSubscribers(filter, new Date());
   const { counts } = data;
 
@@ -105,5 +109,14 @@ export default async function SubscribersPage({ searchParams }: PageProps<"/admi
         />
       </section>
     </>
+  );
+}
+
+// The page streams in under its own boundary, so a click shows the skeleton straight away.
+export default function SubscribersPage(props: Parameters<typeof SubscribersPageContent>[0]) {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <SubscribersPageContent {...props} />
+    </Suspense>
   );
 }

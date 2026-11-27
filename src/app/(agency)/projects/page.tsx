@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import { PageSkeleton } from "@/components/frames/PageSkeleton";
 import { getPlanIds, projectLimitReached } from "@/features/billing/queries";
 import type { ProjectRowData } from "@/features/projects/components/ProjectRow";
 import { ProjectsList } from "@/features/projects/components/ProjectsList";
@@ -9,7 +11,7 @@ import { longDate } from "@/lib/format";
 
 // 06 Projects list. On Free with both projects in use, "+ New project" opens the upgrade pop-up (12).
 // ?archive=1 (from the pop-up's "Archive a project instead") shows Archive buttons to Owners.
-export default async function ProjectsPage({ searchParams }: PageProps<"/projects">) {
+async function ProjectsPageContent({ searchParams }: PageProps<"/projects">) {
   const { orgId, isOwner } = await requireRole("MEMBER");
   const { archive } = await searchParams;
   const [projects, workspace, members, limitReached, planIds] = await Promise.all([
@@ -53,5 +55,14 @@ export default async function ProjectsPage({ searchParams }: PageProps<"/project
       archiveMode={archive === "1"}
       canArchive={isOwner}
     />
+  );
+}
+
+// The page streams in under its own boundary, so a click shows the skeleton straight away.
+export default function ProjectsPage(props: Parameters<typeof ProjectsPageContent>[0]) {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <ProjectsPageContent {...props} />
+    </Suspense>
   );
 }

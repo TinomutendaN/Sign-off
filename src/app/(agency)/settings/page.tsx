@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import { PageSkeleton } from "@/components/frames/PageSkeleton";
 import { SettingsIcon } from "@/components/icons";
 import { ScreenHeader } from "@/components/ui/ScreenHeader";
 import { PLANS } from "@/features/billing/plans";
@@ -13,7 +15,7 @@ import { getTeamSettings } from "@/features/workspaces/queries";
 import { requireRole } from "@/lib/auth";
 
 // 09 Team settings. Everyone in the workspace can see it; only Owners can rename or invite.
-export default async function SettingsPage() {
+async function SettingsPageContent() {
   const { orgId, userId, isOwner } = await requireRole("MEMBER");
   const [team, clients, origin, billing] = await Promise.all([
     getTeamSettings(orgId),
@@ -45,5 +47,13 @@ export default async function SettingsPage() {
         </div>
       </div>
     </>
+  );
+}
+
+export default function SettingsPage() {
+  return (
+    <Suspense fallback={<PageSkeleton />}>
+      <SettingsPageContent />
+    </Suspense>
   );
 }
