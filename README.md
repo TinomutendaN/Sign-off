@@ -4,7 +4,7 @@
 
 SIGNoFF helps freelancers and small agencies run client projects and get work approved without email chains. Agencies organise work into projects, milestones and Kanban tasks, then send deliverables to clients, who approve them or request changes in their own portal. Workspaces pay on Free, Pro or Agency plans, monthly or yearly, and an admin dashboard tracks subscribers and monthly revenue.
 
-- **Live app:** [YOUR VERCEL URL]
+- **Live app:** https://sign-off-dun.vercel.app
 - **Video walkthrough:** [YOUR VIDEO LINK]
 
 ---
@@ -75,11 +75,14 @@ Every screen works on laptop, tablet and phone. On tablets the side panel hides;
   | Plan | Monthly | Annual |
   |---|---|---|
   | Free | $0 | $0 |
-  | Pro | $19 | $190 |
-  | Agency | $49 | $490 |
+  | Pro | $19 | $189.96 ($15.83 a month) |
+  | Agency | $49 | $489.96 ($40.83 a month) |
+
+  Clerk stores an annual price as its monthly equivalent, so a year costs 12 × $15.83 or 12 × $40.83. The app shows the amounts Clerk really charges.
 
 - **Plan limits:** Free allows 1 workspace and 2 projects. Starting a third project opens the upgrade pop-up.
-- **Self-service billing:** upgrade, switch between monthly and annual, update the card or cancel from the Billing page.
+- **Self-service billing:** upgrade in a secure checkout window, then switch between monthly and annual, update the card or cancel from the Billing page (Clerk's subscription details).
+- **Test payments only:** the demo runs on Clerk's development payment gateway (Stripe test mode). Pay with the test card `4242 4242 4242 4242`, any future date and any CVC. No real money is taken.
 
 ### For the SIGNoFF admin
 - **Admin dashboard:** monthly recurring revenue, paying subscribers, new subscribers, cancellations, a revenue chart and subscribers by plan.
@@ -93,18 +96,21 @@ Open the app and pick a role on the sign-in page to explore a ready-made workspa
 
 | Role | Signs in as | Lands on |
 |---|---|---|
-| Agency owner | Tino M. · Northfold Studio | Dashboard |
+| Agency owner | Tinomutenda N. · Northfold Studio | Dashboard |
 | Team member | Ama K. · Northfold Studio | Dashboard |
 | Client | Thandi M. · Brightline Bakery | Client portal |
 | SIGNoFF admin | Platform owner | Admin dashboard |
 
 ### A typical flow
 1. An agency picks **Pro** on the Pricing page.
-2. They create an account and pay for Pro.
+2. They create an account and pay for Pro with a test card.
 3. They invite a client and work on the Kanban board.
 4. They send a homepage design for approval.
 5. The client approves it in their portal.
 6. The admin dashboard shows the new subscriber and the revenue going up.
+
+### The demo resets every night
+At 01:00 UTC a Vercel Cron job (`/api/cron/reset-demo`) puts the demo back to its starting point, dated around that day: Northfold Studio back on the Free plan, visitors' uploads, clients, invitations and extra team members removed, and the subscriber history rebuilt (199 paying workspaces before anyone upgrades). Running `npx prisma db seed` does the same reset by hand.
 
 ---
 
@@ -132,14 +138,15 @@ The app uses **10 runtime packages** in total. The full reasoning, including the
 - **Clients are ordinary Clerk users.** A `ClientAccess` table links each client to the projects they may see.
 - **Subscriptions live in Clerk Billing.** Clerk webhooks copy subscription events into a `Subscription` table, which feeds the admin screens. An annual plan counts as its yearly price divided by 12.
 - **Access rules live in one file.** `src/lib/auth.ts` holds `requireRole()`, `requireClient()` and `requireAdmin()`, and every page and action uses them.
-- **There are only two API routes:** Clerk webhooks and Vercel Blob uploads. Everything else is a Server Action.
+- **There are only three API routes:** Clerk webhooks, Vercel Blob uploads and the nightly demo reset (Vercel Cron). Everything else is a Server Action.
+- **Client invites need no webhook.** An invite is claimed the first time the invited person lands after signing in with the invited email.
 
 ---
 
 ## Getting started
 
 ### Prerequisites
-- Node.js 20 or newer
+- Node.js 26 (the version in `package.json` `engines`)
 - A [Clerk](https://clerk.com) account
 - A [Vercel](https://vercel.com) account with a Neon database and a Blob store
 - Git
@@ -147,8 +154,8 @@ The app uses **10 runtime packages** in total. The full reasoning, including the
 ### 1. Clone and install
 
 ```bash
-git clone [YOUR REPO URL]
-cd signoff
+git clone https://github.com/TinomutendaN/Sign-off.git
+cd Sign-off
 npm install
 ```
 
@@ -166,7 +173,7 @@ npx prisma migrate dev
 npx prisma db seed
 ```
 
-The seed creates a starter workspace (Northfold Studio), its client (Brightline Bakery), both projects, their milestones, tasks, deliverables and activity, plus subscriber history for the admin screens.
+The seed runs the full demo reset: it creates the starter workspace's data (Northfold Studio), its client (Brightline Bakery), both projects, their milestones, tasks, deliverables and activity, plus subscriber history for the admin screens, all dated around today. It also puts Northfold back on Free in Clerk and removes visitors' files, invitations and extra members, so it needs the Clerk and Blob keys as well as the database. Set `DEMO_ANCHOR_DATE=2026-11-24` to get the exact dates in the designs.
 
 ### 4. Run the app
 
@@ -185,7 +192,8 @@ Clerk webhooks need a public address. Use a tunnelling tool such as ngrok to exp
 
 | Name | What it is |
 |---|---|
-| `DATABASE_URL` | Neon connection string |
+| `DATABASE_URL` | Neon connection string (pooled), used by the app |
+| `DATABASE_URL_UNPOOLED` | Neon direct connection string, used by Prisma migrations |
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk publishable key (development instance) |
 | `CLERK_SECRET_KEY` | Clerk secret key |
 | `CLERK_WEBHOOK_SIGNING_SECRET` | Signing secret for the Clerk webhook endpoint |
@@ -195,6 +203,8 @@ Clerk webhooks need a public address. Use a tunnelling tool such as ngrok to exp
 | `ADMIN_USER_IDS` | Comma-separated Clerk user IDs allowed into `/admin` |
 | `DEMO_ORG_ID` | Clerk organization ID for Northfold Studio |
 | `DEMO_*_USER_ID` | Clerk user IDs for the seeded people (owner, team members, client, admin) |
+| `CRON_SECRET` | Secret Vercel sends with the nightly reset call; the route rejects calls without it |
+| `DEMO_ANCHOR_DATE` | Optional. The day the demo data is built around (`YYYY-MM-DD`); unset means the day the reset runs |
 
 Never commit `.env.local`.
 
@@ -206,12 +216,12 @@ Never commit `.env.local`.
 2. **Turn on Organizations.** Each agency workspace is an organization.
 3. **Turn on Billing** and create **Organization** plans:
    - Free
-   - Pro: $19 a month or $190 a year
-   - Agency: $49 a month or $490 a year
+   - Pro: $19 a month, or $15.83 a month billed annually ($189.96 a year)
+   - Agency: $49 a month, or $40.83 a month billed annually ($489.96 a year)
 
    Add features for the plan limits (projects, team members, storage).
-4. **Add a webhook endpoint** pointing to `/api/webhooks/clerk`, subscribed to the billing and invitation events. Copy its signing secret into `CLERK_WEBHOOK_SIGNING_SECRET`.
-5. **Create the starter people:** Tino M., Leo R., Ama K., Jen S., Thandi M. and the admin. Add Tino, Leo, Ama and Jen to the Northfold Studio organization with the right roles, then copy all the IDs into `.env.local`.
+4. **Add a webhook endpoint** pointing to `/api/webhooks/clerk`, subscribed to the subscription and payment (billing) events. Copy its signing secret into `CLERK_WEBHOOK_SIGNING_SECRET`.
+5. **Create the starter people:** the owner, Leo R., Ama K., Jen S., Thandi M. and the admin (names on screen come from Clerk, shown as first name and last initial, e.g. "Tinomutenda N."). Add the owner, Leo, Ama and Jen to the Northfold Studio organization with the right roles, then copy all the IDs into `.env.local`.
 
 On the development instance, Clerk Billing uses its **development payment gateway**, so you can pay with a Stripe test card such as `4242 4242 4242 4242` and don't need your own Stripe account. For live payments, connect your own Stripe account to Clerk's production instance.
 
@@ -221,9 +231,11 @@ On the development instance, Clerk Billing uses its **development payment gatewa
 
 1. Push the repository to GitHub and import it into Vercel.
 2. Add every environment variable from `.env.local` to the Vercel project.
-3. Deploy. The app runs on the `*.vercel.app` address with Clerk's development keys (production keys need your own domain).
-4. Update the Clerk webhook endpoint to the live address.
-5. Run the seed against the live database to load the starter workspace.
+3. Add `CRON_SECRET` (any long random string). `vercel.json` schedules the nightly reset at 01:00 UTC, and Vercel sends this secret with each call.
+4. Deploy. The app runs on the `*.vercel.app` address with Clerk's development keys (production keys need your own domain).
+5. Keep the Vercel function region next to the database: this project runs functions in `iad1` (Washington, D.C.) and Neon in `us-east-1`.
+6. Update the Clerk webhook endpoint to the live address.
+7. Run the seed against the live database to load the starter workspace. After that, the nightly reset keeps it clean.
 
 ---
 
@@ -240,7 +252,7 @@ signoff/
 │  │  ├─ (agency)/       # Dashboard, Clients, Projects, Board, Settings, Billing
 │  │  ├─ (portal)/       # Client home, Client project view
 │  │  ├─ (admin)/        # Admin dashboard, Subscribers
-│  │  └─ api/            # Clerk webhooks, Blob uploads
+│  │  └─ api/            # Clerk webhooks, Blob uploads, nightly demo reset
 │  ├─ features/          # one folder per feature: queries, actions, schemas, components
 │  ├─ components/        # ui building blocks, the four app frames, icons
 │  └─ lib/               # database client, role checks, formatting
